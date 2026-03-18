@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>crud form</title>
+   <script type="module" src="/src/scripts/index.js"></script>
+   <link rel="stylesheet" href="src/styles/style.css">
+</head>
+
+<body>
+   <svg style="display: none">
+      <filter id="glass-distortion">
+         <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" result="noise" />
+         <feDisplacementMap in="SourceGraphic" in2="noise" scale="77" />
+      </filter>
+   </svg>
+   <main class="content">
+      <section class="wrapper">
+         <form id="reg-form" action="/registration" method="post" novalidate data-js-reg-form
+            class="glass-content animation" style="--i:20; --j:12">
+            <h1 class="animation" style="--i:1; --j:7">Prijava na sistem</h1>
+            <div class="form-group animation" style="--i:3; --j:9">
+               <label for="ur">Ime:</label>
+               <div class="block">
+                  <input id="ur" name="name" class="field-control" type="text" minlength="3" maxlength="15" required
+                     aria-errormessage="name-errors">
+                  <i class="bx bxs-user"></i>
+               </div>
+               <span class="field-errors" id="name-errors" data-js-form-field-errors></span>
+            </div>
+            <div class="form-group animation" style="--i:5; --j:11">
+               <label for="pr">Prezime:</label>
+               <div class="block">
+                  <input id="pr" name="surname" class="field-control" type="text" minlength="3" maxlength="15" required
+                     aria-errormessage="surname-errors">
+                  <i class="bx bxs-user"></i>
+               </div>
+               <span class="field-errors" id="surname-errors" data-js-form-field-errors></span>
+            </div>
+            <div class="form-group animation" style="--i:7; --j:13">
+               <label for="email">Email:</label>
+               <div class="block">
+                  <input id="email" name="email" class="field-control" type="email" required
+                     aria-errormessage="email-errors">
+                  <i class="bx bx-envelope"></i>
+               </div>
+               <span class="field-errors" id="email-errors" data-js-form-field-errors></span>
+            </div>
+            <div class="form-group animation" style="--i:9; --j:15">
+               <label for="username">Korisnicko ime:</label>
+               <div class="block">
+                  <input id="username" name="username" class="field-control" type="text" required
+                     aria-errormessage="email-errors">
+                  <i class="bx bx-user-circle"></i>
+               </div>
+               <span class="field-errors" id="username-errors" data-js-form-field-errors></span>
+            </div>
+            <div class="form-group animation" style="--i:11; --j:17">
+               <label for="username">Lozinka:</label>
+               <div class="block">
+                  <input id="username" name="username" class="field-control" type="text" required
+                     aria-errormessage="email-errors">
+                  <i class="bx bx-lock"></i>
+               </div>
+               <span class="field-errors" id="password-errors" data-js-form-field-errors></span>
+            </div>
+            <div class="form-group animation" style="--i:13; --j:19">
+               <label for="username">Potvrda lozinke:</label>
+               <div class="block">
+                  <input id="username" name="username" class="field-control" type="text" required
+                     aria-errormessage="password-repeat-errors">
+                  <i class="bx bx-lock"></i>
+               </div>
+               <span class="field-errors" id="password-repeat-errors" data-js-form-field-errors></span>
+            </div>
+            <button style="--i:15; --j:22" class="subBtn animation" type="submit">Registrirujte se</button>
+            <p style="--i:17; --j:24" class="form-switch animation">Vec imate nalog? <a data-js-login-link href="#"
+                  class="switch-link animation">Login</a></p>
+         </form>
+
+      </section>
+   </main>
+</body>
+
+</html>
