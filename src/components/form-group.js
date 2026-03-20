@@ -9,6 +9,7 @@ export class formGroup extends HTMLElement {
     minLength = Number(this.getAttribute('min-length')) || 3;
     maxLength = Number(this.getAttribute('max-length')) || 15;
     icon = this.getAttribute('icon');
+    id = this.title.toLowerCase();
 
     constructor() {
         super();
@@ -27,19 +28,18 @@ export class formGroup extends HTMLElement {
     }
 
     render() {
-        id = this.title.toLowerCase();
         this.shadowRoot.innerHTML = `
             <style>
                 ${styles}
             </style>
-            <label for="${id}">${this.title}</label>
+            <label for="${this.id}">${this.title}</label>
             <div class="block">
-                <input id="${id}" name="${this.title}" class="field-control" type="${this.type}" 
+                <input id="${this.id}" name="${this.title}" class="field-control" type="${this.type}" 
                 minlength="${this.minLength}" maxlength="${this.maxLength}"
-                    required aria-errormessage="${id}-errors">
+                    required aria-errormessage="${this.id}-errors">
                 <i class="bx ${this.icon}"></i>
             </div>
-            <span class="field-errors" id="${id}-errors" data-js-field-errors></span>
+            <span class="field-errors" id="${this.id}-errors" data-js-field-errors></span>
         `
     }
 
