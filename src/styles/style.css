@@ -72,6 +72,17 @@ canvas {
 
 .content {
     padding-inline: var(--padding-x);
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    overflow-x: scroll;
+    max-width: 600px;
+    position: relative;
+    scrollbar-width: thin;
 }
 
 .glass-filter,

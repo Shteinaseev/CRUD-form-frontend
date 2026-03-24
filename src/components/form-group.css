@@ -3,7 +3,6 @@ input {
     outline: none;
     border: none;
     transition: .2s;
-
 }
 
 * {
@@ -18,8 +17,6 @@ input {
     gap: 0.3rem;
     padding-block: 0.3rem;
 }
-
-
 
 label {
     font-size: 1rem;
@@ -60,7 +57,6 @@ label {
 
         &:focus~svg {
             top: 30%;
-            filter: drop-shadow(0px 0px 4px var(--color-aqua));
         }
     }
 }

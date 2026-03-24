@@ -1,0 +1,17 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:host {
+    width: 200px;
+    flex-basis: 50%;
+}
+
+ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding-block: 0.3rem;
+}
