@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Neon Gradient Wave</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100dvh;
+      background: #0a0e1f;
+      color: white;
+      font-family: system-ui, sans-serif;
+      overflow: hidden;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100dvh;
+      display: grid;
+      place-items: center;
+    }
+
+    .background {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #0f1e5a, #1a0d3a, #002b3d, #0f1e5a);
+      background-size: 300% 300%;
+      animation: bgShift 18s ease infinite;
+      filter: brightness(0.9) contrast(1.15);
+    }
+
+    @keyframes bgShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .glow-shape {
+      position: absolute;
+      width: 140vmin;
+      height: 140vmin;
+      background: conic-gradient(
+        from 90deg at 50% 50%,
+        #00d4ff 0deg,
+        #7c00ff  80deg,
+        #00f2ff  140deg,
+        #a100ff  220deg,
+        #00eaff  300deg,
+        #b300ff  360deg
+      );
+      border-radius: 47% 53% 51% 49% / 48% 52% 48% 52%;
+      top: 50%;
+      left: 50%;
+      translate: -50% -50%;
+      animation: 
+        flow 22s linear infinite,
+        rotate 60s linear infinite;
+      filter: blur(60px) brightness(1.4);
+      opacity: 0.85;
+      mix-blend-mode: screen;
+    }
+
+    .glow-shape:nth-child(2) {
+      animation-delay: -11s;
+      opacity: 0.6;
+      filter: blur(90px) brightness(1.6);
+    }
+
+    @keyframes flow {
+      0%   { border-radius: 47% 53% 51% 49% / 48% 52% 48% 52%; }
+      25%  { border-radius: 62% 38% 44% 56% / 55% 45% 55% 45%; }
+      50%  { border-radius: 38% 62% 56% 44% / 45% 55% 45% 55%; }
+      75%  { border-radius: 53% 47% 49% 51% / 52% 48% 52% 48%; }
+      100% { border-radius: 47% 53% 51% 49% / 48% 52% 48% 52%; }
+    }
+
+    @keyframes rotate {
+      to { rotate: 1turn; }
+    }
+
+    .content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 3rem;
+      text-shadow: 0 0 20px rgba(0,180,255,0.7);
+    }
+
+    h1 {
+      font-size: clamp(3.5rem, 12vw, 9rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      background: linear-gradient(90deg, #00eaff, #c700ff, #00f2ff, #a500ff);
+      background-size: 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: textFlow 8s linear infinite;
+    }
+
+    @keyframes textFlow {
+      to { background-position: 300%; }
+    }
+
+    p {
+      font-size: 1.4rem;
+      max-width: 600px;
+      margin: 1.5rem auto;
+      opacity: 0.9;
+    }
+
+    .learn-more {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 1rem 2.5rem;
+      font-size: 1.3rem;
+      color: white;
+      text-decoration: none;
+      border: 2px solid rgba(0, 220, 255, 0.5);
+      border-radius: 50px;
+      backdrop-filter: blur(10px);
+      transition: all 0.4s;
+    }
+
+    .learn-more:hover {
+      background: rgba(0, 220, 255, 0.15);
+      border-color: #00eaff;
+      box-shadow: 0 0 30px rgba(0, 220, 255, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="background"></div>
+  <div class="glow-shape"></div>
+  <div class="glow-shape"></div>
+
+  <div class="content">
+    <h1>DIGITAL<br>TECHNOLOGY</h1>
+    <p>How our technology helps<br>global businesses</p>
+    <a href="#" class="learn-more">Learn more →</a>
+    <p style="margin-top:4rem; font-size:1.1rem; opacity:0.7;">
+      World Technology, Co.<br>
+      www.example.com
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

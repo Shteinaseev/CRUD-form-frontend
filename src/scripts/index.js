@@ -1,8 +1,11 @@
 import { formGroup } from "../components/form-group";
+import { dotsGenerator } from "./dots";
 
 class CRUD {
     constructor(){
-        console.log("Crud");
+        fetch('https://jsonplaceholder.typicode.com/posts')
+            .then(response => response.json())
+            .then(data => console.log(data))
     }
 }
 

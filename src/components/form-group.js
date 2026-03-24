@@ -1,4 +1,5 @@
 import styles from './form-group.css?inline';
+import * as icons from '@boxicons/js';
 
 export class formGroup extends HTMLElement {
 
@@ -8,8 +9,9 @@ export class formGroup extends HTMLElement {
     type = this.getAttribute('type');
     minLength = Number(this.getAttribute('min-length')) || 3;
     maxLength = Number(this.getAttribute('max-length')) || 15;
-    icon = this.getAttribute('icon');
     id = this.title.toLowerCase();
+    iconsAttr = this.getAttribute('icon').toString();
+    icon = icons.createSvgString(icons[this.iconsAttr]);
 
     constructor() {
         super();
@@ -22,7 +24,7 @@ export class formGroup extends HTMLElement {
         if (name === 'type') this.type = Number(newValue);
         if (name === 'min-length') this.minlength = Number(newValue) || 3;
         if (name === 'max-length') this.maxlength = Number(newValue) || 15;
-        if (name === 'icon') this.icon = Number(newValue);
+        if (name === 'icon') this.iconsAttr = newValue.toString();
 
         this.render();
     }
@@ -37,7 +39,7 @@ export class formGroup extends HTMLElement {
                 <input id="${this.id}" name="${this.title}" class="field-control" type="${this.type}" 
                 minlength="${this.minLength}" maxlength="${this.maxLength}"
                     required aria-errormessage="${this.id}-errors">
-                <i class="bx ${this.icon}"></i>
+                ${this.icon}    
             </div>
             <span class="field-errors" id="${this.id}-errors" data-js-field-errors></span>
         `

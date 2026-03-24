@@ -7,38 +7,157 @@
 }
 
 :root {
-    --bg-color: #0A0A0A;
-    --color-primary: #D60000;
-    --color-secondary: #1C1C1C;
-    --color-accent: #8B0000;
-    --color-metal: #2E2E2E;
-    --color-red-muted: #440303;
+    --bg-color: #ffffff10;
+    --highlight: #ffffffa9;
+    --color-primary: #ffffff;
+    --color-secondary: #000000;
+    --color-accent: #010c5b;
+    --color-aqua: #02abcc;
+    --color-dark-purple: #29208b;
+    --color-accent-muted: #0f5ec5;
 
+    --border: 2px solid #ffffff22;
     --padding-x: 3.76rem;
-     --box-shadow: inset 0px 10px 10px var(--color-red-muted),
-        inset 0px 10px 10px var(--color-metal),
-        0px 0px 40px var(--color-accent);
-        
+    --box-shadow:
+        inset 0px 0px 10px var(--highlight),
+        inset 0px 0px 10px var(--color-accent-muted),
+        0px 0px 100px var(--color-accent-muted),
+        0px 0px 100px var(--highlight);
+
 }
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: var(--bg-color);
+    background-image: linear-gradient(to top, var(--color-dark-purple), var(--color-secondary));
+
     color: var(--color-primary);
-    padding-inline: var(--padding-x);
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     align-items: center;
+    overflow: hidden;
 }
 
-form {
-    width: 21rem;
-    height: 30rem;
-    border: 3px solid var(--color-red-muted);
-    padding-inline: 1.15rem;
-    padding-block: 1.25rem;
+canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    height: 50vh;
+}
 
-    border-radius: 0px 81px 30px 15px;
-    corner-shape: round bevel round round;
+.gradient {
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png");
+    height: 200vh;
+    width: 200vw;
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.05;
+    position: absolute;
+    animation: animateGrain 8s steps(10) infinite;
+}
+
+.line {
+    position: absolute;
+    z-index: 0;
+    bottom: 0;
+    right: 0;
+
+    path {
+        filter:
+            blur(15px) brightness(1.2);
+    }
+}
+
+.content {
+    padding-inline: var(--padding-x);
+}
+
+.glass-filter,
+.glass-overlay,
+.glass-specular {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+}
+
+.glass-filter {
+    z-index: 1;
+    backdrop-filter: blur(4px);
+    filter: url(#glass-distortion) saturate(120%) brightness(1.15);
+}
+
+.glass-overlay {
+    z-index: 2;
+    background: var(--bg-color);
+}
+
+.glass-specular {
+    z-index: 3;
+    box-shadow: inset 1px 1px 10px var(--highlight);
+}
+
+.glass-form {
+    position: relative;
+    width: 28rem;
+    height: 35rem;
+    border-radius: 1rem;
     overflow: hidden;
+
+    form {
+        position: relative;
+        z-index: 4;
+        padding: 30px;
+        height: 100%;
+    }
+}
+
+@keyframes animateGrain {
+
+    0%,
+    100% {
+        transform: translate(0, 0)
+    }
+
+    10% {
+        transform: translate(-5%, -10%)
+    }
+
+    20% {
+        transform: translate(-15%, -20%)
+    }
+
+    30% {
+        transform: translate(-5%, -10%)
+    }
+
+    40% {
+        transform: translate(-15%, -20%)
+    }
+
+    50% {
+        transform: translate(-5%, -10%)
+    }
+
+    60% {
+        transform: translate(-15%, -20%)
+    }
+
+    70% {
+        transform: translate(-5%, -10%)
+    }
+
+    80% {
+        transform: translate(-15%, -20%)
+    }
+
+    90% {
+        transform: translate(-5%, -10%)
+    }
+
+    100% {
+        transform: translate(-10%, -20%)
+    }
+
 }
