@@ -12,13 +12,10 @@ class CRUD {
         this.root = document.querySelector(this.selectors.root);
         this.container = this.root.querySelector(this.selectors.container)
 
-        console.log(this.container)
-        fetch('https://jsonplaceholder.typicode.com/posts')
+        fetch('https://jsonplaceholder.typicode.com/users')
             .then(response => response.json())
             .then(data => data.forEach((el, i) => {
-                if (i <= 13) {
-                    this.container.append(this.createEntityCardEl(el));
-                }
+                this.container.append(this.createEntityCardEl(el));
             }))
     }
 
@@ -36,3 +33,4 @@ class CRUD {
 }
 
 new CRUD();
+new dotsGenerator();

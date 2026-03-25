@@ -29,8 +29,11 @@
             <form-group title="Lozinka" type="text" icon="User"></form-group>
          </form>
       </div>
-      <div class="container" data-js-entity-card-cont>
-      </div>
+      <section class="entity-card-slider">
+         <div class="container" data-js-entity-card-cont>
+
+         </div>
+      </section>
    </main>
    <svg class="line" width="120%" height="120%" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" version="1.1">
       <defs>
@@ -39,14 +42,10 @@
             <stop offset="100%" style="stop-color:#ffffff; stop-opacity:1" />
          </linearGradient>
 
-         <!-- Drop shadow с сильным размазыванием -->
          <filter id="auroraShadow" x="-50%" y="-50%" width="200%" height="200%">
-            <!-- берём альфу исходного контура -->
             <feFlood flood-color="rgba(0, 255, 255, 1)" result="glowColor" />
             <feComposite in="glowColor" in2="SourceAlpha" operator="in" result="glow" />
-            <!-- размытие для мягкого свечения -->
             <feGaussianBlur in="glow" stdDeviation="100" result="blurredGlow" />
-            <!-- объединение свечения с исходной фигурой -->
             <feMerge>
                <feMergeNode in="blurredGlow" />
                <feMergeNode in="SourceGraphic" />
@@ -74,10 +73,7 @@
 
       <path d="M 0 120 C 200 220, 400 120, 600 320 S 800 520, 800 720" stroke="url(#auroraGradient)" stroke-width="10"
          fill="none" filter="url(#auroraShadow)" stroke-linecap="round" />
-
-
    </svg>
-
 </body>
 
 </html>
