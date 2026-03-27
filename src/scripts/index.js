@@ -39,11 +39,14 @@ class CRUD {
 
         this.bindEvents();
 
-        fetch('https://jsonplaceholder.typicode.com/todos')
+        fetch('https://mocki.io/v1/8b08d074-93c2-42be-bb3c-94d1248c9925')
             .then(response => response.json())
-            .then(data => data.forEach((el, i) => {
-                this.container.append(this.createEntityCardEl(el));
-            }))
+            .then(data => {
+                console.log(data);
+                data.forEach((el, i) => {
+                    this.container.append(this.createEntityCardEl(el));
+                })
+            })
     }
 
     createEntityCardEl(data) {

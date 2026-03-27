@@ -5,8 +5,6 @@ export class entityCard extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
-
-
     }
 
     render() {
