@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@boxicons/js": "^1.0.1",
-    "three": "^0.183.2"
+    "@splinetool/loader": "^1.12.72",
+    "@splinetool/runtime": "^1.12.72",
+    "three": "^0.150.1"
   }
 }

@@ -4,34 +4,8 @@
     box-sizing: border-box;
 }
 
-
-
-.glass-filter,
-.glass-overlay,
-.glass-specular {
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-}
-
-.glass-filter {
-    z-index: 1;
-    backdrop-filter: blur(4px);
-    filter: url(#glass-distortion) saturate(120%) brightness(1.15);
-}
-
-.glass-overlay {
-    z-index: 2;
-    background: var(--bg-color);
-}
-
-.glass-specular {
-    z-index: 3;
-    box-shadow: inset 1px 1px 10px var(--highlight);
-}
-
 :host {
-    flex: 0 0 300px;
+    width: 280px;
     padding: 1rem !important;
     border-radius: 0.8rem;
     display: flex;
@@ -39,6 +13,9 @@
     border: var(--border);
     row-gap: 0.8rem;
     position: relative;
+    backdrop-filter: blur(4px);
+    background-color: var(--bg-color);
+    scroll-snap-align: center;
 }
 
 ul {

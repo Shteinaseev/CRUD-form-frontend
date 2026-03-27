@@ -5,19 +5,12 @@ export class entityCard extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+
+
     }
 
     render() {
         this.shadowRoot.innerHTML = `
-            <svg style="display: none">
-                <filter id="glass-distortion">
-                    <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" result="noise" />
-                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="77" />
-                </filter>
-            </svg>
-            <div class="glass-filter"></div>
-            <div class="glass-overlay"></div>
-            <div class="glass-specular"></div>
             <style>
                 ${styles}
             </style>
@@ -40,6 +33,25 @@ export class entityCard extends HTMLElement {
     connectedCallback() {
         this.renderLiEls();
         this.render();
+        const parent = this.parentElement;
+        if (!parent) return;
+
+        const observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                if (mutation.attributeName === 'class') {
+                    if (parent.classList.contains('dragging')) {
+                        this.style.cursor = 'grab';
+                        this.style.userSelect = 'none';
+                    } else {
+                        this.style.cursor = 'auto';
+                        this.style.userSelect = 'all';
+                    }
+                }
+            });
+        });
+
+        observer.observe(parent, { attributes: true });
+
     }
 }
 

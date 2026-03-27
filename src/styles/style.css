@@ -83,16 +83,44 @@ canvas {
 .entity-card-slider {
     flex-shrink: 0;
     margin-inline: auto;
+    width: calc(100vw - 35rem);
+
+    svg {
+        width: 3.125rem;
+        height: 3.125rem;
+        position: absolute;
+        background-color: var(--bg-color);
+        backdrop-filter: blur(15px);
+        border-radius: 50%;
+        box-shadow: rgba(255, 255, 255, 0.25) 0px 50px 100px -20px,
+            rgba(255, 255, 255, 0.3) 0px 30px 60px -30px,
+            rgba(255, 255, 255, 0.35) 0px -2px 6px 0px inset;
+        top: 50%;
+        translate: 0 -50%;
+    }
 }
 
 .container {
-    display: flex;
-    width: 100vw;
+    display: grid;
+    width: 100%;
+    grid-auto-flow: column;
     position: relative;
-    gap: 1rem;
-    overflow-x: scroll;
+    padding-inline: 2rem;
+    overflow-x: hidden;
     scroll-behavior: smooth;
     scroll-snap-type: x proximity;
+
+    /* @media screen and (max-width: 900px) {
+        grid-auto-columns: calc((100% / 4) - 0.6rem);
+    }
+
+    @media screen and (max-width: 600px) {
+        grid-auto-columns: calc((100% / 2.5) - 0.6rem);
+    }
+
+    @media screen and (max-width: 480px) {
+        grid-auto-columns: 100%;
+    } */
 }
 
 .glass-filter,

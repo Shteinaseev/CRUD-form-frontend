@@ -6,6 +6,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
    <title>crud form</title>
    <script type="module" src="/src/scripts/index.js"></script>
+   <script type="module" src="/src/scripts/fluid-gradient.js"></script>
    <link rel="stylesheet" href="src/styles/style.css">
 </head>
 
@@ -16,7 +17,6 @@
          <feDisplacementMap in="SourceGraphic" in2="noise" scale="77" />
       </filter>
    </svg>
-   <div class="gradient"></div>
    <main class="content" data-js>
       <div class="glass-form">
          <div class="glass-filter"></div>
@@ -30,50 +30,15 @@
          </form>
       </div>
       <section class="entity-card-slider">
+         <i data-bx="chevron-right" data-width="64" data-height="64"></i>
          <div class="container" data-js-entity-card-cont>
 
          </div>
+         <i data-bx="chevron-left" data-width="64" data-height="64"></i>
+
       </section>
    </main>
-   <svg class="line" width="120%" height="120%" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" version="1.1">
-      <defs>
-         <linearGradient id="auroraGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#0f5ec5; stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#ffffff; stop-opacity:1" />
-         </linearGradient>
 
-         <filter id="auroraShadow" x="-50%" y="-50%" width="200%" height="200%">
-            <feFlood flood-color="rgba(0, 255, 255, 1)" result="glowColor" />
-            <feComposite in="glowColor" in2="SourceAlpha" operator="in" result="glow" />
-            <feGaussianBlur in="glow" stdDeviation="100" result="blurredGlow" />
-            <feMerge>
-               <feMergeNode in="blurredGlow" />
-               <feMergeNode in="SourceGraphic" />
-            </feMerge>
-         </filter>
-      </defs>
-
-      <path d="M 0 0 C 200 100, 400 0, 600 200 S 800 400, 800 600" stroke="url(#auroraGradient)" stroke-width="10"
-         fill="none" filter="url(#auroraShadow)" stroke-linecap="round" />
-
-      <path d="M 0 -40 C 200 60, 400 -40, 600 160 S 800 360, 800 560" stroke="url(#auroraGradient)" stroke-width="10"
-         fill="none" filter="url(#auroraShadow)" stroke-linecap="round" />
-
-      <path d="M 0 40 C 200 140, 400 40, 600 240 S 800 440, 800 640" stroke="url(#auroraGradient)" stroke-width="10"
-         fill="none" filter="url(#auroraShadow)" stroke-linecap="round" />
-
-      <path d="M 0 -80 C 200 20, 400 -80, 600 120 S 800 320, 800 520" stroke="url(#auroraGradient)" stroke-width="10"
-         fill="none" filter="url(#auroraShadow)" stroke-linecap="round" />
-
-      <path d="M 0 80 C 200 180, 400 80, 600 280 S 800 480, 800 680" stroke="url(#auroraGradient)" stroke-width="10"
-         fill="none" filter="url(#auroraShadow)" stroke-linecap="round" />
-
-      <path d="M 0 -120 C 200 -20, 400 -120, 600 80 S 800 280, 800 480" stroke="url(#auroraGradient)" stroke-width="10"
-         fill="none" filter="url(#auroraShadow)" stroke-linecap="round" />
-
-      <path d="M 0 120 C 200 220, 400 120, 600 320 S 800 520, 800 720" stroke="url(#auroraGradient)" stroke-width="10"
-         fill="none" filter="url(#auroraShadow)" stroke-linecap="round" />
-   </svg>
 </body>
 
 </html>
