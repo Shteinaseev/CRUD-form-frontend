@@ -3,7 +3,19 @@ input {
     outline: none;
     border: none;
     transition: .2s;
+
+    &[type="date"]::-webkit-calendar-picker-indicator {
+        position: absolute;
+        right: 1rem;
+    }
+
+    &[type="number"]::-webkit-outer-spin-button,
+    &[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 }
+
 
 * {
     margin: 0;
@@ -16,6 +28,7 @@ input {
     flex-direction: column;
     gap: 0.3rem;
     padding-block: 0.3rem;
+    --cl: color-mix(in srgb, var(--color-accent) 30%, transparent);
 }
 
 label {
@@ -24,6 +37,7 @@ label {
 
 .block {
     width: 100%;
+    display: flex;
     position: relative;
     z-index: 2;
 
@@ -32,7 +46,7 @@ label {
         top: 50%;
         transform: translateY(-50%);
         z-index: 3;
-        right: 15px;
+        right: 1rem;
         height: 1.25rem;
         transition: .3s;
     }
@@ -47,7 +61,6 @@ label {
         color: var(--color-primary);
         font-weight: 300;
         border: var(--border);
-        --cl: color-mix(in srgb, var(--color-accent) 30%, transparent);
 
         &:valid,
         &:focus {
@@ -59,4 +72,17 @@ label {
             top: 30%;
         }
     }
+}
+
+.radio-group {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    justify-content: center;
+    height: 2.5rem;
+    background-color: var(--bg-color);
+    backdrop-filter: blur(10px);
+    border-radius: .8rem;
+    border: 2px solid var(--cl);
+    box-shadow: var(--box-shadow);
 }

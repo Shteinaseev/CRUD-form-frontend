@@ -80,73 +80,10 @@ canvas {
 
 .entity-card-slider {
     flex-shrink: 0;
-    width: calc(100vw - 35rem);
+    display: flex;
+    gap: 2rem;
+    max-width: 50rem;
     position: relative;
-
-    svg {
-        width: 3.125rem;
-        height: 3.125rem;
-        position: absolute;
-        background-color: var(--bg-color);
-        backdrop-filter: blur(15px);
-        border-radius: 50%;
-        box-shadow: rgba(255, 255, 255, 0.25) 0px 50px 100px -20px,
-            rgba(255, 255, 255, 0.3) 0px 30px 60px -30px,
-            rgba(255, 255, 255, 0.35) 0px -2px 6px 0px inset;
-        top: 50%;
-        translate: 0 -50%;
-        z-index: 1;
-
-        &:hover {
-            opacity: .8;
-        }
-    }
-
-    #left {
-        left: 0;
-    }
-
-    #right {
-        right: 0;
-    }
-
-}
-
-.container {
-    display: grid;
-    width: 100%;
-    grid-auto-flow: column;
-    position: relative;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    scroll-snap-type: x proximity;
-    scrollbar-width: 0;
-
-    &.no-transition {
-        scroll-behavior: auto;
-    }
-
-    &.dragging {
-        scroll-behavior: auto;
-        scroll-snap-type: none;
-
-    }
-
-    &::-webkit-scrollbar {
-        display: none;
-    }
-
-    /* @media screen and (max-width: 900px) {
-        grid-auto-columns: calc((100% / 4) - 0.6rem);
-    }
-
-    @media screen and (max-width: 600px) {
-        grid-auto-columns: calc((100% / 2.5) - 0.6rem);
-    }
-
-    @media screen and (max-width: 480px) {
-        grid-auto-columns: 100%;
-    } */
 }
 
 .glass-filter,
@@ -176,7 +113,7 @@ canvas {
 .glass-form {
     position: relative;
     min-width: 28rem;
-    height: 35rem;
+    min-height: 35rem;
     border-radius: 1rem;
     overflow: hidden;
 

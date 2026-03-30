@@ -29,16 +29,19 @@
          <form class="glass-content">
             <form-group title="Ime" type="text" icon="User"></form-group>
             <form-group title="Prezime" type="text" icon="User"></form-group>
-            <form-group title="JMBG" type="text" icon="User"></form-group>
-            <form-group title="Lozinka" type="text" icon="User"></form-group>
+            <form-group title="Datum rodjenja" type="date" icon=""></form-group>
+            <form-group title="JMBG" type="text" icon="User" min-length="13" max-length="13" number="true"></form-group>
+            <form-group title="Broj Stana" type="number" icon="Home"></form-group>
+            <form-group title="Telefon fiksni" type="tel" icon="Phone"></form-group>
+            <form-group title="Telefon mobilni" type="tel" icon="Phone"></form-group>
+            <form-group title="Nova lozinka" type="text" icon="Lock"></form-group>
+            <form-group title="Potvrda nove lozinke" type="text" icon="Lock"></form-group>
+            <form-group title="Pol" type="radio" icon="User" value1="Muski" value2="Zenski" value3="Drugo"></form-group>
+
+
          </form>
       </div>
-      <section class="entity-card-slider">
-         <i class="arrow" id="right" data-js-arrow data-bx="chevron-right" data-width="64" data-height="64"></i>
-         <div class="container" data-js-entity-card-cont>
-         </div>
-         <i class="arrow" id="left" data-js-arrow data-bx="chevron-left" data-width="64" data-height="64"></i>
-      </section>
+      <section class="entity-card-slider" data-js-entity-card-cont></section>
    </main>
 </body>
 
