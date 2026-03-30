@@ -52,7 +52,7 @@ label {
     }
 
     input {
-        width: 100%;
+        width: 24.25rem;
         background-color: var(--bg-color);
         backdrop-filter: blur(10px);
         border-radius: .8rem;
@@ -75,9 +75,10 @@ label {
 }
 
 .radio-group {
+    width: 24.25rem;
     display: flex;
     align-items: center;
-    gap: 2.5rem;
+    gap: 1.5rem;
     justify-content: center;
     height: 2.5rem;
     background-color: var(--bg-color);
@@ -85,4 +86,32 @@ label {
     border-radius: .8rem;
     border: 2px solid var(--cl);
     box-shadow: var(--box-shadow);
+
+    .radio-block {
+        display: flex;
+        align-items: center;
+    }
+
+    input {
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 50%;
+        border: var(--border);
+        background-color: transparent;
+        appearance: none;
+        position: relative;
+        cursor: pointer;
+
+        &:checked::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0.75rem;
+            height: 0.75rem;
+            background-color: var(--color-primary);
+            border-radius: 50%;
+        }
+    }
 }

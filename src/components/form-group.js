@@ -1,7 +1,7 @@
 import styles from './form-group.css?inline';
 import * as icons from '@boxicons/js';
 
-export class formGroup extends HTMLElement {
+export class FormGroup extends HTMLElement {
 
     static get observedAttributes() {
         return ['title', 'type', 'icon', 'min-length', 'max-length', 'number'];
@@ -40,6 +40,7 @@ export class formGroup extends HTMLElement {
             this.attrsString = '';
         }
 
+        this.id = this.title.toLowerCase().replace(/\s/g, '-') + '-' + Math.floor(Math.random() * 1000);
         this.render();
         const input = this.shadowRoot.querySelector('.field-control');
         if (input) {
@@ -65,8 +66,8 @@ export class formGroup extends HTMLElement {
         this.generateValuesList();
 
         if (this.type === 'radio') {
+            block.classList.add('radio-group');
             this.valuesList.forEach((value, i) => {
-                block.classList.add('radio-group');
                 block.innerHTML += `
                     <div class="radio-block">
                         <input id="${this.id}-${i}" name="${this.title}" class="field-control" type="radio" value="${value}">
@@ -104,4 +105,4 @@ export class formGroup extends HTMLElement {
 
 }
 
-customElements.define("form-group", formGroup); 
+customElements.define("form-group", FormGroup); 

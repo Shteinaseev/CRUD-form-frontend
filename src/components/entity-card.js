@@ -7,6 +7,15 @@ export class entityCard extends HTMLElement {
         this.attachShadow({ mode: 'open' });
     }
 
+    set data(value) {
+        this._data = value;
+        this.render();
+    }
+
+    get data() {
+        return this._data;
+    }
+
     render() {
         this.shadowRoot.innerHTML = `
             <style>
@@ -23,8 +32,8 @@ export class entityCard extends HTMLElement {
     }
 
     renderLiEls() {
-        for (let attr of this.attributes) {
-            this.liElementsList.push(`<li>${attr.name}: ${attr.value}</li>`);
+        for (const [key, value] of Object.entries(this._data)) {
+            this.liElementsList.push(`<li>${key}: ${value}</li>`);
         }
     }
 

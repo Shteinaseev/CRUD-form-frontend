@@ -1,4 +1,4 @@
-import { formGroup } from "../components/form-group";
+import { FormGroup } from "../components/form-group";
 import { dotsGenerator } from "./dots";
 import { entityCard } from "../components/entity-card";
 import { ReflectGradient } from "./reflect-gradient";
@@ -37,7 +37,7 @@ class CRUD {
 
     createEntityCardEl(data) {
         const card = document.createElement('entity-card');
-        this.updateAttrs(card, data);
+        card.data = data;
         return card;
     }
 
