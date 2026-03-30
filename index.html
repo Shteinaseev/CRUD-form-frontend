@@ -6,7 +6,6 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
    <title>crud form</title>
    <script type="module" src="/src/scripts/index.js"></script>
-   <script type="module" src="/src/scripts/fluid-gradient.js"></script>
    <link rel="stylesheet" href="src/styles/style.css">
 </head>
 
@@ -17,7 +16,11 @@
          <feDisplacementMap in="SourceGraphic" in2="noise" scale="77" />
       </filter>
    </svg>
-   <canvas id="canvas3d"></canvas>
+
+   <!-- <canvas id="canvas3d"></canvas> -->
+   <div class="reflect-container" data-js-reflect-container>
+      <div class="backdrop-blur-md" data-js-blur-overlay></div>
+   </div>
    <main class="content" data-js>
       <div class="glass-form">
          <div class="glass-filter"></div>
@@ -31,15 +34,12 @@
          </form>
       </div>
       <section class="entity-card-slider">
-         <i data-bx="chevron-right" data-width="64" data-height="64"></i>
+         <i class="arrow" id="right" data-js-arrow data-bx="chevron-right" data-width="64" data-height="64"></i>
          <div class="container" data-js-entity-card-cont>
-
          </div>
-         <i data-bx="chevron-left" data-width="64" data-height="64"></i>
-
+         <i class="arrow" id="left" data-js-arrow data-bx="chevron-left" data-width="64" data-height="64"></i>
       </section>
    </main>
-
 </body>
 
 </html>

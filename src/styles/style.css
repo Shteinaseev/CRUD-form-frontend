@@ -43,8 +43,6 @@ canvas {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: -2;
-    height: 50vh;
 }
 
 .gradient {
@@ -82,8 +80,8 @@ canvas {
 
 .entity-card-slider {
     flex-shrink: 0;
-    margin-inline: auto;
     width: calc(100vw - 35rem);
+    position: relative;
 
     svg {
         width: 3.125rem;
@@ -97,7 +95,21 @@ canvas {
             rgba(255, 255, 255, 0.35) 0px -2px 6px 0px inset;
         top: 50%;
         translate: 0 -50%;
+        z-index: 1;
+
+        &:hover {
+            opacity: .8;
+        }
     }
+
+    #left {
+        left: 0;
+    }
+
+    #right {
+        right: 0;
+    }
+
 }
 
 .container {
@@ -105,10 +117,24 @@ canvas {
     width: 100%;
     grid-auto-flow: column;
     position: relative;
-    padding-inline: 2rem;
-    overflow-x: hidden;
+    overflow-x: auto;
     scroll-behavior: smooth;
     scroll-snap-type: x proximity;
+    scrollbar-width: 0;
+
+    &.no-transition {
+        scroll-behavior: auto;
+    }
+
+    &.dragging {
+        scroll-behavior: auto;
+        scroll-snap-type: none;
+
+    }
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 
     /* @media screen and (max-width: 900px) {
         grid-auto-columns: calc((100% / 4) - 0.6rem);
@@ -210,4 +236,46 @@ canvas {
         transform: translate(-10%, -20%)
     }
 
+}
+
+.backdrop-blur-none {
+    backdrop-filter: blur(0px);
+}
+
+.backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+}
+
+.backdrop-blur-md {
+    backdrop-filter: blur(8px);
+}
+
+.backdrop-blur-lg {
+    backdrop-filter: blur(12px);
+}
+
+.backdrop-blur-xl {
+    backdrop-filter: blur(16px);
+}
+
+.backdrop-blur-2xl {
+    backdrop-filter: blur(24px);
+}
+
+.backdrop-blur-3xl {
+    backdrop-filter: blur(40px);
+}
+
+.liquid-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+#container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
 }

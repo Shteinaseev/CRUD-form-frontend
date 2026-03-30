@@ -1,158 +1,227 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Neon Gradient Wave</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shader Background</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <style>
-    * {
+    body, html {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      min-height: 100dvh;
-      background: #0a0e1f;
-      color: white;
-      font-family: system-ui, sans-serif;
       overflow: hidden;
+      height: 100%;
+      background: #000;
     }
 
-    .container {
+    #container {
       position: relative;
       width: 100%;
-      height: 100dvh;
-      display: grid;
-      place-items: center;
+      height: 100%;
     }
 
-    .background {
+    canvas {
+      display: block;
       position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, #0f1e5a, #1a0d3a, #002b3d, #0f1e5a);
-      background-size: 300% 300%;
-      animation: bgShift 18s ease infinite;
-      filter: brightness(0.9) contrast(1.15);
+      top: 0;
+      left: 0;
     }
 
-    @keyframes bgShift {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .glow-shape {
-      position: absolute;
-      width: 140vmin;
-      height: 140vmin;
-      background: conic-gradient(
-        from 90deg at 50% 50%,
-        #00d4ff 0deg,
-        #7c00ff  80deg,
-        #00f2ff  140deg,
-        #a100ff  220deg,
-        #00eaff  300deg,
-        #b300ff  360deg
-      );
-      border-radius: 47% 53% 51% 49% / 48% 52% 48% 52%;
-      top: 50%;
-      left: 50%;
-      translate: -50% -50%;
-      animation: 
-        flow 22s linear infinite,
-        rotate 60s linear infinite;
-      filter: blur(60px) brightness(1.4);
-      opacity: 0.85;
-      mix-blend-mode: screen;
-    }
-
-    .glow-shape:nth-child(2) {
-      animation-delay: -11s;
-      opacity: 0.6;
-      filter: blur(90px) brightness(1.6);
-    }
-
-    @keyframes flow {
-      0%   { border-radius: 47% 53% 51% 49% / 48% 52% 48% 52%; }
-      25%  { border-radius: 62% 38% 44% 56% / 55% 45% 55% 45%; }
-      50%  { border-radius: 38% 62% 56% 44% / 45% 55% 45% 55%; }
-      75%  { border-radius: 53% 47% 49% 51% / 52% 48% 52% 48%; }
-      100% { border-radius: 47% 53% 51% 49% / 48% 52% 48% 52%; }
-    }
-
-    @keyframes rotate {
-      to { rotate: 1turn; }
-    }
-
-    .content {
-      position: relative;
-      z-index: 10;
-      text-align: center;
-      padding: 3rem;
-      text-shadow: 0 0 20px rgba(0,180,255,0.7);
-    }
-
-    h1 {
-      font-size: clamp(3.5rem, 12vw, 9rem);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      background: linear-gradient(90deg, #00eaff, #c700ff, #00f2ff, #a500ff);
-      background-size: 300%;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      animation: textFlow 8s linear infinite;
-    }
-
-    @keyframes textFlow {
-      to { background-position: 300%; }
-    }
-
-    p {
-      font-size: 1.4rem;
-      max-width: 600px;
-      margin: 1.5rem auto;
-      opacity: 0.9;
-    }
-
-    .learn-more {
-      display: inline-block;
-      margin-top: 2rem;
-      padding: 1rem 2.5rem;
-      font-size: 1.3rem;
-      color: white;
-      text-decoration: none;
-      border: 2px solid rgba(0, 220, 255, 0.5);
-      border-radius: 50px;
-      backdrop-filter: blur(10px);
-      transition: all 0.4s;
-    }
-
-    .learn-more:hover {
-      background: rgba(0, 220, 255, 0.15);
-      border-color: #00eaff;
-      box-shadow: 0 0 30px rgba(0, 220, 255, 0.6);
-    }
+    /* Пример backdrop blur (можно менять классы) */
+    .backdrop-blur-sm  { backdrop-filter: blur(4px); }
+    .backdrop-blur-md  { backdrop-filter: blur(8px); }
+    .backdrop-blur-lg  { backdrop-filter: blur(12px); }
+    .backdrop-blur-xl  { backdrop-filter: blur(16px); }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="background"></div>
-  <div class="glow-shape"></div>
-  <div class="glow-shape"></div>
-
-  <div class="content">
-    <h1>DIGITAL<br>TECHNOLOGY</h1>
-    <p>How our technology helps<br>global businesses</p>
-    <a href="#" class="learn-more">Learn more →</a>
-    <p style="margin-top:4rem; font-size:1.1rem; opacity:0.7;">
-      World Technology, Co.<br>
-      www.example.com
-    </p>
-  </div>
+<div id="container">
+  <canvas id="shader-canvas"></canvas>
+  
+  <!-- Слой с блюром (по желанию) -->
+  <div id="blur-layer" class="backdrop-blur-sm"></div>
 </div>
+
+<script>
+// ====================== Shader Background (Vanilla + Three.js) ======================
+
+class ShaderBackground {
+  constructor({
+    color = "#07eae6",      // hex цвет свечения
+    blurAmount = "sm",      // "none" | "sm" | "md" | "lg" | "xl"
+    containerId = "container"
+  } = {}) {
+    this.container = document.getElementById(containerId);
+    this.canvas = document.getElementById("shader-canvas");
+    
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.canvas,
+      antialias: false,
+      alpha: false
+    });
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    this.uniforms = {
+      iTime:       { value: 0 },
+      iResolution: { value: new THREE.Vector2() },
+      iMouse:      { value: new THREE.Vector2(0, 0) },
+      u_color:     { value: new THREE.Color(color) }
+    };
+
+    this.material = new THREE.ShaderMaterial({
+      uniforms: this.uniforms,
+      vertexShader: this.vertexShader(),
+      fragmentShader: this.fragmentShader(),
+      depthWrite: false,
+      depthTest: false
+    });
+
+    const geometry = new THREE.PlaneGeometry(2, 2);
+    this.mesh = new THREE.Mesh(geometry, this.material);
+    this.scene.add(this.mesh);
+
+    this.isHovering = false;
+    this.mouse = { x: 0, y: 0 };
+
+    this.initEvents();
+    this.resize();
+    this.animate();
+
+    // Применяем blur
+    this.setBlur(blurAmount);
+  }
+
+  vertexShader() {
+    return `
+      void main() {
+        gl_Position = vec4(position, 1.0);
+      }
+    `;
+  }
+
+  fragmentShader() {
+    return `
+      precision mediump float;
+
+      uniform vec2 iResolution;
+      uniform float iTime;
+      uniform vec2 iMouse;
+      uniform vec3 u_color;
+
+      void main() {
+        vec2 fragCoord = gl_FragCoord.xy;
+        vec2 uv = (fragCoord - iResolution * 0.5) / min(iResolution.x, iResolution.y);
+
+        vec2 mouse_uv = (iMouse - iResolution * 0.5) / min(iResolution.x, iResolution.y);
+
+        float t = iTime * 0.5;
+
+        // Mouse influence
+        float mouseInfluence = 0.0;
+        if (length(iMouse) > 10.0) {
+          float dist = distance(uv, mouse_uv);
+          mouseInfluence = smoothstep(0.8, 0.0, dist);
+        }
+
+        // Turbulence / distortion
+        for(float i = 8.0; i < 20.0; i++) {
+          uv.x += 0.6 / i * cos(i * 2.5 * uv.y + t);
+          uv.y += 0.6 / i * cos(i * 1.5 * uv.x + t);
+        }
+
+        float wave = abs(sin(t - uv.y - uv.x + mouseInfluence * 8.0));
+        float glow = smoothstep(0.9, 0.0, wave);
+
+        vec3 color = glow * u_color;
+        
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `;
+  }
+
+  initEvents() {
+    window.addEventListener('resize', () => this.resize());
+
+    this.canvas.addEventListener('mousemove', (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      this.mouse.x = e.clientX - rect.left;
+      this.mouse.y = e.clientY - rect.top;
+      this.isHovering = true;
+    });
+
+    this.canvas.addEventListener('mouseenter', () => {
+      this.isHovering = true;
+    });
+
+    this.canvas.addEventListener('mouseleave', () => {
+      this.isHovering = false;
+      this.uniforms.iMouse.value.set(0, 0);
+    });
+  }
+
+  resize() {
+    const width = this.container.clientWidth;
+    const height = this.container.clientHeight;
+
+    this.renderer.setSize(width, height);
+    this.uniforms.iResolution.value.set(width, height);
+  }
+
+  setColor(hexColor) {
+    this.uniforms.u_color.value.set(hexColor);
+  }
+
+  setBlur(blurSize) {
+    const blurLayer = document.getElementById('blur-layer');
+    blurLayer.className = ''; // сбрасываем
+
+    if (blurSize === 'none') return;
+
+    const classes = {
+      sm:  'backdrop-blur-sm',
+      md:  'backdrop-blur-md',
+      lg:  'backdrop-blur-lg',
+      xl:  'backdrop-blur-xl'
+    };
+
+    if (classes[blurSize]) {
+      blurLayer.classList.add(classes[blurSize]);
+    } else {
+      blurLayer.classList.add('backdrop-blur-sm');
+    }
+  }
+
+  animate() {
+    requestAnimationFrame(() => this.animate());
+
+    this.uniforms.iTime.value = performance.now() / 1000;
+
+    if (this.isHovering) {
+      this.uniforms.iMouse.value.set(this.mouse.x, this.canvas.clientHeight - this.mouse.y);
+    }
+
+    this.renderer.render(this.scene, this.camera);
+  }
+}
+
+// ====================== Использование ======================
+
+// Пример инициализации
+document.addEventListener('DOMContentLoaded', () => {
+  const background = new ShaderBackground({
+    color: "#07eae6",     // твой цвет (можно менять)
+    blurAmount: "md",     // none, sm, md, lg, xl
+    containerId: "container"
+  });
+
+  // Пример смены цвета позже:
+  // setTimeout(() => background.setColor("#ff00ff"), 3000);
+});
+</script>
 
 </body>
 </html>
