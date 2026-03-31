@@ -11,7 +11,7 @@ class CRUD {
     selectors = {
         root: '[data-js]',
         container: '[data-js-entity-card-cont]',
-        arrow: '[data-js-arrow]'
+        btnShowAll: '[data-js-show-all]'
     }
 
     constructor() {
@@ -21,21 +21,20 @@ class CRUD {
 
         this.root = document.querySelector(this.selectors.root);
         this.container = this.root.querySelector(this.selectors.container);
-        this.arrowsBtns = document.querySelectorAll('.arrow');
-        this.cardPervView = Math.round(this.container.offsetWidth / this.firstCardWidth);
+        this.btnShowAll = this.root.querySelector(this.selectors.btnShowAll);
 
         fetch('https://mocki.io/v1/840e113d-8cfc-4286-85d5-9742b876cb08')
             .then(response => response.json())
             .then(data => {
                 data = data.slice(0, 2);
                 data.forEach((el, i) => {
-                    this.container.append(this.createEntityCardEl(el));
+                    this.container.append(this.createEntityCardEl(el, i));
                 })
             })
-        // this.bindEvents();
+        this.bindEvents();
     }
 
-    createEntityCardEl(data) {
+    createEntityCardEl(data, i) {
         const card = document.createElement('entity-card');
         card.data = data;
         return card;
@@ -48,6 +47,12 @@ class CRUD {
     }
 
     bindEvents() {
+        this.btnShowAll.addEventListener('click', () => {
+            [...this.container.children].forEach((child, i) => {
+                child.classList.toggle('disactivated');
+            });
+            this.container.classList.toggle('disactivated');
+        });
     }
 }
 
