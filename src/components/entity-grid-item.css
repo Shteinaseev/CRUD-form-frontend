@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:host {
+    width: 21rem;
+    padding: 1rem;
+    border-radius: 0.8rem;
+    display: flex;
+    border: var(--border);
+    row-gap: 0.8rem;
+    position: relative;
+    backdrop-filter: blur(15px);
+    background-color: var(--bg-color);
+    scroll-snap-align: center;
+    z-index: 1;
+    transition-duration: .8s;
+}
+
+ul {
+    position: relative;
+    z-index: 4;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding-block: 0.3rem;
+    justify-content: center;
+    align-items: flex-start;
+}
