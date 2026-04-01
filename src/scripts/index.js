@@ -2,7 +2,7 @@ import { FormGroup } from "../components/form-group";
 import { dotsGenerator } from "./dots";
 import { entityCard } from "../components/entity-card";
 import { ReflectGradient } from "./reflect-gradient";
-import { getIcons, Alarm, ChevronLeft, ChevronRight } from '@boxicons/js';
+import { getIcons, Alarm, ChevronLeft, ChevronRight, Menu } from '@boxicons/js';
 
 class CRUD {
     isDragging = false;
@@ -16,7 +16,7 @@ class CRUD {
 
     constructor() {
         getIcons({
-            icons: { ChevronLeft, ChevronRight, Alarm }
+            icons: { ChevronLeft, ChevronRight, Alarm, Menu  }
         });
 
         this.root = document.querySelector(this.selectors.root);
@@ -52,9 +52,11 @@ class CRUD {
                 child.classList.toggle('disactivated');
             });
             this.container.classList.toggle('disactivated');
+            this.btnShowAll.classList.toggle('disactivated');
         });
     }
 }
 
 new CRUD();
 new ReflectGradient();
+

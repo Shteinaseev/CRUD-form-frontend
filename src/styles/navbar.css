@@ -1,0 +1,84 @@
+.navbar {
+    position: fixed;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 5rem;
+    height: 5rem;
+    aspect-ratio: 1;
+    padding: .5rem;
+    border-radius: 100%;
+    z-index: 1000;
+    box-shadow: 0 0 15px var(--color-primary);
+    --cl: color-mix(in srgb, var(--color-accent) 30%, transparent);
+    transition-duration: .4s;
+
+    &:hover {
+        box-shadow: 0 0 3rem var(--color-primary);
+    }
+}
+
+button {
+    border: none;
+}
+
+.burger-btn {
+    background-color: var(--bg-color);
+    border: var(--border);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    z-index: 4;
+    transition-duration: .4s;
+
+    &:hover {
+        background-color: var(--cl);
+    }
+
+    &:active {
+        background-color: var(--color-primary);
+        box-shadow: 0 0 20px var(--color-primary);
+    }
+
+    svg {
+        fill: var(--color-primary);
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
+
+.burger-btn .burger-btn i {
+    font-size: 0;
+    color: var(--color-light);
+}
+
+.navbar.scrolled .burger-btn {
+    opacity: 0.45;
+    background-color: #000000;
+    backdrop-filter: blur(10px);
+    border: 1px solid #ffffff33;
+    pointer-events: all;
+}
+
+.navbar.scrolled .burger-btn i {
+    font-size: 1.4rem;
+}
+
+
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce),
+(max-width: 480px) and (max-device-width: 480px) {
+    .glass-filter {
+        backdrop-filter: blur(4px) saturate(110%) !important;
+        filter: none !important;
+        /* ← отключаем svg distortion полностью */
+    }
+}

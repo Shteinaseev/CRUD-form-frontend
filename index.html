@@ -7,6 +7,7 @@
    <title>crud form</title>
    <script type="module" src="/src/scripts/index.js"></script>
    <link rel="stylesheet" href="src/styles/style.css">
+   <link rel="stylesheet" href="src/styles/navbar.css">
 </head>
 
 <body>
@@ -21,8 +22,16 @@
    <div class="reflect-container" data-js-reflect-container>
       <div class="backdrop-blur-md" data-js-blur-overlay></div>
    </div>
+   <nav class="navbar" aria-label="Main menu">
+      <div class="glass-filter"></div>
+      <div class="glass-overlay"></div>
+      <div class="glass-specular"></div>
+      <button class="burger-btn" aria-label="Open the menu" aria-expanded="false">
+         <i data-bx="menu"></i>
+      </button>
+   </nav>
    <main class="content" data-js>
-      <div class="glass-form">
+      <aside class="glass-form">
          <div class="glass-filter"></div>
          <div class="glass-overlay"></div>
          <div class="glass-specular"></div>
@@ -42,12 +51,12 @@
             <form-group title="Username" type="text" icon="User"></form-group>
             <button class="btn" type="submit">Pošalji</button>
          </form>
-      </div>
+      </aside>
       <section class="entity-card-slider">
          <div class="container" data-js-entity-card-cont>
 
          </div>
-         <button class="btn btn-transparent animation" data-js-show-all>Prikaži sve</button>
+         <button class="btn btn-transparent" style="--i:10; --j:10" data-js-show-all>Prikaži sve</button>
       </section>
    </main>
 </body>
