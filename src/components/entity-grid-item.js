@@ -30,7 +30,7 @@ export class EntityGridItem extends HTMLElement {
 
     renderLiEls() {
         for (const [key, value] of Object.entries(this._data)) {
-            this.liElementsList.push(`<li>${key}: ${value}</li>`);
+            this.liElementsList.push(`<li><strong>${key}:</strong><span> ${value}</span></li>`);
         }
     }
 

@@ -70,32 +70,38 @@ canvas {
 }
 
 .content {
-    display: flex;
     width: 100vw;
     overflow: hidden;
-    justify-content: end;
 }
 
 .entity-card-slider {
-    flex-shrink: 0;
+    min-height: 75vh;
     margin-top: 1rem;
-    max-width: 50rem;
-    position: relative;
     display: flex;
+    position: relative;
     flex-direction: column;
-    align-items: end;
+    row-gap: 1rem;
 
     .container {
         display: flex;
         column-gap: 2rem;
         transition-duration: 1s;
         transform: translateX(0);
+        align-self: flex-end;
 
         &.disactivated {
             transform: translateX(120%);
         }
+
     }
 
+    .btn {
+        align-self: flex-end;
+
+        &.disactivated {
+            transform: translateX(20vw);
+        }
+    }
 }
 
 .glass-filter,
@@ -233,7 +239,14 @@ entity-card {
     }
 }
 
+.hidden {
+    display: none;
+}
+
 .btn-transparent {
+    position: absolute;
+    right: 0;
+    bottom: 0;
     padding: 0.5rem;
     color: var(--highlight);
     background-color: var(--bg-color);
