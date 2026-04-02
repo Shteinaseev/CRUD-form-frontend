@@ -77,21 +77,40 @@ class CRUD {
         }
     }
 
+    #waitTransition(el, timeout = 1000) {
+        return new Promise(resolve => {
+            const onEnd = e => {
+                if (e.target !== el) return;
+                el.removeEventListener('transitionend', onEnd);
+                clearTimeout(timer);
+                resolve();
+            };
+            const timer = setTimeout(() => {
+                el.removeEventListener('transitionend', onEnd);
+                resolve();
+            }, timeout);
+            el.addEventListener('transitionend', onEnd);
+        })
+    }
+
+    #removeWithAnimation() {
+        return new Promise(resolve => {
+            void el.offsetWidth;
+            el.classList.add('disactivated');
+
+        })
+        resolve();
+    }
+
     bindEvents() {
+        this._isExpanded = true;
+        this._isAnimating = false;
+
         this.btnShowAll.addEventListener('click', () => {
             [...this.container.children].forEach((child, i) => {
-                child.classList.toggle('disactivated');
-                setTimeout(() => {
-                    child.remove();
-                }, 500);
+                child.classList.add('disactivated');
             });
-            this.container.classList.toggle('disactivated');
-            this.btnShowAll.classList.add('disactivated');
-            setTimeout(() => {
-                this.renderGridItems();
-                this.btnShowAll.textContent = "Vratiti nazad";
-                this.btnShowAll.classList.remove('disactivated');
-            }, 600);
+            this.container.classList.add('disactivated');
         });
         this.navbar.addEventListener('click', () => {
             this.postForm.classList.toggle('active');

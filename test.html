@@ -1,12 +1,35 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shader Background</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <style>
-    body, html {
+    :root {
+      --bg-color: #ffffff10;
+      --highlight: #ffffffa9;
+      --color-primary: #ffffff;
+      --color-secondary: #000000;
+      --color-accent: #010c5b;
+      --color-aqua: #02abcc;
+      --color-dark-purple: #29208b;
+      --color-accent-muted: #0f5ec5;
+      --color-danger: #ef444459;
+
+      --border: 2px solid #ffffff22;
+      --padding-x: 3.76rem;
+      --box-shadow:
+        inset 0px 0px 10px var(--highlight),
+        inset 0px 0px 10px var(--color-accent-muted),
+        0px 0px 100px var(--color-accent-muted),
+        0px 0px 100px var(--highlight);
+
+    }
+
+    body,
+    html {
       margin: 0;
       padding: 0;
       overflow: hidden;
@@ -27,84 +50,189 @@
       left: 0;
     }
 
+    .glass-form {
+      position: absolute;
+      min-width: 35rem;
+      height: 100vh;
+      border-radius: 1rem;
+      overflow: hidden;
+      transition-duration: .8s;
+      z-index: 10;
+      top: 0;
+      left: 0;
+
+      .glass-filter {
+        z-index: 11;
+      }
+
+      .glass-overlay {
+        z-index: 12;
+      }
+
+      .glass-specular {
+        z-index: 13;
+      }
+
+      &.active {
+        filter: blur(0px);
+        transform: translateX(0);
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        z-index: 14;
+        padding: 30px;
+        height: 100%;
+        overflow: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+
+        &::-webkit-scrollbar {
+          width: 10px;
+          transition: .3s;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: linear-gradient(to bottom, var(--color-aqua), var(--color-accent-muted));
+          border-radius: 10px;
+          border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        form-group {
+          opacity: 0;
+          animation: fadeInUp 0.5s ease-out forwards;
+
+        }
+
+        /* Стагированный эффект - каждый элемент появляется с задержкой */
+        form-group:nth-child(1) {
+          animation-delay: 0.1s;
+        }
+
+        form-group:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+
+        form-group:nth-child(3) {
+          animation-delay: 0.3s;
+        }
+
+        form-group:nth-child(4) {
+          animation-delay: 0.4s;
+        }
+
+        form-group:nth-child(n+5) {
+          animation-delay: 0.5s;
+        }
+
+      }
+    }
+
     /* Пример backdrop blur (можно менять классы) */
-    .backdrop-blur-sm  { backdrop-filter: blur(4px); }
-    .backdrop-blur-md  { backdrop-filter: blur(8px); }
-    .backdrop-blur-lg  { backdrop-filter: blur(12px); }
-    .backdrop-blur-xl  { backdrop-filter: blur(16px); }
+    .backdrop-blur-sm {
+      backdrop-filter: blur(4px);
+    }
+
+    .backdrop-blur-md {
+      backdrop-filter: blur(8px);
+    }
+
+    .backdrop-blur-lg {
+      backdrop-filter: blur(12px);
+    }
+
+    .backdrop-blur-xl {
+      backdrop-filter: blur(16px);
+    }
   </style>
 </head>
+
 <body>
 
-<div id="container">
-  <canvas id="shader-canvas"></canvas>
-  
-  <!-- Слой с блюром (по желанию) -->
-  <div id="blur-layer" class="backdrop-blur-sm"></div>
-</div>
+  <div id="container">
+    <canvas id="shader-canvas"></canvas>
+    <!-- Слой с блюром (по желанию) -->
+    <div id="blur-layer" class="backdrop-blur-sm"></div>
+    <div class="glass-form" data-js-post-form>
+      <div class="glass-filter"></div>
+      <div class="glass-overlay"></div>
+      <div class="glass-specular"></div>
+      <form class="glass-content">
+        <input type="text"><input type="text"><input type="text"><input type="text">
+        <button class="btn" type="submit">Pošalji</button>
+      </form>
+    </div>
+  </div>
 
-<script>
-// ====================== Shader Background (Vanilla + Three.js) ======================
+  <script>
+    // ====================== Shader Background (Vanilla + Three.js) ======================
 
-class ShaderBackground {
-  constructor({
-    color = "#07eae6",      // hex цвет свечения
-    blurAmount = "sm",      // "none" | "sm" | "md" | "lg" | "xl"
-    containerId = "container"
-  } = {}) {
-    this.container = document.getElementById(containerId);
-    this.canvas = document.getElementById("shader-canvas");
-    
-    this.scene = new THREE.Scene();
-    this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    class ShaderBackground {
+      constructor({
+        color = "#07eae6",      // hex цвет свечения
+        blurAmount = "sm",      // "none" | "sm" | "md" | "lg" | "xl"
+        containerId = "container"
+      } = {}) {
+        this.container = document.getElementById(containerId);
+        this.canvas = document.getElementById("shader-canvas");
 
-    this.renderer = new THREE.WebGLRenderer({
-      canvas: this.canvas,
-      antialias: false,
-      alpha: false
-    });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-    this.uniforms = {
-      iTime:       { value: 0 },
-      iResolution: { value: new THREE.Vector2() },
-      iMouse:      { value: new THREE.Vector2(0, 0) },
-      u_color:     { value: new THREE.Color(color) }
-    };
+        this.renderer = new THREE.WebGLRenderer({
+          canvas: this.canvas,
+          antialias: false,
+          alpha: false
+        });
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    this.material = new THREE.ShaderMaterial({
-      uniforms: this.uniforms,
-      vertexShader: this.vertexShader(),
-      fragmentShader: this.fragmentShader(),
-      depthWrite: false,
-      depthTest: false
-    });
+        this.uniforms = {
+          iTime: { value: 0 },
+          iResolution: { value: new THREE.Vector2() },
+          iMouse: { value: new THREE.Vector2(0, 0) },
+          u_color: { value: new THREE.Color(color) }
+        };
 
-    const geometry = new THREE.PlaneGeometry(2, 2);
-    this.mesh = new THREE.Mesh(geometry, this.material);
-    this.scene.add(this.mesh);
+        this.material = new THREE.ShaderMaterial({
+          uniforms: this.uniforms,
+          vertexShader: this.vertexShader(),
+          fragmentShader: this.fragmentShader(),
+          depthWrite: false,
+          depthTest: false
+        });
 
-    this.isHovering = false;
-    this.mouse = { x: 0, y: 0 };
+        const geometry = new THREE.PlaneGeometry(2, 2);
+        this.mesh = new THREE.Mesh(geometry, this.material);
+        this.scene.add(this.mesh);
 
-    this.initEvents();
-    this.resize();
-    this.animate();
+        this.isHovering = false;
+        this.mouse = { x: 0, y: 0 };
 
-    // Применяем blur
-    this.setBlur(blurAmount);
-  }
+        this.initEvents();
+        this.resize();
+        this.animate();
 
-  vertexShader() {
-    return `
+        // Применяем blur
+        this.setBlur(blurAmount);
+      }
+
+      vertexShader() {
+        return `
       void main() {
         gl_Position = vec4(position, 1.0);
       }
     `;
-  }
+      }
 
-  fragmentShader() {
-    return `
+      fragmentShader() {
+        return `
       precision mediump float;
 
       uniform vec2 iResolution;
@@ -141,87 +269,88 @@ class ShaderBackground {
         gl_FragColor = vec4(color, 1.0);
       }
     `;
-  }
+      }
 
-  initEvents() {
-    window.addEventListener('resize', () => this.resize());
+      initEvents() {
+        window.addEventListener('resize', () => this.resize());
 
-    this.canvas.addEventListener('mousemove', (e) => {
-      const rect = this.canvas.getBoundingClientRect();
-      this.mouse.x = e.clientX - rect.left;
-      this.mouse.y = e.clientY - rect.top;
-      this.isHovering = true;
-    });
+        this.canvas.addEventListener('mousemove', (e) => {
+          const rect = this.canvas.getBoundingClientRect();
+          this.mouse.x = e.clientX - rect.left;
+          this.mouse.y = e.clientY - rect.top;
+          this.isHovering = true;
+        });
 
-    this.canvas.addEventListener('mouseenter', () => {
-      this.isHovering = true;
-    });
+        this.canvas.addEventListener('mouseenter', () => {
+          this.isHovering = true;
+        });
 
-    this.canvas.addEventListener('mouseleave', () => {
-      this.isHovering = false;
-      this.uniforms.iMouse.value.set(0, 0);
-    });
-  }
+        this.canvas.addEventListener('mouseleave', () => {
+          this.isHovering = false;
+          this.uniforms.iMouse.value.set(0, 0);
+        });
+      }
 
-  resize() {
-    const width = this.container.clientWidth;
-    const height = this.container.clientHeight;
+      resize() {
+        const width = this.container.clientWidth;
+        const height = this.container.clientHeight;
 
-    this.renderer.setSize(width, height);
-    this.uniforms.iResolution.value.set(width, height);
-  }
+        this.renderer.setSize(width, height);
+        this.uniforms.iResolution.value.set(width, height);
+      }
 
-  setColor(hexColor) {
-    this.uniforms.u_color.value.set(hexColor);
-  }
+      setColor(hexColor) {
+        this.uniforms.u_color.value.set(hexColor);
+      }
 
-  setBlur(blurSize) {
-    const blurLayer = document.getElementById('blur-layer');
-    blurLayer.className = ''; // сбрасываем
+      setBlur(blurSize) {
+        const blurLayer = document.getElementById('blur-layer');
+        blurLayer.className = ''; // сбрасываем
 
-    if (blurSize === 'none') return;
+        if (blurSize === 'none') return;
 
-    const classes = {
-      sm:  'backdrop-blur-sm',
-      md:  'backdrop-blur-md',
-      lg:  'backdrop-blur-lg',
-      xl:  'backdrop-blur-xl'
-    };
+        const classes = {
+          sm: 'backdrop-blur-sm',
+          md: 'backdrop-blur-md',
+          lg: 'backdrop-blur-lg',
+          xl: 'backdrop-blur-xl'
+        };
 
-    if (classes[blurSize]) {
-      blurLayer.classList.add(classes[blurSize]);
-    } else {
-      blurLayer.classList.add('backdrop-blur-sm');
+        if (classes[blurSize]) {
+          blurLayer.classList.add(classes[blurSize]);
+        } else {
+          blurLayer.classList.add('backdrop-blur-sm');
+        }
+      }
+
+      animate() {
+        requestAnimationFrame(() => this.animate());
+
+        this.uniforms.iTime.value = performance.now() / 1000;
+
+        if (this.isHovering) {
+          this.uniforms.iMouse.value.set(this.mouse.x, this.canvas.clientHeight - this.mouse.y);
+        }
+
+        this.renderer.render(this.scene, this.camera);
+      }
     }
-  }
 
-  animate() {
-    requestAnimationFrame(() => this.animate());
+    // ====================== Использование ======================
 
-    this.uniforms.iTime.value = performance.now() / 1000;
+    // Пример инициализации
+    document.addEventListener('DOMContentLoaded', () => {
+      const background = new ShaderBackground({
+        color: "#07eae6",     // твой цвет (можно менять)
+        blurAmount: "md",     // none, sm, md, lg, xl
+        containerId: "container"
+      });
 
-    if (this.isHovering) {
-      this.uniforms.iMouse.value.set(this.mouse.x, this.canvas.clientHeight - this.mouse.y);
-    }
-
-    this.renderer.render(this.scene, this.camera);
-  }
-}
-
-// ====================== Использование ======================
-
-// Пример инициализации
-document.addEventListener('DOMContentLoaded', () => {
-  const background = new ShaderBackground({
-    color: "#07eae6",     // твой цвет (можно менять)
-    blurAmount: "md",     // none, sm, md, lg, xl
-    containerId: "container"
-  });
-
-  // Пример смены цвета позже:
-  // setTimeout(() => background.setColor("#ff00ff"), 3000);
-});
-</script>
+      // Пример смены цвета позже:
+      // setTimeout(() => background.setColor("#ff00ff"), 3000);
+    });
+  </script>
 
 </body>
+
 </html>

@@ -30,8 +30,6 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background-image: linear-gradient(to top, var(--color-dark-purple), var(--color-secondary));
-
     color: var(--color-primary);
     height: 100vh;
     display: flex;
@@ -43,6 +41,7 @@ canvas {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: -1;
 }
 
 .gradient {
@@ -76,11 +75,10 @@ canvas {
 
 .entity-card-slider {
     min-height: 75vh;
-    margin-top: 1rem;
+    margin-top: 2.5rem;
     display: flex;
     position: relative;
     flex-direction: column;
-    row-gap: 1rem;
 
     .container {
         display: flex;
@@ -110,22 +108,23 @@ canvas {
     position: absolute;
     inset: 0;
     border-radius: inherit;
+    pointer-events: none;
 }
 
 .glass-filter {
-    z-index: 1;
+    z-index: 2;
     backdrop-filter: blur(4px);
     filter: url(#glass-distortion) saturate(120%) brightness(1.15);
 }
 
 .glass-overlay {
-    z-index: 2;
+    z-index: 3;
     background: var(--bg-color);
 }
 
 .glass-specular {
-    z-index: 3;
-    box-shadow: inset 1px 1px 10px var(--highlight);
+    z-index: 4;
+    box-shadow: inset 10px 1px 10px var(--highlight);
 }
 
 
@@ -143,31 +142,44 @@ canvas {
 
 .glass-form {
     position: absolute;
-    min-width: var(--form-width, 20rem);
+    min-width: var(--form-width, 26rem);
     height: 100vh;
     border-radius: 1rem;
     overflow: hidden;
     transition-duration: .8s;
-    transform: translateX(-100%);
-    filter: blur(10px);
+    z-index: 10;
     top: 0;
     left: 0;
+    transform: translateX(0%);
+
 
     &.active {
-        filter: blur(0px);
-        transform: translateX(0);
+        transform: translateX(-100%);
+    }
+
+    .glass-filter {
+        z-index: 11;
+    }
+
+    .glass-overlay {
+        z-index: 12;
+    }
+
+    .glass-specular {
+        z-index: 13;
     }
 
     form {
         display: flex;
         flex-direction: column;
         position: relative;
-        z-index: 4;
+        z-index: 14;
         padding: 30px;
         height: 100%;
         overflow: auto;
         scrollbar-width: thin;
         scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+        box-shadow: var(--box-shadow);
 
         &::-webkit-scrollbar {
             width: 10px;

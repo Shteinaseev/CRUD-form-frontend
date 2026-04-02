@@ -16,7 +16,6 @@
     backdrop-filter: blur(15px);
     background-color: var(--bg-color);
     scroll-snap-align: center;
-    z-index: 1;
     transition-duration: .8s;
 }
 
