@@ -44,11 +44,16 @@ class CRUD {
             const card = this.createEntityCardEl(data, i);
             this.container.appendChild(card);
         });
+        if (this.container.classList.contains('disactivated')) {
+            this.container.classList.remove('disactivated');
+        }
     }
 
     renderGridItems() {
+        let j = 0;
         this.data.forEach((data, i) => {
-            const gridItem = this.createGridItem(data, i);
+            j += 5;
+            const gridItem = this.createGridItem(data, j);
             gridItem.classList.add('animation');
             gridItem.classList.add('disactivated');
             setTimeout(() => {
@@ -100,12 +105,16 @@ class CRUD {
         });
     }
 
-    #hideAllItems(container, timeout = 500) {
-        const promises = [...container.children].map(el => this.#fadeOutAndRemove(el, timeout));
+    #hideAllItems(container, timeout = 1000) {
+        const promises = [...container.children].map(el => {
+            if (!el.tagname === 'div') {
+                this.#fadeOutAndRemove(el, timeout)
+            }
+        });
         return Promise.all(promises);
     }
 
-    #fadeContainer(container, timeout = 500) {
+    #fadeContainer(container, timeout = 1000) {
         return new Promise(resolve => {
             void container.offsetWidth;
             container.classList.add('disactivated');
@@ -130,29 +139,20 @@ class CRUD {
         let isShowingAll = false;
 
         this.btnShowAll.addEventListener('click', () => {
-            this.btnShowAll.disabled = true;
-
-            this.#fadeContainer(this.container, 500)
-                .then(() => this.#hideAllItems(this.container, 500))
-                .then(() => {
-                    if (!isShowingAll) {
+            if (!isShowingAll) {
+                this.#hideAllItems(this.container, 1000)
+                this.#fadeContainer(this.container, 1000)
+                    .then(() => {
                         this.renderGridItems();
-                        this.btnShowAll.textContent = "Vrati se nazad";
                         isShowingAll = true;
-                    } else {
-                        return this.#hideAllItems(this.section, 500)
-                            .then(() => {
-                                this.renderEntityCards();
-                                this.btnShowAll.textContent = "Prikaži sve";
-                            });
-                    }
-                })
-                .then(() => {
-                    this.container.classList.remove('disactivated');
-                })
-                .finally(() => {
-                    this.btnShowAll.disabled = false;
-                });
+                    })
+            } else if (isShowingAll) {
+                this.#hideAllItems(this.section, 1000)
+                    .then(() => {
+                        this.renderEntityCards();
+                        isShowingAll = false;
+                    })
+            }
         });
     }
 }

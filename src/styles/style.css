@@ -246,7 +246,19 @@ entity-card {
     filter: blur(0);
 
     &.disactivated {
-        opacity: .5;
+        opacity: .3;
+        filter: blur(10px);
+    }
+}
+
+entity-grid-items {
+    transform: translateX(0);
+    opacity: 1;
+    filter: blur(0);
+
+    &.disactivated {
+        transform: translateX(100%);
+        opacity: .3;
         filter: blur(10px);
     }
 }
