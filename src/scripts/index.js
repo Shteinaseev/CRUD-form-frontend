@@ -77,43 +77,82 @@ class CRUD {
         }
     }
 
-    #waitTransition(el, timeout = 1000) {
-        return new Promise(resolve => {
-            const onEnd = e => {
-                if (e.target !== el) return;
-                el.removeEventListener('transitionend', onEnd);
-                clearTimeout(timer);
-                resolve();
-            };
-            const timer = setTimeout(() => {
-                el.removeEventListener('transitionend', onEnd);
-                resolve();
-            }, timeout);
-            el.addEventListener('transitionend', onEnd);
-        })
-    }
-
-    #removeWithAnimation() {
+    #fadeOutAndRemove(el, timeout = 500) {
         return new Promise(resolve => {
             void el.offsetWidth;
             el.classList.add('disactivated');
 
-        })
-        resolve();
+            const onEnd = e => {
+                if (e.target !== el) return;
+                el.removeEventListener('transitionend', onEnd);
+                clearTimeout(timer);
+                el.remove();
+                resolve();
+            };
+
+            const timer = setTimeout(() => {
+                el.removeEventListener('transitionend', onEnd);
+                el.remove();
+                resolve();
+            }, timeout);
+
+            el.addEventListener('transitionend', onEnd);
+        });
+    }
+
+    #hideAllItems(container, timeout = 500) {
+        const promises = [...container.children].map(el => this.#fadeOutAndRemove(el, timeout));
+        return Promise.all(promises);
+    }
+
+    #fadeContainer(container, timeout = 500) {
+        return new Promise(resolve => {
+            void container.offsetWidth;
+            container.classList.add('disactivated');
+
+            const onEnd = e => {
+                if (e.target !== container) return;
+                container.removeEventListener('transitionend', onEnd);
+                clearTimeout(timer);
+                resolve();
+            };
+
+            const timer = setTimeout(() => {
+                container.removeEventListener('transitionend', onEnd);
+                resolve();
+            }, timeout);
+
+            container.addEventListener('transitionend', onEnd);
+        });
     }
 
     bindEvents() {
-        this._isExpanded = true;
-        this._isAnimating = false;
+        let isShowingAll = false;
 
         this.btnShowAll.addEventListener('click', () => {
-            [...this.container.children].forEach((child, i) => {
-                child.classList.add('disactivated');
-            });
-            this.container.classList.add('disactivated');
-        });
-        this.navbar.addEventListener('click', () => {
-            this.postForm.classList.toggle('active');
+            this.btnShowAll.disabled = true;
+
+            this.#fadeContainer(this.container, 500)
+                .then(() => this.#hideAllItems(this.container, 500))
+                .then(() => {
+                    if (!isShowingAll) {
+                        this.renderGridItems();
+                        this.btnShowAll.textContent = "Vrati se nazad";
+                        isShowingAll = true;
+                    } else {
+                        return this.#hideAllItems(this.section, 500)
+                            .then(() => {
+                                this.renderEntityCards();
+                                this.btnShowAll.textContent = "Prikaži sve";
+                            });
+                    }
+                })
+                .then(() => {
+                    this.container.classList.remove('disactivated');
+                })
+                .finally(() => {
+                    this.btnShowAll.disabled = false;
+                });
         });
     }
 }
