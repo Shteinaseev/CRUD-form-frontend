@@ -52,7 +52,6 @@ class CRUD {
     renderGridItems() {
         let j = 0;
         this.data.forEach((data, i) => {
-            j += 5;
             const gridItem = this.createGridItem(data, j);
             gridItem.classList.add('animation');
             gridItem.classList.add('disactivated');
@@ -60,6 +59,7 @@ class CRUD {
                 gridItem.classList.remove('disactivated');
             }, 100);
             this.section.appendChild(gridItem);
+            j += 4;
         });
     }
 
@@ -71,7 +71,7 @@ class CRUD {
 
     createGridItem(data, i) {
         const gridItem = document.createElement('entity-grid-item');
-        gridItem.style.setProperty('--i', `${i + 5}`);
+        gridItem.style.setProperty('--i', `${i}`);
         gridItem.data = data;
         return gridItem;
     }
@@ -90,26 +90,19 @@ class CRUD {
             const onEnd = e => {
                 if (e.target !== el) return;
                 el.removeEventListener('transitionend', onEnd);
-                clearTimeout(timer);
-                el.remove();
                 resolve();
             };
-
-            const timer = setTimeout(() => {
-                el.removeEventListener('transitionend', onEnd);
-                el.remove();
-                resolve();
-            }, timeout);
 
             el.addEventListener('transitionend', onEnd);
         });
     }
 
     #hideAllItems(container, timeout = 1000) {
-        const promises = [...container.children].map(el => {
-            if (!el.tagname === 'div') {
-                this.#fadeOutAndRemove(el, timeout)
-            }
+        const promises = [...container.children];
+        promises.filter(el => {
+            return el.tagName.toLowerCase() !== 'div' && el.tagName.toLowerCase() !== 'button';
+        }).map(el => {
+            this.#fadeOutAndRemove(el, timeout)
         });
         return Promise.all(promises);
     }
@@ -154,6 +147,9 @@ class CRUD {
                     })
             }
         });
+        this.navbar.addEventListener('click', () => {
+            this.postForm.classList.toggle('active');
+        })
     }
 }
 
