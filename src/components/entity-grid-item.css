@@ -17,6 +17,7 @@
     opacity: 1;
     filter: blur(0);
     transition-duration: .8s;
+    width: auto;
 }
 
 :host(.disactivated) {
@@ -29,12 +30,11 @@ ul {
     width: 100%;
     position: relative;
     z-index: 4;
-    padding: 0;
     list-style: none;
-    display: flex;
-    gap: 0.8rem;
+    display: grid;
     padding: 1rem;
-    justify-content: space-between;
+    grid-auto-columns: minmax(1fr, 10rem);
+    grid-auto-flow: column;
     align-items: center;
 }
 
@@ -45,4 +45,5 @@ li {
     align-items: left;
     font-size: 1.2rem;
     text-align: left;
+    white-space: nowrap;
 }

@@ -26,6 +26,7 @@
         0px 0px 100px var(--color-accent-muted),
         0px 0px 100px var(--highlight);
 
+    --navbar-width: 5rem;
 }
 
 body {
@@ -71,14 +72,29 @@ canvas {
 .content {
     width: 100vw;
     overflow: hidden;
+
+    header {
+        width: 100%;
+        position: fixed;
+        z-index: 2;
+        display: grid;
+        grid-auto-flow: column;
+        padding: 1rem;
+        grid-auto-columns: minmax(1fr, 10rem);
+        background-color: var(--bg-color);
+        backdrop-filter: blur(10px);
+        height: var(--navbar-width);
+
+    }
 }
 
 .entity-card-slider {
     min-height: 75vh;
-    margin-top: 2.5rem;
+    margin-top: var(--navbar-width);
     display: flex;
     position: relative;
     flex-direction: column;
+
 
     .container {
         display: flex;

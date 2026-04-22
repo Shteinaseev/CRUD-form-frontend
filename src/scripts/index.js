@@ -34,6 +34,8 @@ class CRUD {
             .then(data => {
                 this.data = data;
                 this.renderEntityCards();
+                this.renderHeaderGridItem();
+
             })
         this.bindEvents();
     }
@@ -42,6 +44,11 @@ class CRUD {
         let data = this.data.slice(0, 2);
         data.forEach((data, i) => {
             const card = this.createEntityCardEl(data, i);
+            card.classList.add('animation');
+            card.classList.add('disactivated');
+            setTimeout(() => {
+                card.classList.remove('disactivated');
+            }, 10);
             this.container.appendChild(card);
         });
         if (this.container.classList.contains('disactivated')) {
@@ -63,6 +70,11 @@ class CRUD {
         });
     }
 
+    renderHeaderGridItem() {
+        const el = this.createHeaderGridItem();
+        this.root.prepend(el);
+    }
+
     createEntityCardEl(data, i) {
         const card = document.createElement('entity-card');
         card.data = data;
@@ -76,13 +88,23 @@ class CRUD {
         return gridItem;
     }
 
+    createHeaderGridItem() {
+        const header = document.createElement('header');
+        header.style.setProperty('--i', `2`);
+        for (const key of Object.keys(this.data[0])) {
+            const width = key.length * 8;
+            header.innerHTML += `<p style="--width: ${width}">${key}</p>`;
+        }
+        return header;
+    }
+
     updateAttrs(card, data) {
         for (const [key, value] of Object.entries(data)) {
             card.setAttribute(key, value);
         }
     }
 
-    #fadeOutAndRemove(el, timeout = 500) {
+    #fadeOut(el, timeout = 500) {
         return new Promise(resolve => {
             void el.offsetWidth;
             el.classList.add('disactivated');
@@ -90,7 +112,7 @@ class CRUD {
             const onEnd = e => {
                 if (e.target !== el) return;
                 el.removeEventListener('transitionend', onEnd);
-                resolve();
+                resolve(el);
             };
 
             el.addEventListener('transitionend', onEnd);
@@ -98,13 +120,18 @@ class CRUD {
     }
 
     #hideAllItems(container, timeout = 1000) {
-        const promises = [...container.children];
-        promises.filter(el => {
+        const elements = [...container.children];
+        const filteredElements = elements.filter(el => {
             return el.tagName.toLowerCase() !== 'div' && el.tagName.toLowerCase() !== 'button';
-        }).map(el => {
-            this.#fadeOutAndRemove(el, timeout)
-        });
-        return Promise.all(promises);
+        })
+        const promises = Promise.all(filteredElements.map(el => this.#fadeOut(el, timeout)))
+            .then((list) => {
+                list.forEach((el) => {
+                    el.remove();
+                })
+            })
+        return promises;
+
     }
 
     #fadeContainer(container, timeout = 1000) {
