@@ -52,10 +52,10 @@ class CRUD {
     renderGridItems() {
         let j = 0;
         this.data.forEach((data, i) => {
-            j += 5;
             const gridItem = this.createGridItem(data, j);
             gridItem.classList.add('animation');
             gridItem.classList.add('disactivated');
+            j += 2.5;
             setTimeout(() => {
                 gridItem.classList.remove('disactivated');
             }, 100);
@@ -82,7 +82,7 @@ class CRUD {
         }
     }
 
-    #fadeOutAndRemove(el, timeout = 500) {
+    #fadeOutAndRemove(el, timeout = 1000) {
         return new Promise(resolve => {
             void el.offsetWidth;
             el.classList.add('disactivated');
@@ -90,28 +90,26 @@ class CRUD {
             const onEnd = e => {
                 if (e.target !== el) return;
                 el.removeEventListener('transitionend', onEnd);
-                clearTimeout(timer);
-                el.remove();
-                resolve();
+                resolve(el);
             };
 
-            const timer = setTimeout(() => {
-                el.removeEventListener('transitionend', onEnd);
-                el.remove();
-                resolve();
-            }, timeout);
 
             el.addEventListener('transitionend', onEnd);
         });
     }
 
     #hideAllItems(container, timeout = 1000) {
-        const promises = [...container.children].map(el => {
-            if (!el.tagname === 'div') {
-                this.#fadeOutAndRemove(el, timeout)
-            }
-        });
-        return Promise.all(promises);
+        const items = [...container.children]
+            .filter(el =>
+                el.tagName.toLowerCase() === 'entity-card' ||
+                el.tagName.toLowerCase() === 'entity-grid-item'
+            )
+
+        const promises = items.map(el => this.#fadeOutAndRemove(el, timeout));
+        return Promise.all(promises)
+            .then(elements => {
+                elements.forEach(el => el.remove());
+            });
     }
 
     #fadeContainer(container, timeout = 1000) {
@@ -139,20 +137,32 @@ class CRUD {
         let isShowingAll = false;
 
         this.btnShowAll.addEventListener('click', () => {
+            this.btnShowAll.disabled = true;
+
             if (!isShowingAll) {
                 this.#hideAllItems(this.container, 1000)
-                this.#fadeContainer(this.container, 1000)
+                this.#fadeContainer(this.container, 1500)
                     .then(() => {
                         this.renderGridItems();
                         isShowingAll = true;
                     })
+                    .finally(() => {
+                        this.btnShowAll.disabled = false;
+                    });
+
             } else if (isShowingAll) {
                 this.#hideAllItems(this.section, 1000)
                     .then(() => {
                         this.renderEntityCards();
                         isShowingAll = false;
                     })
+                    .finally(() => {
+                        this.btnShowAll.disabled = false;
+                    });
             }
+        });
+        this.navbar.addEventListener('click', () => {
+            this.postForm.classList.toggle('active');
         });
     }
 }

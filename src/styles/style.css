@@ -31,14 +31,14 @@
 body {
     font-family: 'Inter', sans-serif;
     color: var(--color-primary);
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 canvas {
     display: block;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: -1;
@@ -86,6 +86,8 @@ canvas {
         transition-duration: 1s;
         transform: translateX(0);
         align-self: flex-end;
+        position: absolute;
+        z-index: 0;
 
         &.disactivated {
             transform: translateX(120%);

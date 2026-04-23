@@ -36,6 +36,7 @@ export class EntityGridItem extends HTMLElement {
 
     connectedCallback() {
         this.renderLiEls();
+        console.log(this.liElementsList.join(""))
         this.render();
     }
 }
