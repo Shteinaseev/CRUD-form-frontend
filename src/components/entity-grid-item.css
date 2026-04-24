@@ -33,7 +33,8 @@ ul {
     list-style: none;
     display: grid;
     padding: 1rem;
-    grid-auto-columns: minmax(1fr, 10rem);
+    grid-template-columns: repeat(auto-fill, minmax(6.6rem, 10vw));
+    column-gap: 0.8rem;
     grid-auto-flow: column;
     align-items: center;
 }

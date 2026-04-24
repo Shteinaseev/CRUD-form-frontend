@@ -66,7 +66,7 @@ class CRUD {
                 gridItem.classList.remove('disactivated');
             }, 100);
             this.section.appendChild(gridItem);
-            j += 4;
+            j += 5;
         });
     }
 
