@@ -3,7 +3,7 @@ import { dotsGenerator } from "./dots";
 import { entityCard } from "../components/entity-card";
 import { EntityGridItem } from "../components/entity-grid-item";
 import { ReflectGradient } from "./reflect-gradient";
-import { getIcons, Alarm, ChevronLeft, ChevronRight, Menu } from '@boxicons/js';
+import { getIcons, Home, ChevronLeft, ChevronRight, Menu, Plus, InfoCircle, HelpCircle } from '@boxicons/js';
 
 class CRUD {
     isDragging = false;
@@ -15,15 +15,18 @@ class CRUD {
         section: '[data-js-section]',
         btnShowAll: '[data-js-show-all]',
         postForm: '[data-js-post-form]',
+        navbar: '[data-js-navbar]',
+        navbarBtn: '[data-js-navbar-btn]',
     }
 
     constructor() {
         getIcons({
-            icons: { ChevronLeft, ChevronRight, Alarm, Menu }
+            icons: { Home, ChevronLeft, ChevronRight, Menu, Plus, InfoCircle, HelpCircle }
         });
 
         this.root = document.querySelector(this.selectors.root);
         this.navbar = document.querySelector(this.selectors.navbar);
+        this.navbarBtn = this.navbar.querySelector(this.selectors.navbarBtn);
         this.section = this.root.querySelector(this.selectors.section);
         this.container = this.section.querySelector('.container');
         this.btnShowAll = this.root.querySelector(this.selectors.btnShowAll);
@@ -165,6 +168,17 @@ class CRUD {
     bindEvents() {
         let isShowingAll = false;
 
+        window.addEventListener('click', (e) => {
+            const isClickInsideNavbar = this.navbar.contains(e.target);
+            if (!isClickInsideNavbar && !this.navbar.classList.contains('scrolled')) {
+                this.navbar.classList.add('scrolled');
+            }
+        })
+
+        this.navbarBtn.addEventListener('click', () => {
+            this.navbar.classList.toggle('scrolled');
+        })
+
         this.btnShowAll.addEventListener('click', () => {
             if (!isShowingAll) {
                 this.btnShowAll.textContent = 'Sakrij sve';
@@ -188,9 +202,7 @@ class CRUD {
                     })
             }
         });
-        this.navbar.addEventListener('click', () => {
-            this.postForm.classList.toggle('active');
-        })
+
     }
 }
 

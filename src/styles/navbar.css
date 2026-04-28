@@ -1,70 +1,109 @@
 .navbar {
     position: fixed;
+    padding-inline: 1.2rem;
+    height: var(--navbar-height);
+    width: var(--nav-width);
     left: 50%;
-    top: 0;
     transform: translateX(-50%);
-    width: var(--navbar-width);
-    aspect-ratio: 1;
-    padding: .5rem;
-    border-radius: 100%;
-    z-index: 1000;
-    box-shadow: 0 0 15px var(--color-primary);
-    --cl: color-mix(in srgb, var(--color-accent) 30%, transparent);
-    transition-duration: .4s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--radius);
+    z-index: 100;
+    transition-property: all;
+    transition-duration: var(--transition-duration);
+    transition-timing-function: var(--transition-timing-function);
 
-    &:hover {
-        box-shadow: 0 0 3rem var(--color-primary);
+    &.scrolled {
+        width: var(--navbar-height);
+        height: var(--navbar-height);
+        aspect-ratio: 1;
+        padding-inline: 0;
+        border-radius: 50%;
+
+        .burger-btn {
+            opacity: 0.45;
+            background-color: #000000;
+            backdrop-filter: blur(10px);
+            border: 1px solid #ffffff33;
+            pointer-events: all;
+
+            svg {
+                fill: var(--color-primary);
+            }
+        }
+
+    }
+
+    .burger-btn {
+        width: 3.75rem;
+        position: absolute;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        z-index: 5;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+
+        &:hover {
+            background-color: #ffffff65;
+        }
     }
 }
 
-button {
-    border: none;
-}
-
-.burger-btn {
-    background-color: var(--bg-color);
-    border: var(--border);
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    z-index: 4;
-    transition-duration: .4s;
-
-    &:hover {
-        background-color: var(--cl);
-    }
-
-    &:active {
-        background-color: var(--color-primary);
-        box-shadow: 0 0 20px var(--color-primary);
-    }
-
-    svg {
-        fill: var(--color-primary);
-        width: 1.5rem;
-        height: 1.5rem;
-    }
-}
-
-.burger-btn .burger-btn i {
+.burger-btn i {
     font-size: 0;
     color: var(--color-light);
 }
 
-.navbar.scrolled .burger-btn {
-    opacity: 0.45;
-    background-color: #000000;
-    backdrop-filter: blur(10px);
-    border: 1px solid #ffffff33;
-    pointer-events: all;
+
+.navbar.scrolled .burger-btn svg {
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
-.navbar.scrolled .burger-btn i {
-    font-size: 1.4rem;
+.navbar ul {
+    width: 100%;
+    position: relative;
+    z-index: 4;
+    display: flex;
+    justify-content: space-evenly;
+    transition-property: all;
+    transition-duration: .6s;
+    transition-timing-function: var(--transition-timing-function);
+    scale: 1;
 }
 
+.navbar.scrolled ul {
+    column-gap: 0;
+    pointer-events: none;
+    transition-duration: .35s;
+}
 
+.navbar ul li {
+    font-size: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    opacity: 1;
+    scale: 1;
+    transition-property: all;
+    transition-duration: .4s;
+    transition-timing-function: var(--transition-timing-function);
+    transition-delay: 0;
+
+    svg {
+        width: 1.75rem;
+        height: 1.75rem;
+    }
+}
+
+.navbar.scrolled ul li {
+    font-size: 0;
+    scale: 0.6;
+    opacity: 0;
+    filter: blur(10px);
+    transition-delay: .15s;
+}
 
 @media (prefers-reduced-motion: reduce) {
     * {

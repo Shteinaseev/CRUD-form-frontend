@@ -21,13 +21,25 @@
    <div class="reflect-container" data-js-reflect-container>
       <div class="backdrop-blur-md" data-js-blur-overlay></div>
    </div>
-   <nav class="navbar" aria-label="Main menu" data-js-navbar>
+   <nav class="navbar scrolled" aria-label="Main menu" data-js-navbar>
       <div class="glass-filter"></div>
       <div class="glass-overlay"></div>
       <div class="glass-specular"></div>
-      <button class="burger-btn" aria-label="Open the menu" aria-expanded="false">
+      <button class="burger-btn" aria-label="Open the menu" aria-expanded="false" data-js-navbar-btn>
          <i data-bx="menu"></i>
       </button>
+      <ul class="nav-links" role="menubar">
+         <li>
+            <i data-bx="home"></i>
+         </li>
+         <li>
+            <i data-bx="plus"></i>
+         </li>
+         <li>
+            <i data-bx="info-circle"></i>
+         </li>
+
+      </ul>
    </nav>
    <main class="content" data-js>
       <div class="glass-form" data-js-post-form>
