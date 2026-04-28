@@ -29,6 +29,7 @@ export class EntityGridItem extends HTMLElement {
     }
 
     renderLiEls() {
+        // let i = 0; style="max-width: ${this.colWidths[i] || 100}px">
         for (const [key, value] of Object.entries(this._data)) {
             this.liElementsList.push(`<li>${value}</li>`);
         }

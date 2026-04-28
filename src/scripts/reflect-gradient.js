@@ -14,6 +14,7 @@ export class ReflectGradient {
 
         uniform vec2 iResolution;
         uniform float iTime;
+        uniform vec2 iMouse;
 
         varying vec2 vUv;
 
@@ -23,7 +24,13 @@ export class ReflectGradient {
         void mainImage(out vec4 fragColor, in vec2 fragCoord) {
             float time = iTime * 0.5 + 23.0;
             vec2 uv = fragCoord.xy / iResolution.xy;
-            vec2 p = mod(uv * TAU, TAU) - 250.0;
+            
+            // Mouse interaction - create distortion around cursor
+            vec2 mouse = iMouse / iResolution;
+            float dist = distance(uv, mouse);
+            float distortion = smoothstep(0.3, 0.0, dist) * 0.15;
+            
+            vec2 p = mod((uv + distortion) * TAU, TAU) - 250.0;
             vec2 i = vec2(p);
             float c = 1.0;
             float inten = 0.005;
@@ -69,7 +76,8 @@ export class ReflectGradient {
 
         this.uniforms = {
             iTime: { value: 0 },
-            iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+            iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+            iMouse: { value: new THREE.Vector2(0, 0) }
         };
 
         const material = new THREE.ShaderMaterial({
@@ -84,7 +92,13 @@ export class ReflectGradient {
 
         this.startTime = Date.now();
         window.addEventListener('resize', this.resize.bind(this));
+        document.addEventListener('mousemove', this.onMouseMove.bind(this));
         this.animate();
+    }
+
+    onMouseMove(e) {
+        this.uniforms.iMouse.value.x = e.clientX;
+        this.uniforms.iMouse.value.y = window.innerHeight - e.clientY;
     }
 
     animate() {

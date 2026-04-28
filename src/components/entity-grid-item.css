@@ -33,10 +33,10 @@ ul {
     list-style: none;
     display: grid;
     padding: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(6.6rem, 10vw));
+    grid-template-columns: 1.5rem 5.31rem 5.31rem 9.37rem 9.5rem 6rem 7.5rem 7.5rem 2.5rem 10.7rem 9.37rem 16rem 7.5rem;
     column-gap: 0.8rem;
     grid-auto-flow: column;
-    align-items: center;
+    place-items: center;
 }
 
 li {
@@ -47,4 +47,5 @@ li {
     font-size: 1.2rem;
     text-align: left;
     white-space: nowrap;
+    text-overflow: ellipsis;
 }

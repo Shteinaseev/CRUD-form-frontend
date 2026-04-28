@@ -29,7 +29,7 @@ export class FormGroup extends HTMLElement {
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        if (oldValue === newValue) return;
+        if (oldValue === newValue || newValue === '') return;
 
         switch (name) {
             case 'label':
@@ -44,6 +44,9 @@ export class FormGroup extends HTMLElement {
                 this.#type = newValue || 'text';
                 break;
 
+            case 'icon':
+                this.#icon = icons.createSvgString(icons[newValue]) || '';
+                break;
 
             case 'inputmode':
                 this.#inputMode = newValue || null;
@@ -132,7 +135,8 @@ export class FormGroup extends HTMLElement {
                 ${this.#maxLength ? `minlength="${this.#minLength}"` : ''}
                 ${this.#maxLength ? `maxlength="${this.#maxLength}"` : ''}    
                 ${this.#inputMode ? `inputmode="${this.#inputMode}"` : ''}
-            >   
+            >
+            ${this.#icon}
         `
     }
 

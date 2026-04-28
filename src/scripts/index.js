@@ -34,8 +34,6 @@ class CRUD {
             .then(data => {
                 this.data = data;
                 this.renderEntityCards();
-                this.renderHeaderGridItem();
-
             })
         this.bindEvents();
     }
@@ -51,6 +49,7 @@ class CRUD {
             }, 10);
             this.container.appendChild(card);
         });
+
         if (this.container.classList.contains('disactivated')) {
             this.container.classList.remove('disactivated');
         }
@@ -72,7 +71,12 @@ class CRUD {
 
     renderHeaderGridItem() {
         const el = this.createHeaderGridItem();
-        this.root.prepend(el);
+        el.classList.add('animation');
+        el.classList.add('disactivated');
+        setTimeout(() => {
+            el.classList.remove('disactivated');
+        }, 100);
+        this.section.prepend(el);
     }
 
     createEntityCardEl(data, i) {
@@ -85,15 +89,18 @@ class CRUD {
         const gridItem = document.createElement('entity-grid-item');
         gridItem.style.setProperty('--i', `${i}`);
         gridItem.data = data;
+        gridItem.colWidths = this.colWidths;
         return gridItem;
     }
 
     createHeaderGridItem() {
         const header = document.createElement('header');
         header.style.setProperty('--i', `2`);
+        this.colWidths = [];
         for (const key of Object.keys(this.data[0])) {
             const width = key.length * 8;
-            header.innerHTML += `<p style="--width: ${width}">${key}</p>`;
+            this.colWidths.push(width);
+            header.innerHTML += `<p>${key}</p>`;
         }
         return header;
     }
@@ -160,17 +167,24 @@ class CRUD {
 
         this.btnShowAll.addEventListener('click', () => {
             if (!isShowingAll) {
+                this.btnShowAll.textContent = 'Sakrij sve';
+                this.btnShowAll.disabled = true;
                 this.#hideAllItems(this.container, 1000)
                 this.#fadeContainer(this.container, 1000)
                     .then(() => {
                         this.renderGridItems();
+                        this.renderHeaderGridItem();
                         isShowingAll = true;
+                        this.btnShowAll.disabled = false;
                     })
             } else if (isShowingAll) {
+                this.btnShowAll.textContent = 'Prikaži sve';
+                this.btnShowAll.disabled = true;
                 this.#hideAllItems(this.section, 1000)
                     .then(() => {
                         this.renderEntityCards();
                         isShowingAll = false;
+                        this.btnShowAll.disabled = false;
                     })
             }
         });

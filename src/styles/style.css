@@ -72,32 +72,42 @@ canvas {
 .content {
     width: 100vw;
     overflow: hidden;
+    padding-top: var(--navbar-width);
 
     header {
+        border-radius: 0.8rem;
+        border: var(--border);
         width: 100%;
-        position: fixed;
+        position: sticky;
         z-index: 2;
         display: grid;
         grid-auto-flow: column;
         padding: 1rem;
-        grid-template-columns: repeat(13, auto-fit);
+        grid-template-columns: 1.5rem 5.31rem 5.31rem 9.37rem 9.5rem 6rem 7.5rem 7.5rem 2.5rem 10.7rem 9.37rem 16rem 7.5rem;
         column-gap: 0.8rem;
         background-color: var(--bg-color);
         backdrop-filter: blur(10px);
         height: var(--navbar-width);
-        align-items: center;
+        place-items: center;
         font-size: 1.25rem;
         font-weight: 600;
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+
+        &.disactivated {
+            opacity: 0;
+            filter: blur(10px);
+            transform: translateY(-100%);
+        }
     }
 }
 
 .entity-card-slider {
     min-height: 75vh;
-    margin-top: var(--navbar-width);
     display: flex;
     position: relative;
     flex-direction: column;
-
 
     .container {
         display: flex;
