@@ -65,7 +65,7 @@
 .navbar ul {
     width: 100%;
     position: relative;
-    z-index: 4;
+    z-index: 6;
     display: flex;
     justify-content: space-evenly;
     transition-property: all;
@@ -94,6 +94,7 @@
     svg {
         width: 1.75rem;
         height: 1.75rem;
+        fill: var(--color-primary);
     }
 }
 

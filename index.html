@@ -30,15 +30,20 @@
       </button>
       <ul class="nav-links" role="menubar">
          <li>
-            <i data-bx="home"></i>
+            <button data-js-navbar-home-btn>
+               <i data-bx="home"></i>
+            </button>
          </li>
          <li>
-            <i data-bx="plus"></i>
+            <button data-js-navbar-add-btn>
+               <i data-bx="plus"></i>
+            </button>
          </li>
          <li>
-            <i data-bx="info-circle"></i>
+            <button data-js-navbar-info-btn>
+               <i data-bx="info-circle"></i>
+            </button>
          </li>
-
       </ul>
    </nav>
    <main class="content" data-js>
@@ -46,22 +51,15 @@
          <div class="glass-filter"></div>
          <div class="glass-overlay"></div>
          <div class="glass-specular"></div>
-         <form class="glass-content">
-            <form-group label="Ime" name="first_name" type="text" icon="User"></form-group>
-            <form-group label="Prezime" name="last_name" type="text" icon="User"></form-group>
-            <form-group label="Datum rodjenja" name="birthday" type="date" icon=""></form-group>
-            <form-group label="JMBG" type="text" icon="User" min-length="13" max-length="13" number="true"></form-group>
-            <form-group label="Broj Stana" type="number" icon="Home"></form-group>
-            <form-group label="Telefon fiksni" type="tel" icon="Phone"></form-group>
-            <form-group label="Telefon mobilni" type="tel" icon="Phone"></form-group>
-            <form-group label="Nova lozinka" type="text" icon="Lock"></form-group>
-            <form-group label="Potvrda nove lozinke" type="text" icon="Lock"></form-group>
-            <form-group label="Pol" name="gender" type="radio" icon="User" options="Male, Female, Other"></form-group>
-            <form-group label="Datum prvog upisa" type="date" icon=""></form-group>
-            <form-group label="Email" type="email" icon="Envelope"></form-group>
-            <form-group label="Username" type="text" icon="User"></form-group>
+         <form class="glass-content" data-js-post-form-container>
             <button class="btn" type="submit">Pošalji</button>
+            <div class="btn-wrapper" data-js-btn-wrapper>
+               <button type="button" data-js-btn-index="1">1</button>
+               <button type="button" data-js-btn-index="2">2</button>
+               <button type="button" data-js-btn-index="3">3</button>
+            </div>
          </form>
+
       </div>
       <section class="entity-card-slider" data-js-section>
          <div class="container">
