@@ -7,7 +7,7 @@ import { getIcons, Home, ChevronLeft, ChevronRight, Menu, Plus, InfoCircle, Help
 
 class CRUD {
     isDragging = false;
-    index = 2;
+    index = 1;
     startX = 0;
     firstCardWidth = 350;
     selectors = {
@@ -60,7 +60,7 @@ class CRUD {
         this.btnShowAll = this.root.querySelector(this.selectors.btnShowAll);
         this.postForm = this.root.querySelector(this.selectors.postForm);
         this.postFormContainer = this.postForm.querySelector(this.selectors.postFormContainer);
-        this.btnWrapper = this.postFormContainer.querySelector(this.selectors.btnWrapper);
+        this.btnWrapper = this.postForm.querySelector(this.selectors.btnWrapper);
         this.renderFormGroups();
         fetch('https://mocki.io/v1/840e113d-8cfc-4286-85d5-9742b876cb08')
             .then(response => response.json())
@@ -71,8 +71,14 @@ class CRUD {
         this.bindEvents();
     }
 
-    createFormGroup() {
+    createFormGroup(i) {
         const formGroup = document.createElement('form-group');
+        formGroup.style.setProperty('--i', `${i}`);
+        formGroup.classList.add('animation');
+        formGroup.classList.add('activated');
+        setTimeout(() => {
+            formGroup.classList.remove('activated');
+        }, 10);
         return formGroup;
     }
 
@@ -83,19 +89,22 @@ class CRUD {
     }
 
     renderFormGroups() {
+        let i = 0;
         switch (this.index) {
             case 1:
-                this.firstFormFields.forEach((obj) => {
-                    const el = this.createFormGroup();
+                this.firstFormFields.forEach(obj => {
+                    const el = this.createFormGroup(i);
                     this.updateAttrs(el, obj);
-                    this.postFormContainer.prepend(el);
+                    this.postFormContainer.appendChild(el);
+                    i += 1;
                 })
                 break;
             case 2:
-                this.secondFormFields.forEach((obj) => {
-                    const el = this.createFormGroup();
+                this.secondFormFields.forEach(obj => {
+                    const el = this.createFormGroup(i);
                     this.updateAttrs(el, obj);
                     this.postFormContainer.prepend(el);
+                    i += 1;
                 })
                 break;
         }
@@ -127,7 +136,7 @@ class CRUD {
             setTimeout(() => {
                 gridItem.classList.remove('disactivated');
             }, 100);
-            this.section.appendChild(gridItem);
+            this.section.append(gridItem);
             j += 5;
         });
     }
@@ -191,6 +200,7 @@ class CRUD {
         })
         const promises = Promise.all(filteredElements.map(el => this.#fadeOut(el, timeout)))
             .then((list) => {
+                console.log(list);
                 list.forEach((el) => {
                     el.remove();
                 })
@@ -250,7 +260,10 @@ class CRUD {
         this.btnWrapper.addEventListener('click', (e) => {
             const btnIndex = parseInt(e.target.getAttribute('data-js-btn-index'));
             this.index = btnIndex;
-            this.renderFormGroups();
+            this.#hideAllItems(this.postFormContainer, 500)
+                .then(() => {
+                    this.renderFormGroups();
+                });
         })
 
         this.navbarBtn.addEventListener('click', () => {

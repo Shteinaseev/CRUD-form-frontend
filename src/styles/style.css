@@ -223,53 +223,57 @@ canvas {
         z-index: 14;
         padding: 30px;
         height: 100%;
-        overflow: auto;
-        scrollbar-width: thin;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: none;
+        /* Firefox */
         scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
         box-shadow: var(--box-shadow);
+
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s var(--transition-timing-function);
+        }
 
         &::-webkit-scrollbar {
             width: 10px;
             transition: .3s;
+            display: none;
         }
 
         &::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
+            display: none;
+
         }
 
         &::-webkit-scrollbar-thumb {
             background: linear-gradient(to bottom, var(--color-aqua), var(--color-accent-muted));
             border-radius: 10px;
             border: 2px solid rgba(255, 255, 255, 0.1);
+            display: none;
         }
 
         form-group {
-            opacity: 0;
-            animation: fadeInUp 0.5s ease-out forwards;
+            transform: translateX(0);
+            filter: blur(0);
 
+            &.disactivated {
+                transform: translateX(-100%);
+                opacity: .2;
+                filter: blur(10px);
+            }
+
+            &.activated {
+                transform: translateX(100%);
+                opacity: 0;
+                filter: blur(10px);
+
+            }
         }
 
-        /* Стагированный эффект - каждый элемент появляется с задержкой */
-        form-group:nth-child(1) {
-            animation-delay: 0.1s;
-        }
-
-        form-group:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        form-group:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-
-        form-group:nth-child(4) {
-            animation-delay: 0.4s;
-        }
-
-        form-group:nth-child(n+5) {
-            animation-delay: 0.5s;
-        }
 
         .btn-wrapper {
             padding-top: 1rem;
@@ -333,6 +337,7 @@ entity-grid-items {
     }
 }
 
+
 .hidden {
     display: none;
 }
@@ -358,7 +363,7 @@ entity-grid-items {
 
 .animation {
     transition-delay: calc(.1s * var(--i));
-    transition-duration: 1.2s;
+    transition-duration: 0.8s;
 }
 
 @keyframes animateGrain {
