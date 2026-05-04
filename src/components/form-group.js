@@ -1,6 +1,5 @@
 import styles from './form-group.css?inline';
 import * as icons from '@boxicons/js';
-
 export class FormGroup extends HTMLElement {
 
     static get observedAttributes() {
