@@ -1,10 +1,11 @@
 import styles from './form-group.css?inline';
 import * as icons from '@boxicons/js';
+console.log(icons)
 export class FormGroup extends HTMLElement {
 
     static get observedAttributes() {
         return ['label', 'name', 'type', 'icon',
-            'inputmode', 'min-length', 'max-length', 'value', 'required', 'options'];
+            'inputmode', 'min-length', 'max-length', 'value', 'required', 'options', 'lookup', 'displayfields', 'searchfields'];
     }
 
     #label = '';
@@ -17,7 +18,9 @@ export class FormGroup extends HTMLElement {
     #value = '';
     #required = false;
     #options = [];
-
+    #lookup = '';
+    #displayFields = [];
+    #searchFields = [];
     #id = '';
     #internals = null;
 
@@ -70,24 +73,103 @@ export class FormGroup extends HTMLElement {
             case 'required':
                 this.#required = newValue !== null;
                 break;
+
+            case 'lookup':
+                this.#lookup = newValue || '';
+                break;
+
+            case 'displayfields':
+                this.#displayFields = this.#parseOptions(newValue);
+
+                break;
+
+            case 'searchfields':
+                this.#searchFields = this.#parseOptions(newValue);
+                break;
         }
 
         this.#id = this.#name.toLowerCase().replace(/\s/g, '-') + '-' + Math.floor(Math.random() * 1000);
 
         this.render();
         this.#bindInputEvents();
+
+    }
+
+    debounce(func, delay) {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    #fetchSuggestions(value) {
+        if (!value) {
+            return
+        }
+        fetch(`http://localhost:3000/${this.#lookup}?q=${value}`)
+            .then(res => res.json())
+            .then(data => {
+                const newData = [];
+                data.forEach(el => {
+                    let i = 0;
+                    const obj = {};
+                    console.log(el)
+                    for (const [key, value] of Object.entries(el)) {
+                        if (this.#displayFields[i++] === key) {
+                            obj[key] = value
+                        }
+                    }
+                    newData.push(obj)
+
+                });
+                this.dispatchEvent(new CustomEvent("data-send", {
+                    detail: { data: newData, title: this.#lookup },
+                    bubbles: true,
+                    composed: true
+                }));
+
+            })
+            .catch(err => console.error('Search error:', err));
+
+    }
+
+    onInput(event) {
+        const value = event.target.#value.trim();
+        this.#fetchSuggestions(value);
     }
 
     #bindInputEvents() {
         const input = this.shadowRoot.querySelector('input, textarea');
         if (!input) return;
-
-        input.addEventListener('input', () => {
-            if (this.#type === 'number' || this.#inputMode === 'numeric') {
+        if (this.#type === 'number' || this.#inputMode === 'numeric') {
+            input.addEventListener('input', () => {
+                this.#value = input.value;
                 input.value = input.value.replace(/\D/g, '');
-            }
-            this.#value = input.value;
-        });
+            });
+        }
+        else if (this.#type === 'checkbox') {
+            input.nextElementSibling.addEventListener('click', () => {
+                input.nextElementSibling.classList.toggle('check');
+            });
+        }
+        else if (this.#type === 'search') {
+            input.addEventListener('input', this.debounce(this.onInput.bind(this), 500));
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    this.#fetchSuggestions(input.value.trim());
+                }
+                document.addEventListener('suggestion-selected', (e) => {
+                    if (e.detail['data-js-table'].value === this.#lookup) {
+                        input.value = e.detail['data-js-suggestion'].value
+                    }
+                });
+
+            });
+        }
+
+
+
     }
 
     #parseOptions(value) {
@@ -108,11 +190,38 @@ export class FormGroup extends HTMLElement {
         } else if (this.#type === 'date') {
             block.classList.add('block');
             block.innerHTML = this.#renderDateInput();
+        } else if (this.#type === 'search') {
+            block.classList.add('block');
+            block.innerHTML = this.#renderSearchInput();
+        } else if (this.#type === 'checkbox') {
+            block.classList.add('checkbox');
+            block.innerHTML = this.#renderCheckboxInput();
+
         } else {
             block.classList.add('block');
             block.innerHTML = this.#renderInput();
         }
         return block.outerHTML;
+    }
+
+    #renderSearchInput() {
+        return `
+            <input 
+                id="${this.#id}"
+                name="${this.#name}"
+                class="field-control" 
+                type="text"
+                ${this.#inputMode ? `inputmode="${this.#inputMode}"` : ''}
+            >
+            ${this.#icon}
+        `
+    }
+
+    #renderCheckboxInput() {
+        return `
+                <input id="${this.#id}" name="${this.#name}" class="field-control" type="checkbox" >
+                <div class="checkmark"></div>
+            `
     }
 
     #renderRadioInputs() {
@@ -139,7 +248,6 @@ export class FormGroup extends HTMLElement {
         `
     }
 
-
     #renderDateInput() {
         return `
             <input 
@@ -155,6 +263,11 @@ export class FormGroup extends HTMLElement {
 
     render() {
         const blockHTML = this.#renderBlockEl();
+        //  if (this.#type === 'checkbox') {
+
+        // } else {
+        //     let tm = '<label for="${this.#id}">${this.#label}</label>'
+        // }
         this.shadowRoot.innerHTML = `
             <style>
                 ${styles}
@@ -162,11 +275,12 @@ export class FormGroup extends HTMLElement {
             <label for="${this.#id}">${this.#label}</label>
             ${blockHTML} 
             <span class="field-errors" id="${this.#id}-errors" data-js-field-errors></span>
-        `
+            `
     }
 
     connectedCallback() {
         this.render();
+        this.#bindInputEvents();
     }
 
 }

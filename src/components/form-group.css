@@ -23,12 +23,15 @@ input {
     box-sizing: border-box;
 }
 
+
+
 :host {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
     padding-block: 0.3rem;
     --cl: color-mix(in srgb, var(--color-accent) 30%, transparent);
+    position: relative;
 }
 
 :host(.disactivated) {
@@ -41,9 +44,78 @@ label {
     font-size: 1rem;
 }
 
-.block {
-    width: 100%;
+input:checked~.checkmark {
+    box-shadow: inset 3px 3px 5px #c5c5c5,
+        inset -3px -3px 5px #ffffff;
+}
+
+input:checked~.checkmark:after {
+    opacity: 1;
+}
+
+
+.checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkbox {
     display: flex;
+    position: relative;
+    cursor: pointer;
+    font-size: 20px;
+    user-select: none;
+    column-gap: 0.8rem;
+    align-items: center;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 1.3em;
+    width: 1.3em;
+    background-color: #ccc;
+    border-radius: 100%;
+    background: #e8e8e8;
+    box-shadow: 3px 3px 5px #c5c5c5,
+        -3px -3px 5px #ffffff;
+    transition-duration: 0.5s;
+}
+
+.check {
+    box-shadow: inset 3px 3px 5px #c5c5c5,
+        inset -3px -3px 5px #ffffff;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    opacity: 0;
+}
+
+.check:after {
+    opacity: 1;
+}
+
+.checkbox .checkmark:after {
+    left: 0.45em;
+    top: 0.25em;
+    width: 0.25em;
+    height: 0.5em;
+    border: solid darkgray;
+    border-width: 0 0.15em 0.15em 0;
+    transform: rotate(45deg);
+}
+
+.block {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     position: relative;
     z-index: 2;
 
@@ -59,6 +131,8 @@ label {
 
     input {
         width: 24.25rem;
+        position: relative;
+        z-index: 1;
         background-color: var(--bg-color);
         backdrop-filter: blur(10px);
         border-radius: .8rem;
@@ -77,7 +151,12 @@ label {
         &:focus~svg {
             top: 30%;
         }
+
+
+
     }
+
+
 }
 
 .radio-group {

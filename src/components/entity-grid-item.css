@@ -5,6 +5,7 @@
 
 :host {
     width: max-content;
+    min-width: 100%;
     border-radius: 0.8rem;
     display: flex;
     row-gap: 0.8rem;

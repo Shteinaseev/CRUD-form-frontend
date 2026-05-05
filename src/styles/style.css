@@ -63,6 +63,24 @@ canvas {
     z-index: -1;
 }
 
+.info-block {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-color);
+    backdrop-filter: blur(24px);
+    clip-path: circle(0% at 0% 0%);
+    transition-duration: 1s;
+    transition-timing-function: ease-in-out;
+    position: absolute;
+    z-index: 35;
+
+    &.active {
+        clip-path: circle(100% at 50% 50%);
+    } 
+}
+
+
+
 .gradient {
     background-image: url("https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png");
     height: 100vh;
@@ -124,6 +142,7 @@ canvas {
 
     header {
         width: max-content;
+        min-width: 100%;
         border-radius: 0.8rem;
         border: var(--border);
         position: sticky;
@@ -215,6 +234,58 @@ canvas {
     }
 }
 
+.search-list {
+    margin-top: .3rem;
+    min-width: 30vw;
+    border-radius: .8rem;
+    top: 0;
+    right: 0;
+    position: absolute;
+    z-index: 100;
+    padding: 1rem;
+    transform: translateX(0);
+    transition: .6s;
+
+    &.disactivated {
+        transform: translateX(100%);
+    }
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        row-gap: .3rem;
+        list-style: none;
+        position: relative;
+        z-index: 4;
+
+    }
+
+    li {
+        height: 3rem;
+        background-color: #e0e8ef88;
+        backdrop-filter: blur(14px);
+        border-radius: .8rem;
+        padding: 1rem;
+        transition: .3s;
+        animation: 1s ease-in-out fadeInUp;
+        box-shadow: -4px -2px 16px 0px #ffffff, 4px 2px 16px 0px rgb(95 157 231 / 48%);
+
+        &:hover {
+            color: #516d91;
+            background-color: #E5EDF5;
+            box-shadow: -2px -1px 8px 0px #ffffff, 2px 1px 8px 0px rgb(95 157 231 / 48%);
+        }
+
+        &:active {
+            box-shadow: none;
+        }
+
+        &.disactivated {
+            opacity: 1;
+        }
+    }
+}
+
 .glass-form {
     position: absolute;
     min-width: var(--form-width, 26rem);
@@ -285,6 +356,8 @@ canvas {
         }
 
         form-group {
+            position: relative;
+            z-index: -10;
             transform: translateX(0);
             filter: blur(0);
 

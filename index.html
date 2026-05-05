@@ -10,6 +10,7 @@
 </head>
 
 <body>
+   <div class="info-block" data-js-info-block></div>
    <svg style="display: none">
       <filter id="glass-distortion">
          <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" result="noise" />
@@ -47,6 +48,15 @@
       </ul>
    </nav>
    <main class="content" data-js>
+      <div class="search-list disactivated">
+         <div class="glass-filter"></div>
+         <div class="glass-overlay"></div>
+         <div class="glass-specular"></div>
+         <ul data-js-search-list>
+
+         </ul>
+      </div>
+
       <div class="glass-form" data-js-post-form>
          <div class="glass-filter"></div>
          <div class="glass-overlay"></div>

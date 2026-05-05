@@ -10,6 +10,7 @@
     "mock": "json-server --watch server/db.json --port 3000"
   },
   "devDependencies": {
+    "json-server": "^0.17.0",
     "vite": "^8.0.0"
   },
   "dependencies": {

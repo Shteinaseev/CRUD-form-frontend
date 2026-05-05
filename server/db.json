@@ -184,5 +184,179 @@
             "srodstvo": "Deda",
             "svedocanstvo": 1
         }
+    ],
+    "mesto": [
+        {
+            "idmesto": 1,
+            "naziv": "Novi Sad",
+            "ptt": "21000"
+        },
+        {
+            "idmesto": 2,
+            "naziv": "Beograd",
+            "ptt": "11000"
+        },
+        {
+            "idmesto": 3,
+            "naziv": "Subotica",
+            "ptt": "24000"
+        },
+        {
+            "idmesto": 4,
+            "naziv": "Niš",
+            "ptt": "18000"
+        }
+    ],
+    "opstina": [
+        {
+            "idopstina": 1,
+            "naziv": "Novi Sad",
+            "ptt": "21000"
+        },
+        {
+            "idopstina": 2,
+            "naziv": "Beograd",
+            "ptt": "11000"
+        },
+        {
+            "idopstina": 3,
+            "naziv": "Subotica",
+            "ptt": "24000"
+        },
+        {
+            "idopstina": 4,
+            "naziv": "Niš",
+            "ptt": "18000"
+        }
+    ],
+    "osnovna_skola": [
+        {
+            "idosnovna_skola": 1,
+            "naziv": "OŠ Jovan Jovanović Zmaj",
+            "ulica_idulica": 12,
+            "opstina_idopstina": 1,
+            "mesto_idmesto": 1
+        },
+        {
+            "idosnovna_skola": 2,
+            "naziv": "OŠ Svetozar Marković",
+            "ulica_idulica": 25,
+            "opstina_idopstina": 2,
+            "mesto_idmesto": 2
+        },
+        {
+            "idosnovna_skola": 3,
+            "naziv": "OŠ Dositej Obradović",
+            "ulica_idulica": 33,
+            "opstina_idopstina": 3,
+            "mesto_idmesto": 3
+        },
+        {
+            "idosnovna_skola": 4,
+            "naziv": "OŠ Vuk Karadžić",
+            "ulica_idulica": 41,
+            "opstina_idopstina": 4,
+            "mesto_idmesto": 4
+        }
+    ],
+    "odeljenje": [
+        {
+            "idodeljenje": 1,
+            "oznka_odeljenja": "I-1",
+            "razred": 1,
+            "skolska_godina_idskolska_godina": 2025,
+            "smer_idsmer": 1
+        },
+        {
+            "idodeljenje": 2,
+            "oznka_odeljenja": "I-2",
+            "razred": 1,
+            "skolska_godina_idskolska_godina": 2025,
+            "smer_idsmer": 2
+        },
+        {
+            "idodeljenje": 3,
+            "oznka_odeljenja": "II-1",
+            "razred": 2,
+            "skolska_godina_idskolska_godina": 2025,
+            "smer_idsmer": 1
+        },
+        {
+            "idodeljenje": 4,
+            "oznka_odeljenja": "III-1",
+            "razred": 3,
+            "skolska_godina_idskolska_godina": 2025,
+            "smer_idsmer": 3
+        }
+    ],
+    "odeljenje_has_ucenik": [
+        {
+            "idodeljenje_has_ucenik": 1,
+            "ucenik_iducenik": 101,
+            "odeljenje_idodeljenje": 1,
+            "datu_upisa": "2025-09-01",
+            "datum_ispisa": null
+        },
+        {
+            "idodeljenje_has_ucenik": 2,
+            "ucenik_iducenik": 102,
+            "odeljenje_idodeljenje": 1,
+            "datu_upisa": "2025-09-01",
+            "datum_ispisa": null
+        },
+        {
+            "idodeljenje_has_ucenik": 3,
+            "ucenik_iducenik": 103,
+            "odeljenje_idodeljenje": 2,
+            "datu_upisa": "2025-09-01",
+            "datum_ispisa": "2026-01-15"
+        },
+        {
+            "idodeljenje_has_ucenik": 4,
+            "ucenik_iducenik": 104,
+            "odeljenje_idodeljenje": 3,
+            "datu_upisa": "2025-09-01",
+            "datum_ispisa": null
+        }
+    ],
+    "ulica": [
+        {
+            "idulica": 1,
+            "naziv": "Bulevar Oslobođenja"
+        },
+        {
+            "idulica": 2,
+            "naziv": "Zmaj Jovina"
+        },
+        {
+            "idulica": 3,
+            "naziv": "Kralja Petra I"
+        },
+        {
+            "idulica": 4,
+            "naziv": "Cara Dušana"
+        },
+        {
+            "idulica": 5,
+            "naziv": "Mihajla Pupina"
+        }
+    ],
+    "skolska_godina": [
+        {
+            "idskolska_godina": 1,
+            "skolska_godina": "2023/2024"
+        },
+        {
+            "idskolska_godina": 2,
+            "skolska_godina": "2024/2025"
+        },
+        {
+            "idskolska_godina": 3,
+            "skolska_godina": "2025/2026"
+        },
+        {
+            "idskolska_godina": 4,
+            "skolska_godina": "2026/2027"
+        }
     ]
 }

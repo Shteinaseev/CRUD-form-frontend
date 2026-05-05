@@ -4,12 +4,29 @@ import { entityCard } from "../components/entity-card";
 import { EntityGridItem } from "../components/entity-grid-item";
 import { ReflectGradient } from "./reflect-gradient";
 import { getIcons, Home, ChevronLeft, ChevronRight, Menu, Plus, InfoCircle, HelpCircle } from '@boxicons/js';
-import { columnsWidth, firstFormFields, secondFormFields } from "../config/data-grid-config";
+import {
+    columnsWidth, ucenikFormFields,
+    ucenikHasStarateljFormFields,
+    smerFormFields, mestoFormFields, osnovnaSkolaFormFields, opstinaFormFields
+} from "../config/data-grid-config";
 class CRUD {
     isDragging = false;
     index = 1;
     startX = 0;
     firstCardWidth = 350;
+    endpoints = [
+        'ucenik_has_staratelj',
+        'ucenik',
+        'mesto',
+        'osnovna_skola',
+        'opstina',
+        'odeljenje_has_ucenik',
+        'odeljenje',
+        'ulica',
+        'staratelj',
+        'smer',
+        'skolska_godina'
+    ]
     selectors = {
         root: '[data-js]',
         navbar: '[data-js-navbar]',
@@ -23,7 +40,10 @@ class CRUD {
         infoBtn: '[data-js-navbar-info-btn]',
         postFormContainer: '[data-js-post-form-container]',
         btnWrapper: '[data-js-btn-wrapper]',
-        numberBtn: '[data-js-btn-index]'
+        numberBtn: '[data-js-btn-index]',
+        searchList: '[data-js-search-list]',
+        suggestion: '[data-js-suggestion]',
+        infoBlock: '[data-js-info-block]',
     }
 
     constructor() {
@@ -32,23 +52,35 @@ class CRUD {
         });
 
         this.root = document.querySelector(this.selectors.root);
+        this.infoBlock = document.querySelector(this.selectors.infoBlock);
         this.navbar = document.querySelector(this.selectors.navbar);
         this.homeBtn = this.navbar.querySelector(this.selectors.homeBtn)
         this.addBtn = this.navbar.querySelector(this.selectors.addBtn);
+        this.infoBtn = this.navbar.querySelector(this.selectors.infoBtn);
         this.navbarBtn = this.navbar.querySelector(this.selectors.navbarBtn);
         this.section = this.root.querySelector(this.selectors.section);
         this.container = this.section.querySelector('.container');
         this.postForm = this.root.querySelector(this.selectors.postForm);
         this.postFormContainer = this.postForm.querySelector(this.selectors.postFormContainer);
+        this.searchList = this.root.querySelector(this.selectors.searchList);
         this.renderFormGroups();
-        fetch('http://localhost:3000/staratelj')
+        this.#fetchData();
+        this.bindEvents();
+    }
+
+    #fetchData() {
+        fetch(`http://localhost:3000/${this.endpoints[this.index - 1]}`)
             .then(response => response.json())
             .then(data => {
                 this.data = data;
-                this.renderEntityCards();
-                this.section.appendChild(this.createBtnEl('button', 'Prikaži sve', true, 'data-js-show-all'));
+                this.#fadeContainer(this.container, 500)
+                this.#hideAllItems(this.container, 1000)
+                    .then(() => {
+                        this.renderEntityCards();
+                        this.section.appendChild(this.createBtnEl('button', 'Prikaži sve', true, 'data-js-show-all'));
+                    })
             })
-        this.bindEvents();
+
     }
 
     createFormGroup(i) {
@@ -71,11 +103,21 @@ class CRUD {
     renderFormGroups() {
         switch (this.index) {
             case 1:
-                this.renderFormItems(firstFormFields);
+                this.renderFormItems(ucenikHasStarateljFormFields);
                 break;
             case 2:
-                this.renderFormItems(secondFormFields);
+                this.renderFormItems(ucenikFormFields);
                 break;
+            case 3:
+                this.renderFormItems(mestoFormFields);
+                break;
+            case 4:
+                this.renderFormItems(osnovnaSkolaFormFields);
+                break;
+            case 5:
+                this.renderFormItems(opstinaFormFields);
+                break;
+
         }
     }
 
@@ -124,7 +166,9 @@ class CRUD {
         wrapper.classList.add('animation');
         wrapper.classList.add('activated');
         wrapper.style.setProperty('--i', `${this.postFormContainer.children.length + 2}`);
-        for (let i = 1; i <= 3; i++) {
+        let i = (this.index - 1 <= 0) ? this.index : this.index - 1
+        const finish = i + 2;
+        for (i; i <= finish; i++) {
             const btn = document.createElement('button');
             btn.setAttribute('data-js-btn-index', i);
             btn.setAttribute('type', 'button');
@@ -261,10 +305,8 @@ class CRUD {
             filteredElements.push(...elements.filter(el => {
                 return el.tagName.toLowerCase() !== 'div';
             }));
-            console.log(filteredElements);
         } else {
             filteredElements.push(...elements);
-            console.log(filteredElements);
         }
         const promises = Promise.all(filteredElements.map(el => this.#fadeOut(el, timeout)))
             .then((list) => {
@@ -301,6 +343,27 @@ class CRUD {
     bindEvents() {
         let isShowingAll = false;
 
+
+        window.addEventListener('data-send', (e) => {
+            console.log(e.detail)
+            this.searchList.parentElement.classList.remove('disactivated');
+            this.searchList.innerHTML = e.detail.data.map((item) => {
+                let textContent = ''
+                let id = '';
+                for (const [key, value] of Object.entries(item)) {
+                    textContent += `${key} : ${value}, `
+                    if (key === 'id' + e.detail.title) {
+                        id = value;
+                    }
+                }
+                return `<li data-js-suggestion="${id}" data-js-table="${e.detail.title}" class="disactivated">${textContent}</li>`;
+            }).join('');
+        })
+
+        window.addEventListener('blur', (e) => {
+            this.searchList.parentElement.classList.add('disactivated')
+        }, { capture: true })
+
         window.addEventListener('click', (e) => {
             const isClickInsideNavbar = this.navbar.contains(e.target);
             if (!isClickInsideNavbar && !this.navbar.classList.contains('scrolled')) {
@@ -310,10 +373,22 @@ class CRUD {
             if (e.target.matches(this.selectors.numberBtn)) {
                 const btnIndex = parseInt(e.target.getAttribute('data-js-btn-index'));
                 this.index = btnIndex;
+                this.#hideAllItems(this.section, 500)
+                this.#fetchData();
                 this.#hideAllItems(this.postFormContainer, 500, false)
                     .then(() => {
                         this.renderFormGroups();
                     });
+            }
+
+            if (e.target.matches(this.selectors.suggestion)) {
+                console.log(e)
+                document.dispatchEvent(new CustomEvent('suggestion-selected', {
+                    detail: e.target.attributes,
+                    bubbles: true,
+                    composed: true
+                }));
+
             }
 
             if (e.target.matches(this.selectors.btnShowAll)) {
@@ -371,6 +446,8 @@ class CRUD {
                                 this.section.appendChild(this.createBtnEl('button', 'Prikaži sve', true, 'data-js-show-all', 1000));
                             })
                     }
+                } else if (e.target === this.infoBtn || e.target.closest(this.selectors.infoBtn)){
+                    this.infoBlock.classList.toggle('active')
                 }
             }
         })
