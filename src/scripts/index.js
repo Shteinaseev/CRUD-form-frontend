@@ -28,7 +28,7 @@ class CRUD {
         'http://localhost:3000/osnovna_skola',
         'http://localhost:3000/opstina',
         'http://localhost:3000/odeljenje_has_ucenik',
-        '/api/odeljenje/api/proba.php',
+        'https://dario.ginder.ucim.in.rs/odeljenje',
         'http://localhost:3000/ulica',
         'http://localhost:3000/staratelj',
         'http://localhost:3000/smer',
