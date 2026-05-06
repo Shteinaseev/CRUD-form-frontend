@@ -106,7 +106,14 @@ export class FormGroup extends HTMLElement {
         if (!value) {
             return
         }
-        fetch(`http://localhost:3000/${this.#lookup}?q=${value}`)
+        let url;
+        if (this.#lookup === 'odeljenje') {
+            url = `http://localhost:5173/api/odeljenje/api/proba.php
+`
+        } else {
+            url = `http://localhost:3000/${this.#lookup}?q=${value}`
+        }
+        fetch(url)
             .then(res => res.json())
             .then(data => {
                 const newData = [];

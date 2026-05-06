@@ -259,36 +259,6 @@
             "mesto_idmesto": 4
         }
     ],
-    "odeljenje": [
-        {
-            "idodeljenje": 1,
-            "oznka_odeljenja": "I-1",
-            "razred": 1,
-            "skolska_godina_idskolska_godina": 2025,
-            "smer_idsmer": 1
-        },
-        {
-            "idodeljenje": 2,
-            "oznka_odeljenja": "I-2",
-            "razred": 1,
-            "skolska_godina_idskolska_godina": 2025,
-            "smer_idsmer": 2
-        },
-        {
-            "idodeljenje": 3,
-            "oznka_odeljenja": "II-1",
-            "razred": 2,
-            "skolska_godina_idskolska_godina": 2025,
-            "smer_idsmer": 1
-        },
-        {
-            "idodeljenje": 4,
-            "oznka_odeljenja": "III-1",
-            "razred": 3,
-            "skolska_godina_idskolska_godina": 2025,
-            "smer_idsmer": 3
-        }
-    ],
     "odeljenje_has_ucenik": [
         {
             "idodeljenje_has_ucenik": 1,
@@ -357,6 +327,28 @@
         {
             "idskolska_godina": 4,
             "skolska_godina": "2026/2027"
+        }
+    ],
+    "smer": [
+        {
+            "idsmer": 1,
+            "naziv_smera": "Matematika"
+        },
+        {
+            "idsmer": 2,
+            "naziv_smera": "Informatika"
+        },
+        {
+            "idsmer": 3,
+            "naziv_smera": "Biologija"
+        },
+        {
+            "idsmer": 4,
+            "naziv_smera": "Hemija"
+        },
+        {
+            "idsmer": 5,
+            "naziv_smera": "Istorija"
         }
     ]
 }

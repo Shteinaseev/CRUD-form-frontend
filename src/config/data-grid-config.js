@@ -88,75 +88,83 @@ export const opstinaFormFields = [
 ];
 
 export const odeljenjeHasUcenikFormFields = [
-  { label: "Učenik", name: "ucenik_iducenik", type: "search", icon: "User", 
-    lookup: "ucenik", displayFields: ["iducenik", "ime", "prezime"], 
-    searchFields: ["iducenik", "ime", "prezime"] }, // поиск по ученику
+    {
+        label: "Učenik", name: "ucenik_iducenik", type: "search", icon: "User",
+        lookup: "ucenik", displayFields: ["iducenik", "ime", "prezime"],
+        searchFields: ["iducenik", "ime", "prezime"]
+    }, // поиск по ученику
 
-  { label: "Odeljenje", name: "odeljenje_idodeljenje", type: "search", icon: "Layers", 
-    lookup: "odeljenje", displayFields: ["idodeljenje", "oznka_odeljenja", "razred"], 
-    searchFields: ["idodeljenje", "oznka_odeljenja", "razred"] }, // поиск по отделению
+    {
+        label: "Odeljenje", name: "odeljenje_idodeljenje", type: "search", icon: "Layers",
+        lookup: "odeljenje", displayFields: ["idodeljenje", "oznaka_odeljenja", "razred"],
+        searchFields: ["idodeljenje", "oznaka_odeljenja", "razred"]
+    }, // поиск по отделению
 
-  { label: "Datum upisa", name: "datu_upisa", type: "date", icon: "Calendar" },
+    { label: "Datum upisa", name: "datu_upisa", type: "date", icon: "Calendar" },
 
-  { label: "Datum ispisa", name: "datum_ispisa", type: "date", icon: "Calendar" }
+    { label: "Datum ispisa", name: "datum_ispisa", type: "date", icon: "Calendar" }
 ];
 
 export const odeljenjeFormFields = [
-  { label: "Oznaka odeljenja", name: "oznka_odeljenja", type: "text", icon: "Tag" },
+    { label: "Oznaka odeljenja", name: "oznaka_odeljenja", type: "text", icon: "Tag" },
 
-  { label: "Razred", name: "razred", type: "number", icon: "Layers" },
+    { label: "Razred", name: "razred", type: "number", icon: "Layers" },
 
-  { label: "Školska godina", name: "skolska_godina_idskolska_godina", type: "search", icon: "Calendar", 
-    lookup: "skolska_godina", displayFields: ["idskolska_godina", "skolska_godina"], 
-    searchFields: ["idskolska_godina", "skolska_godina"] }, // поиск по школьному году
+    {
+        label: "Školska godina", name: "skolska_godina_idskolska_godina", type: "search", icon: "Calendar",
+        lookup: "skolska_godina", displayFields: ["idskolska_godina", "skolska_godina"],
+        searchFields: ["idskolska_godina", "skolska_godina"]
+    }, // поиск по школьному году
 
-  { label: "Smer", name: "smer_idsmer", type: "search", icon: "BookOpen", 
-    lookup: "smer", displayFields: ["idsmer", "naziv"], 
-    searchFields: ["idsmer", "naziv"] } // поиск по направлению
+    {
+        label: "Smer", name: "smer_idsmer", type: "search", icon: "BookOpen",
+        lookup: "smer", displayFields: ["idsmer", "naziv"],
+        searchFields: ["idsmer", "naziv"]
+    } // поиск по направлению
 ];
 
 export const ulicaFormFields = [
     { label: "Naziv ulice", name: "street_name", type: "text", icon: "Globe" },
 ];
 
+export const starateljFormFields = [
+    { label: "Ime", name: "first_name", type: "text", icon: "User" },
+    { label: "Prezime", name: "last_name", type: "text", icon: "User" },
+    { label: "JMBG", name: "jmbg", type: "text", icon: "User", minLength: 13, maxLength: 13, number: true },
+    { label: "Broj stana", name: "apartment_number", type: "number", icon: "Home" },
+
+    {
+        label: "Ulica", name: "street_id", type: "search", icon: "Road", lookup: "ulica",
+        displayFields: ["idulica", "naziv"], searchFields: ["idulica", "naziv"]
+    }, // search
+
+    {
+        label: "Mesto", name: "place_id", type: "search", icon: "Globe", lookup: "mesto",
+        displayFields: ["idmesto", "naziv", "ptt"], searchFields: ["idmesto", "naziv", "ptt"]
+    }, // search
+
+    {
+        label: "Opština", name: "municipality_id", type: "search", icon: "MapIcon", lookup: "opstina",
+        displayFields: ["idopstina", "naziv", "ptt"], searchFields: ["idopstina", "naziv", "ptt"]
+    }, // search
+
+    { label: "Email", name: "email", type: "email", icon: "Envelope" },
+    { label: "Username", name: "username", type: "text", icon: "User" },
+    { label: "Lozinka", name: "password", type: "text", icon: "Lock" },
+
+    { label: "Telefon posao", name: "phone_work", type: "tel", icon: "Phone" },
+    { label: "Telefon fiksni", name: "phone_fixed", type: "tel", icon: "Phone" },
+    { label: "Telefon mobilni", name: "phone_mobile", type: "tel", icon: "Phone" },
+
+    { label: "Pol", name: "gender", type: "radio", icon: "User", options: ["M", "F", "Other"] },
+    { label: "Tip", name: "type", type: "text", icon: "Tag" }
+];
 
 export const smerFormFields = [
     { label: "Naziv smera", name: "direction_name", type: "text", icon: "User" },
 ]
 
 export const skolskaGodinaFormFields = [
-  { label: "Školska godina", name: "skolska_godina", type: "text", icon: "Calendar" }
+    { label: "Školska godina", name: "skolska_godina", type: "text", icon: "Calendar" }
 ];
-
-export const ucenik = {
-  iducenik: "INT",
-  ime: "VARCHAR(45)",
-  prezime: "VARCHAR(45)",
-  datum_rodjenja: "DATE",
-  datum_prvog_upisa: "DATE",
-  osnovna_skola: "INT",
-  mesto_idmesto: "INT",
-  opstina_idopstina: "INT",
-  ulica_idulica: "INT",
-  broj_ulice: "INT",
-  telefon: "VARCHAR(20)",
-  e_mail: "VARCHAR(100)",
-  username: "VARCHAR(45)"
-};
-
-export const staratelj = {
-  idstaratelj: "INT",
-  ime: "VARCHAR(45)",
-  prezime: "VARCHAR(45)",
-  jmbg: "VARCHAR(13)",
-  ulica_idulica: "INT",
-  broj_ulice: "INT",
-  mesto_idmesto: "INT",
-  opstina_idopstina: "INT",
-  username: "VARCHAR(45)",
-  telefon_posao: "VARCHAR(20)",
-  telefon_kuca: "VARCHAR(20)",
-  e_mail: "VARCHAR(100)",
-  vaznost: "TINYINT"
-};
 

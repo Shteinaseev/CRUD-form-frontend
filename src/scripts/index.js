@@ -8,28 +8,31 @@ import { getIcons, Home, ChevronLeft, ChevronRight, Menu, Plus, InfoCircle, Help
 import * as tables from '../config/table-js-config';
 import {
     columnsWidth, ucenikFormFields,
-    ucenikHasStarateljFormFields, mestoFormFields, osnovnaSkolaFormFields, opstinaFormFields, odeljenjeHasUcenikFormFields,
-    odeljenjeFormFields, ulicaFormFields, smerFormFields, skolskaGodinaFormFields
+    ucenikHasStarateljFormFields, mestoFormFields,
+    osnovnaSkolaFormFields, opstinaFormFields,
+    odeljenjeHasUcenikFormFields,
+    odeljenjeFormFields, starateljFormFields, ulicaFormFields, smerFormFields,
+    skolskaGodinaFormFields
 } from "../config/data-grid-config";
 
 class CRUD {
     isDragging = false;
-    index = 1;
+    index = 7;
     startX = 0;
     firstCardWidth = 350;
     isShowingAll = false;
     endpoints = [
-        'ucenik_has_staratelj',
-        'ucenik',
-        'mesto',
-        'osnovna_skola',
-        'opstina',
-        'odeljenje_has_ucenik',
-        'odeljenje',
-        'ulica',
-        'staratelj',
-        'smer',
-        'skolska_godina'
+        'http://localhost:3000/ucenik_has_staratelj',
+        'http://localhost:3000/ucenik',
+        'http://localhost:3000/mesto',
+        'http://localhost:3000/osnovna_skola',
+        'http://localhost:3000/opstina',
+        'http://localhost:3000/odeljenje_has_ucenik',
+        '/api/odeljenje/api/proba.php',
+        'http://localhost:3000/ulica',
+        'http://localhost:3000/staratelj',
+        'http://localhost:3000/smer',
+        'http://localhost:3000/skolska_godina'
     ]
     selectors = {
         root: '[data-js]',
@@ -70,10 +73,14 @@ class CRUD {
         this.renderFormGroups();
         this.#fetchData();
         this.bindEvents();
+
     }
 
+
+
+
     #fetchData() {
-        fetch(`http://localhost:3000/${this.endpoints[this.index - 1]}`)
+        fetch(`${this.endpoints[this.index - 1]}`)
             .then(response => response.json())
             .then(data => {
                 this.data = data;
@@ -132,9 +139,12 @@ class CRUD {
                 this.renderFormItems(ulicaFormFields);
                 break;
             case 9:
-                this.renderFormItems(smerFormFields);
+                this.renderFormItems(starateljFormFields);
                 break;
             case 10:
+                this.renderFormItems(smerFormFields);
+                break;
+            case 11:
                 this.renderFormItems(skolskaGodinaFormFields);
                 break;
 
@@ -495,7 +505,7 @@ class CRUD {
                         this.#renderTableShemeEls();
                         this.infoBlock.classList.add('active');
                         this.#showAllItems(this.infoBlock, 500)
-    
+
                     }
 
                 }
