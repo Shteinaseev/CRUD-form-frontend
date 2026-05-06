@@ -1,139 +1,112 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Data Grid</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #0f0f2a;
-      color: #eee;
-      padding: 20px;
-    }
-
-    .data-grid {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      background: #1a1a2e;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    }
-
-    .grid-header {
-      display: grid;
-      grid-template-columns: 120px 1fr 100px 100px 120px;
-      background: #16213e;
-      padding: 14px 16px;
-      font-weight: 600;
-      border-bottom: 1px solid #334155;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .grid-row {
-      display: grid;
-      grid-template-columns: 120px 1fr 100px 100px 120px;
-      padding: 12px 16px;
-      border-bottom: 1px solid #334155;
-      transition: background 0.2s;
-    }
-
-    .grid-row:hover {
-      background: #1e2a4a;
-    }
-
-    .grid-row:last-child {
-      border-bottom: none;
-    }
-
-    .grid-cell {
-      padding: 4px 8px;
+    .er-diagram {
+      position: relative;
       display: flex;
-      align-items: center;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin: 40px;
     }
 
-    .text-right { justify-content: flex-end; }
-    .text-center { justify-content: center; }
-
-    .status {
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 500;
+    .table {
+      background: #f9f9f9;
+      border: 2px solid #333;
+      border-radius: 8px;
+      padding: 10px 15px;
+      width: 200px;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
     }
 
-    .status.good    { background: #22c55e; color: #000; }
-    .status.moderate{ background: #eab308; color: #000; }
-    .status.poor    { background: #ef4444; color: #fff; }
+    .table h3 {
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: 1.1em;
+      color: #222;
+    }
 
-    .header-cell {
-      font-weight: 600;
-      color: #94a3b8;
+    .table ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .table li {
+      font-size: 0.9em;
+      border-bottom: 1px solid #ddd;
+      padding: 4px 0;
+    }
+
+    .relations {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 800px;
+      height: 200px;
+      pointer-events: none;
     }
   </style>
 </head>
+
 <body>
-
-  <h1 style="text-align:center; margin-bottom:20px;">Data Grid</h1>
-
-  <div class="data-grid" id="dataGrid">
-    <!-- Заголовки -->
-    <div class="grid-header">
-      <div class="header-cell">Время</div>
-      <div class="header-cell">Город</div>
-      <div class="header-cell text-right">Темп. (°C)</div>
-      <div class="header-cell text-right">Влажность</div>
-      <div class="header-cell text-center">Статус</div>
+  <div class="er-diagram">
+    <!-- Таблица Ucenik -->
+    <div class="table" id="ucenik">
+      <h3>ucenik</h3>
+      <ul>
+        <li>iducenik INT</li>
+        <li>ime VARCHAR(45)</li>
+        <li>prezime VARCHAR(45)</li>
+        <li>osnovna_skola_id INT</li>
+        <li>mesto_id INT</li>
+      </ul>
     </div>
 
-    <!-- Данные будут вставляться сюда через JS -->
+    <!-- Таблица Osnovna Skola -->
+    <div class="table" id="osnovna_skola">
+      <h3>osnovna_skola</h3>
+      <ul>
+        <li>idosnovna_skola INT</li>
+        <li>naziv VARCHAR(45)</li>
+        <li>mesto_id INT</li>
+      </ul>
+    </div>
+
+    <!-- Таблица Mesto -->
+    <div class="table" id="mesto">
+      <h3>mesto</h3>
+      <ul>
+        <li>idmesto INT</li>
+        <li>naziv VARCHAR(45)</li>
+      </ul>
+    </div>
+
+    <!-- SVG линии -->
+    <svg width="100%" height="100%" viewBox="0 0 1200 800">
+      <!-- Таблица ucenik -->
+      <rect x="50" y="50" width="200" height="120" fill="#f9f9f9" stroke="#333" />
+      <text x="60" y="70" font-size="14">ucenik</text>
+
+      <!-- Таблица osnovna_skola -->
+      <rect x="400" y="50" width="200" height="100" fill="#f9f9f9" stroke="#333" />
+      <text x="410" y="70" font-size="14">osnovna_skola</text>
+
+      <!-- Связь -->
+      <line x1="250" y1="100" x2="400" y2="100" stroke="black" stroke-width="2" marker-end="url(#arrow)" />
+
+      <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill="black" />
+        </marker>
+      </defs>
+    </svg>
+
   </div>
-
-  <script>
-    const data = [
-      { time: "09:00", city: "Белград", temp: 18.5, humidity: 65, status: "good" },
-      { time: "10:00", city: "Нови Сад", temp: 19.2, humidity: 62, status: "good" },
-      { time: "11:00", city: "Ниш", temp: 22.1, humidity: 58, status: "moderate" },
-      { time: "12:00", city: "Крагуевац", temp: 24.8, humidity: 45, status: "poor" },
-      { time: "13:00", city: "Суботица", temp: 17.3, humidity: 71, status: "good" },
-      { time: "14:00", city: "Зренянин", temp: 21.5, humidity: 53, status: "moderate" },
-    ];
-
-    function renderGrid() {
-      const grid = document.getElementById('dataGrid');
-
-      data.forEach(item => {
-        const row = document.createElement('div');
-        row.className = 'grid-row';
-
-        row.innerHTML = `
-          <div class="grid-cell">${item.time}</div>
-          <div class="grid-cell">${item.city}</div>
-          <div class="grid-cell text-right">${item.temp}°C</div>
-          <div class="grid-cell text-right">${item.humidity}%</div>
-          <div class="grid-cell text-center">
-            <span class="status ${item.status}">${item.status === 'good' ? 'Хорошо' : 
-                                                    item.status === 'moderate' ? 'Умеренно' : 'Плохо'}</span>
-          </div>
-        `;
-
-        grid.appendChild(row);
-      });
-    }
-
-    // Запуск при загрузке
-    window.onload = renderGrid;
-  </script>
-
 </body>
+
 </html>

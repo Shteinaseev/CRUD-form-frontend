@@ -2,18 +2,22 @@ import { FormGroup } from "../components/form-group";
 import { dotsGenerator } from "./dots";
 import { entityCard } from "../components/entity-card";
 import { EntityGridItem } from "../components/entity-grid-item";
+import { TableSheme } from "../components/table-sheme";
 import { ReflectGradient } from "./reflect-gradient";
 import { getIcons, Home, ChevronLeft, ChevronRight, Menu, Plus, InfoCircle, HelpCircle } from '@boxicons/js';
+import * as tables from '../config/table-js-config';
 import {
     columnsWidth, ucenikFormFields,
-    ucenikHasStarateljFormFields,
-    smerFormFields, mestoFormFields, osnovnaSkolaFormFields, opstinaFormFields
+    ucenikHasStarateljFormFields, mestoFormFields, osnovnaSkolaFormFields, opstinaFormFields, odeljenjeHasUcenikFormFields,
+    odeljenjeFormFields, ulicaFormFields, smerFormFields, skolskaGodinaFormFields
 } from "../config/data-grid-config";
+
 class CRUD {
     isDragging = false;
     index = 1;
     startX = 0;
     firstCardWidth = 350;
+    isShowingAll = false;
     endpoints = [
         'ucenik_has_staratelj',
         'ucenik',
@@ -77,6 +81,7 @@ class CRUD {
                 this.#hideAllItems(this.container, 1000)
                     .then(() => {
                         this.renderEntityCards();
+                        this.isShowingAll = false;
                         this.section.appendChild(this.createBtnEl('button', 'Prikaži sve', true, 'data-js-show-all'));
                     })
             })
@@ -116,6 +121,21 @@ class CRUD {
                 break;
             case 5:
                 this.renderFormItems(opstinaFormFields);
+                break;
+            case 6:
+                this.renderFormItems(odeljenjeHasUcenikFormFields);
+                break;
+            case 7:
+                this.renderFormItems(odeljenjeFormFields);
+                break;
+            case 8:
+                this.renderFormItems(ulicaFormFields);
+                break;
+            case 9:
+                this.renderFormItems(smerFormFields);
+                break;
+            case 10:
+                this.renderFormItems(skolskaGodinaFormFields);
                 break;
 
         }
@@ -205,17 +225,6 @@ class CRUD {
         return gridItem;
     }
 
-    renderGridItems() {
-        let j = 0;
-        this.data.slice(0, 10).forEach((data, i) => {
-            const gridItem = this.createGridItem(data, j);
-            gridItem.classList.add('animation');
-            gridItem.classList.add('disactivated');
-            this.section.append(gridItem);
-            j += 5;
-        });
-    }
-
     renderHeaderGridItem() {
         const el = this.createHeaderGridItem();
         el.classList.add('animation');
@@ -261,6 +270,35 @@ class CRUD {
         return header;
     }
 
+    #createTableShemeEl(data, j) {
+        const tableSheme = document.createElement('table-sheme');
+        tableSheme.data = data;
+        tableSheme.style.setProperty('--i', `${j}`);
+        return tableSheme;
+    }
+
+    renderGridItems() {
+        let j = 0;
+        this.data.slice(0, 10).forEach((data, i) => {
+            const gridItem = this.createGridItem(data, j);
+            gridItem.classList.add('animation');
+            gridItem.classList.add('disactivated');
+            this.section.append(gridItem);
+            j += 5;
+        });
+    }
+
+    #renderTableShemeEls() {
+        let j = 0;
+        for (const [key, value] of Object.entries(tables)) {
+            console.log(value)
+            const tableShemeEl = this.#createTableShemeEl(value, j);
+            tableShemeEl.classList.add('animation');
+            tableShemeEl.classList.add('disactivated');
+            this.infoBlock.append(tableShemeEl);
+        }
+
+    }
 
     #fadeIn(el) {
         return new Promise(resolve => {
@@ -341,8 +379,6 @@ class CRUD {
     }
 
     bindEvents() {
-        let isShowingAll = false;
-
 
         window.addEventListener('data-send', (e) => {
             console.log(e.detail)
@@ -374,7 +410,9 @@ class CRUD {
                 const btnIndex = parseInt(e.target.getAttribute('data-js-btn-index'));
                 this.index = btnIndex;
                 this.#hideAllItems(this.section, 500)
-                this.#fetchData();
+                    .then(() => {
+                        this.#fetchData();
+                    })
                 this.#hideAllItems(this.postFormContainer, 500, false)
                     .then(() => {
                         this.renderFormGroups();
@@ -392,7 +430,7 @@ class CRUD {
             }
 
             if (e.target.matches(this.selectors.btnShowAll)) {
-                if (!isShowingAll) {
+                if (!this.isShowingAll) {
                     this.#fadeContainer(this.container, 500)
                     this.#fadeOut(e.target, 500)
                     this.#hideAllItems(this.container, 1000)
@@ -403,15 +441,15 @@ class CRUD {
                             this.#showAllItems(this.section, 1000)
                                 .then(() => {
                                     this.section.style.overflowX = 'auto';
-                                    isShowingAll = true;
+                                    this.isShowingAll = true;
                                 });
                         })
-                } else if (isShowingAll) {
+                } else if (this.isShowingAll) {
                     this.#hideAllItems(this.section, 1000)
                         .then(() => {
                             this.renderEntityCards();
                             this.section.style.overflowX = 'hidden';
-                            isShowingAll = false;
+                            this.isShowingAll = false;
                             this.section.appendChild(this.createBtnEl('button', 'Prikaži sve', true, 'data-js-show-all', 1000));
                         })
                 }
@@ -446,8 +484,20 @@ class CRUD {
                                 this.section.appendChild(this.createBtnEl('button', 'Prikaži sve', true, 'data-js-show-all', 1000));
                             })
                     }
-                } else if (e.target === this.infoBtn || e.target.closest(this.selectors.infoBtn)){
-                    this.infoBlock.classList.toggle('active')
+                } else if (e.target === this.infoBtn || e.target.closest(this.selectors.infoBtn)) {
+                    if (this.infoBlock.classList.contains('active')) {
+                        this.#hideAllItems(this.infoBlock, 500)
+                            .then(() => {
+                                this.infoBlock.classList.remove('active');
+                            })
+                    } else {
+                        console.log("ds")
+                        this.#renderTableShemeEls();
+                        this.infoBlock.classList.add('active');
+                        this.#showAllItems(this.infoBlock, 500)
+    
+                    }
+
                 }
             }
         })

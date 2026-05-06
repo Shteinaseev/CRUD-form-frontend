@@ -65,7 +65,8 @@ canvas {
 
 .info-block {
     width: 100vw;
-    height: 100vh;
+    min-height: 50vh;
+    overflow-y: scroll;
     background-color: var(--bg-color);
     backdrop-filter: blur(24px);
     clip-path: circle(0% at 0% 0%);
@@ -73,10 +74,26 @@ canvas {
     transition-timing-function: ease-in-out;
     position: absolute;
     z-index: 35;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    gap: 2rem;
 
     &.active {
         clip-path: circle(100% at 50% 50%);
-    } 
+    }
+
+    table-sheme {
+        transform: translateY(0);
+        opacity: 1;
+        filter: blur(0);
+
+        &.disactivated {
+            transform: translateY(100%);
+            opacity: .3;
+            filter: blur(10px);
+        }
+    }
 }
 
 
@@ -449,16 +466,18 @@ entity-card {
 }
 
 entity-grid-items {
-    transform: translateX(0);
+    transform: translateY(0);
     opacity: 1;
     filter: blur(0);
 
     &.disactivated {
-        transform: translateX(100%);
+        transform: translateY(100%);
         opacity: .3;
         filter: blur(10px);
     }
 }
+
+
 
 
 .hidden {

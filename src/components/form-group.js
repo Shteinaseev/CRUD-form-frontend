@@ -1,6 +1,5 @@
 import styles from './form-group.css?inline';
 import * as icons from '@boxicons/js';
-console.log(icons)
 export class FormGroup extends HTMLElement {
 
     static get observedAttributes() {
@@ -111,6 +110,7 @@ export class FormGroup extends HTMLElement {
             .then(res => res.json())
             .then(data => {
                 const newData = [];
+                console.log(data)
                 data.forEach(el => {
                     let i = 0;
                     const obj = {};

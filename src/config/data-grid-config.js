@@ -101,8 +101,62 @@ export const odeljenjeHasUcenikFormFields = [
   { label: "Datum ispisa", name: "datum_ispisa", type: "date", icon: "Calendar" }
 ];
 
+export const odeljenjeFormFields = [
+  { label: "Oznaka odeljenja", name: "oznka_odeljenja", type: "text", icon: "Tag" },
+
+  { label: "Razred", name: "razred", type: "number", icon: "Layers" },
+
+  { label: "Školska godina", name: "skolska_godina_idskolska_godina", type: "search", icon: "Calendar", 
+    lookup: "skolska_godina", displayFields: ["idskolska_godina", "skolska_godina"], 
+    searchFields: ["idskolska_godina", "skolska_godina"] }, // поиск по школьному году
+
+  { label: "Smer", name: "smer_idsmer", type: "search", icon: "BookOpen", 
+    lookup: "smer", displayFields: ["idsmer", "naziv"], 
+    searchFields: ["idsmer", "naziv"] } // поиск по направлению
+];
+
+export const ulicaFormFields = [
+    { label: "Naziv ulice", name: "street_name", type: "text", icon: "Globe" },
+];
+
 
 export const smerFormFields = [
     { label: "Naziv smera", name: "direction_name", type: "text", icon: "User" },
 ]
+
+export const skolskaGodinaFormFields = [
+  { label: "Školska godina", name: "skolska_godina", type: "text", icon: "Calendar" }
+];
+
+export const ucenik = {
+  iducenik: "INT",
+  ime: "VARCHAR(45)",
+  prezime: "VARCHAR(45)",
+  datum_rodjenja: "DATE",
+  datum_prvog_upisa: "DATE",
+  osnovna_skola: "INT",
+  mesto_idmesto: "INT",
+  opstina_idopstina: "INT",
+  ulica_idulica: "INT",
+  broj_ulice: "INT",
+  telefon: "VARCHAR(20)",
+  e_mail: "VARCHAR(100)",
+  username: "VARCHAR(45)"
+};
+
+export const staratelj = {
+  idstaratelj: "INT",
+  ime: "VARCHAR(45)",
+  prezime: "VARCHAR(45)",
+  jmbg: "VARCHAR(13)",
+  ulica_idulica: "INT",
+  broj_ulice: "INT",
+  mesto_idmesto: "INT",
+  opstina_idopstina: "INT",
+  username: "VARCHAR(45)",
+  telefon_posao: "VARCHAR(20)",
+  telefon_kuca: "VARCHAR(20)",
+  e_mail: "VARCHAR(100)",
+  vaznost: "TINYINT"
+};
 
