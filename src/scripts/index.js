@@ -28,7 +28,7 @@ class CRUD {
         'http://localhost:3000/osnovna_skola',
         'http://localhost:3000/opstina',
         'http://localhost:3000/odeljenje_has_ucenik',
-        'https://dario.ginder.ucim.in.rs/odeljenje/api/proba.php',
+        'api/odeljenje/api/proba.php',
         'http://localhost:3000/ulica',
         'http://localhost:3000/staratelj',
         'http://localhost:3000/smer',
@@ -51,6 +51,7 @@ class CRUD {
         searchList: '[data-js-search-list]',
         suggestion: '[data-js-suggestion]',
         infoBlock: '[data-js-info-block]',
+        erDiagramBlock: '[data-js-er-diagram-block]'
     }
 
     constructor() {
@@ -60,6 +61,7 @@ class CRUD {
 
         this.root = document.querySelector(this.selectors.root);
         this.infoBlock = document.querySelector(this.selectors.infoBlock);
+        this.erdBlock = document.querySelector(this.selectors.erDiagramBlock);
         this.navbar = document.querySelector(this.selectors.navbar);
         this.homeBtn = this.navbar.querySelector(this.selectors.homeBtn)
         this.addBtn = this.navbar.querySelector(this.selectors.addBtn);
@@ -302,7 +304,7 @@ class CRUD {
             const tableShemeEl = this.#createTableShemeEl(value, j);
             tableShemeEl.classList.add('animation');
             tableShemeEl.classList.add('disactivated');
-            this.infoBlock.append(tableShemeEl);
+            this.erdBlock.append(tableShemeEl);
         }
 
     }
@@ -367,7 +369,7 @@ class CRUD {
     #fadeContainer(container, timeout = 1000) {
         return new Promise(resolve => {
             void container.offsetWidth;
-            container.classList.add('disactivated');
+            container.classList.toggle('disactivated');
 
             const onEnd = e => {
                 if (e.target !== container) return;
@@ -466,7 +468,7 @@ class CRUD {
                 if (e.target === this.addBtn || e.target.closest(this.selectors.addBtn)) {
                     this.postForm.classList.toggle('active');
                 } else if (e.target === this.homeBtn || e.target.closest(this.selectors.homeBtn)) {
-                    if (!isShowingAll) {
+                    if (!this.isShowingAll) {
                         const btn = this.section.querySelector('[data-js-show-all]');
                         this.#fadeOut(btn, 500);
                         this.#fadeContainer(this.container, 500)
@@ -478,33 +480,35 @@ class CRUD {
                                 this.#showAllItems(this.section, 1000)
                                     .then(() => {
                                         this.section.style.overflowX = 'auto';
-                                        isShowingAll = true;
+                                        this.isShowingAll = true;
                                     });
                             })
                     }
-                    else if (isShowingAll) {
+                    else if (this.isShowingAll) {
                         this.#hideAllItems(this.section, 1000)
                             .then(() => {
                                 this.renderEntityCards();
                                 this.section.style.overflowX = 'hidden';
-                                isShowingAll = false;
+                                this.isShowingAll = false;
                                 this.section.appendChild(this.createBtnEl('button', 'Prikaži sve', true, 'data-js-show-all', 1000));
                             })
                     }
                 } else if (e.target === this.infoBtn || e.target.closest(this.selectors.infoBtn)) {
-                    if (this.infoBlock.classList.contains('active')) {
-                        this.#hideAllItems(this.infoBlock, 500)
+                    if (!this.infoBlock.classList.contains('disactivated')) {
+                        this.#hideAllItems(this.erdBlock, 500)
                             .then(() => {
-                                this.infoBlock.classList.remove('active');
+                                this.erdBlock.classList.add('disactivated');
+                                this.infoBlock.classList.add('disactivated');
                             })
                     } else {
-                        console.log("ds")
                         this.#renderTableShemeEls();
-                        this.infoBlock.classList.add('active');
-                        this.#showAllItems(this.infoBlock, 500)
+                        this.#fadeIn(this.infoBlock)
+                            .then(() => {
+                                this.erdBlock.classList.remove('disactivated')
+                                this.#showAllItems(this.erdBlock, 500)
+                            })
 
                     }
-
                 }
             }
         })
@@ -512,8 +516,6 @@ class CRUD {
         this.navbarBtn.addEventListener('click', () => {
             this.navbar.classList.toggle('scrolled');
         })
-
-
 
     }
 }

@@ -16,6 +16,11 @@
     backdrop-filter: blur(15px);
     background-color: var(--bg-color);
     transition-duration: .8s;
+
+    &:hover {
+        color: var(--highlight);
+        background-color: var(--bg-color);
+    }
 }
 
 @keyframes fadeInUp {

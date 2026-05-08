@@ -63,24 +63,20 @@ canvas {
     z-index: -1;
 }
 
-.info-block {
+.er-diagram-block {
     width: 100vw;
-    min-height: 50vh;
-    overflow-y: scroll;
-    background-color: var(--bg-color);
-    backdrop-filter: blur(24px);
-    clip-path: circle(0% at 0% 0%);
-    transition-duration: 1s;
-    transition-timing-function: ease-in-out;
-    position: absolute;
-    z-index: 35;
+    height: 100vh;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
     gap: 2rem;
+    overflow-y: scroll;
+    transform: translateX(0);
+    position: absolute;
+    z-index: 36;
 
-    &.active {
-        clip-path: circle(100% at 50% 50%);
+    &.disactivated {
+        transform: translateX(-100%);
     }
 
     table-sheme {
@@ -94,6 +90,23 @@ canvas {
             filter: blur(10px);
         }
     }
+}
+
+.info-block {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-color);
+    backdrop-filter: blur(24px);
+    clip-path: circle(100% at 50% 50%);
+    transition-duration: 1s;
+    transition-timing-function: ease-in-out;
+    position: absolute;
+    z-index: 35;
+
+    &.disactivated {
+        clip-path: circle(0% at 0% 0%);
+    }
+
 }
 
 
