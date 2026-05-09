@@ -3,7 +3,6 @@ export const columnsWidth = new Proxy([], {
         return target[prop] || 0; // default width of 100px if not set
     },
     set(target, prop, value) {
-        console.log(`Setting column ${prop} width to ${value}px`);
         target[prop] = value;
         document.documentElement.style.setProperty('--col-widths', columnsWidth.map(w => w / 16 + 'rem').join(' '));
         return true;

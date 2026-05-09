@@ -36,7 +36,6 @@ export class TableSheme extends HTMLElement {
     }
 
     connectedCallback() {
-        console.log("fdfd", this.data)
         this.renderLiEls();
         this.render();
     }

@@ -88,7 +88,7 @@ class CRUD {
                     .then(() => {
                         this.renderEntityCards();
                         this.isShowingAll = false;
-                        this.section.appendChild(this.createBtnEl('button', 'Prikaži sve', true, 'data-js-show-all'));
+                        this.section.appendChild(this.createBtnEl('button', 'disactivated', 'Prikaži sve', true, 'data-js-show-all'));
                     })
             })
 
@@ -163,17 +163,13 @@ class CRUD {
 
     renderBtnBlock() {
         const wrapper = this.createBtnWrapper();
-        const btnSubmit = this.createBtnEl('submit', 'Pošalji', false, 'data-js-submit-btn', this.postFormContainer.children.length + 2);
-        btnSubmit.classList.add('activated');
+        const btnSubmit = this.createBtnEl('submit', 'activated', 'Pošalji', false, 'data-js-submit-btn', this.postFormContainer.children.length + 2);
         this.postFormContainer.appendChild(btnSubmit);
         this.postFormContainer.appendChild(wrapper);
 
-        setTimeout(() => {
-            btnSubmit.classList.remove('activated');
-        }, 10);
     }
 
-    createBtnEl(type = 'submit', text = 'Pošalji', isTransparent = false, selector = 'data-js', i = 2) {
+    createBtnEl(type = 'submit', className = '', text = 'Pošalji', isTransparent = false, selector = 'data-js', i = 1) {
         const btn = document.createElement('button');
         btn.classList.add('btn');
         btn.classList.add('animation');
@@ -183,8 +179,14 @@ class CRUD {
         if (isTransparent) {
             btn.classList.add('btn-transparent');
         }
-
         btn.setAttribute(selector, '');
+
+        if (className) {
+            btn.classList.add(className);
+            setTimeout(() => {
+                btn.classList.remove(className);
+            }, 10);
+        }
 
         return btn;
     }
@@ -204,6 +206,7 @@ class CRUD {
             btn.textContent = `${i}`;
             wrapper.appendChild(btn);
         }
+        wrapper.setAttribute('data-js-btn-wrapper', '')
         setTimeout(() => {
             wrapper.classList.remove('activated');
         }, 10);
@@ -279,10 +282,9 @@ class CRUD {
         return header;
     }
 
-    #createTableShemeEl(data, j) {
+    #createTableShemeEl(data) {
         const tableSheme = document.createElement('table-sheme');
         tableSheme.data = data;
-        tableSheme.style.setProperty('--i', `${j}`);
         return tableSheme;
     }
 
@@ -298,13 +300,10 @@ class CRUD {
     }
 
     #renderTableShemeEls() {
-        let j = 0;
         for (const [key, value] of Object.entries(tables)) {
-            console.log(value)
-            const tableShemeEl = this.#createTableShemeEl(value, j);
-            tableShemeEl.classList.add('animation');
+            const tableShemeEl = this.#createTableShemeEl(value);
             tableShemeEl.classList.add('disactivated');
-            this.erdBlock.append(tableShemeEl);
+            // this.erdBlock.append(tableShemeEl);
         }
 
     }
@@ -339,23 +338,19 @@ class CRUD {
     }
 
     #showAllItems(container, timeout = 1000, filter = true) {
-        const elements = [...container.children];
+        const elements = this.#conditionalfilterItems([...container.children], filter, ['div']);
 
         const promises = Promise.all(elements.map(el => this.#fadeIn(el, timeout)));
         return promises;
     }
 
-    #hideAllItems(container, timeout = 1000, filter = true) {
-        const elements = [...container.children];
-        const filteredElements = [];
-        if (filter) {
-            filteredElements.push(...elements.filter(el => {
-                return el.tagName.toLowerCase() !== 'div';
-            }));
-        } else {
-            filteredElements.push(...elements);
-        }
-        const promises = Promise.all(filteredElements.map(el => this.#fadeOut(el, timeout)))
+    #conditionalfilterItems(array = [], condition = true, els = []) {
+        return condition ? array.filter(el => !els.includes(el.tagName.toLowerCase())) : array;
+    }
+
+    #hideAllItems(container, filter = true) {
+        const elements = this.#conditionalfilterItems([...container.children], filter, ['div']);
+        const promises = Promise.all(elements.map(el => this.#fadeOut(el)))
             .then((list) => {
                 list.forEach((el) => {
                     el.remove();
@@ -363,7 +358,6 @@ class CRUD {
 
             })
         return promises;
-
     }
 
     #fadeContainer(container, timeout = 1000) {
@@ -385,6 +379,32 @@ class CRUD {
 
             container.addEventListener('transitionend', onEnd);
         });
+    }
+
+    #showDataGrid(btn) {
+        this.#fadeContainer(this.container)
+        this.#fadeOut(btn, 500)
+        this.#hideAllItems(this.container)
+            .then(() => {
+                btn.remove();
+                this.renderGridItems();
+                this.renderHeaderGridItem();
+                this.#showAllItems(this.section)
+                    .then(() => {
+                        this.section.style.overflowX = 'auto';
+                        this.isShowingAll = true;
+                    });
+            })
+    }
+
+    #hideDataGrid() {
+        this.section.style.overflowX = 'hidden';
+        this.#hideAllItems(this.section)
+            .then(() => {
+                this.renderEntityCards();
+                this.isShowingAll = false;
+                this.section.appendChild(this.createBtnEl('button', 'disactivated', 'Prikaži sve', true, 'data-js-show-all'));
+            })
     }
 
     bindEvents() {
@@ -411,18 +431,23 @@ class CRUD {
 
         window.addEventListener('click', (e) => {
             const isClickInsideNavbar = this.navbar.contains(e.target);
+            const isNumberBtn = e.target.matches(this.selectors.numberBtn);
             if (!isClickInsideNavbar && !this.navbar.classList.contains('scrolled')) {
                 this.navbar.classList.add('scrolled');
             }
 
-            if (e.target.matches(this.selectors.numberBtn)) {
+            if (isNumberBtn) {
                 const btnIndex = parseInt(e.target.getAttribute('data-js-btn-index'));
                 this.index = btnIndex;
-                this.#hideAllItems(this.section, 500)
+                const btnWrapper = this.postForm.querySelector(this.selectors.btnWrapper);
+                [...btnWrapper.children].forEach(btn => {
+                    btn.disabled = true;
+                });
+                this.#hideAllItems(this.section)
                     .then(() => {
                         this.#fetchData();
                     })
-                this.#hideAllItems(this.postFormContainer, 500, false)
+                this.#hideAllItems(this.postFormContainer, false)
                     .then(() => {
                         this.renderFormGroups();
                     });
@@ -440,27 +465,9 @@ class CRUD {
 
             if (e.target.matches(this.selectors.btnShowAll)) {
                 if (!this.isShowingAll) {
-                    this.#fadeContainer(this.container, 500)
-                    this.#fadeOut(e.target, 500)
-                    this.#hideAllItems(this.container, 1000)
-                        .then(() => {
-                            e.target.remove();
-                            this.renderGridItems();
-                            this.renderHeaderGridItem();
-                            this.#showAllItems(this.section, 1000)
-                                .then(() => {
-                                    this.section.style.overflowX = 'auto';
-                                    this.isShowingAll = true;
-                                });
-                        })
+                    this.#showDataGrid(e.target);
                 } else if (this.isShowingAll) {
-                    this.#hideAllItems(this.section, 1000)
-                        .then(() => {
-                            this.renderEntityCards();
-                            this.section.style.overflowX = 'hidden';
-                            this.isShowingAll = false;
-                            this.section.appendChild(this.createBtnEl('button', 'Prikaži sve', true, 'data-js-show-all', 1000));
-                        })
+                    this.#hideDataGrid();
                 }
             }
 
@@ -470,28 +477,10 @@ class CRUD {
                 } else if (e.target === this.homeBtn || e.target.closest(this.selectors.homeBtn)) {
                     if (!this.isShowingAll) {
                         const btn = this.section.querySelector('[data-js-show-all]');
-                        this.#fadeOut(btn, 500);
-                        this.#fadeContainer(this.container, 500)
-                        this.#hideAllItems(this.container, 1000)
-                            .then(() => {
-                                btn.remove();
-                                this.renderGridItems();
-                                this.renderHeaderGridItem();
-                                this.#showAllItems(this.section, 1000)
-                                    .then(() => {
-                                        this.section.style.overflowX = 'auto';
-                                        this.isShowingAll = true;
-                                    });
-                            })
+                        this.#showDataGrid(btn);
                     }
                     else if (this.isShowingAll) {
-                        this.#hideAllItems(this.section, 1000)
-                            .then(() => {
-                                this.renderEntityCards();
-                                this.section.style.overflowX = 'hidden';
-                                this.isShowingAll = false;
-                                this.section.appendChild(this.createBtnEl('button', 'Prikaži sve', true, 'data-js-show-all', 1000));
-                            })
+                        this.#hideDataGrid();
                     }
                 } else if (e.target === this.infoBtn || e.target.closest(this.selectors.infoBtn)) {
                     if (!this.infoBlock.classList.contains('disactivated')) {

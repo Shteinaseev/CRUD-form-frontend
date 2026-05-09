@@ -15,7 +15,7 @@
     position: relative;
     backdrop-filter: blur(15px);
     background-color: var(--bg-color);
-    transition-duration: .8s;
+    transition-duration: .6s;
 
     &:hover {
         color: var(--highlight);
@@ -50,5 +50,4 @@ ul {
 
 li {
     font-size: 1.2rem;
-    animation: 1s ease-in-out fadeInUp;
 }

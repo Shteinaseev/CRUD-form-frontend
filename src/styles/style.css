@@ -8,7 +8,7 @@
 }
 
 :root {
-    --bg-color: #ffffff10;
+    --bg-color: #ffffff22;
     --highlight: #ffffffa9;
     --color-primary: #ffffff;
     --color-secondary: #000000;
@@ -66,10 +66,10 @@ canvas {
 .er-diagram-block {
     width: 100vw;
     height: 100vh;
-    display: grid;
+    /* display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-items: center;
-    gap: 2rem;
+    gap: 2rem; */
     overflow-y: scroll;
     transform: translateX(0);
     position: absolute;
