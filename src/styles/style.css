@@ -9,6 +9,7 @@
 
 :root {
     --bg-color: #ffffff22;
+    --table-color: #e0e8ef33;
     --highlight: #ffffffa9;
     --color-primary: #ffffff;
     --color-secondary: #000000;
@@ -66,17 +67,35 @@ canvas {
 .er-diagram-block {
     width: 100vw;
     height: 100vh;
-    /* display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    justify-items: center;
-    gap: 2rem; */
-    overflow-y: scroll;
     transform: translateX(0);
     position: absolute;
     z-index: 36;
 
     &.disactivated {
         transform: translateX(-100%);
+    }
+
+    svg {
+        .table {
+            backdrop-filter: blur(15px);
+            fill: var(--bg-color);
+            transition-duration: .6s;
+            stroke: var(--highlight);
+            box-shadow: -4px -2px 16px 0px #ffffff, 4px 2px 16px 0px rgb(95 157 231 / 48%);
+            rx: 0.8rem;
+            width: 280px;
+            height: 350px;
+            filter: url(#multiShadow);
+
+            &:hover {
+                fill: #E5EDF588;
+                box-shadow: -2px -1px 8px 0px #ffffff, 2px 1px 8px 0px rgb(95 157 231 / 48%);
+            }
+        }
+
+        text {
+            font-size: 1.05rem;
+        }
     }
 
     table-sheme {
@@ -489,9 +508,6 @@ entity-grid-items {
         filter: blur(10px);
     }
 }
-
-
-
 
 .hidden {
     display: none;

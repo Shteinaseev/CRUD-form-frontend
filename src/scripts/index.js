@@ -21,6 +21,7 @@ class CRUD {
     startX = 0;
     firstCardWidth = 350;
     isShowingAll = false;
+    svgNs = "http://www.w3.org/2000/svg";
     endpoints = [
         'http://localhost:3000/ucenik_has_staratelj',
         'http://localhost:3000/ucenik',
@@ -51,7 +52,8 @@ class CRUD {
         searchList: '[data-js-search-list]',
         suggestion: '[data-js-suggestion]',
         infoBlock: '[data-js-info-block]',
-        erDiagramBlock: '[data-js-er-diagram-block]'
+        erDiagramBlock: '[data-js-er-diagram-block]',
+        erDiagramCanvas: '[data-js-er-diagram-canvas]'
     }
 
     constructor() {
@@ -62,6 +64,7 @@ class CRUD {
         this.root = document.querySelector(this.selectors.root);
         this.infoBlock = document.querySelector(this.selectors.infoBlock);
         this.erdBlock = document.querySelector(this.selectors.erDiagramBlock);
+        this.erdCanvas = this.erdBlock.querySelector(this.selectors.erDiagramCanvas);
         this.navbar = document.querySelector(this.selectors.navbar);
         this.homeBtn = this.navbar.querySelector(this.selectors.homeBtn)
         this.addBtn = this.navbar.querySelector(this.selectors.addBtn);
@@ -189,6 +192,48 @@ class CRUD {
         }
 
         return btn;
+    }
+
+    #createTablePlane(x, y) {
+        const rect = document.createElementNS(this.svgNs, "rect");
+        rect.setAttribute('x', x);
+        rect.setAttribute('y', y);
+        rect.classList.add('table');
+        return rect;
+    }
+
+    #createTableHeader(x, y, title) {
+        const header = document.createElementNS(this.svgNs, "text");
+        header.setAttribute('x', x);
+        header.setAttribute('y', y);
+        header.textContent = title;
+        return header;
+    }
+
+    #createTableP(x, y, title) {
+        const p = document.createElementNS(this.svgNs, "text");
+        p.setAttribute('x', x);
+        p.setAttribute('y', y);
+        p.textContent = title;
+        return p;
+    }
+
+    #createTableSvg(obj, i, j) {
+        this.erdCanvas.appendChild(this.#createTablePlane(obj.x, obj.y));
+        this.erdCanvas.appendChild(this.#createTableHeader(obj.x, obj.y, obj.title));
+        for (const [key, value] of Object.entries(obj)) {
+            if (!['title', 'x', 'y'].includes(key)) {
+                this.erdCanvas.appendChild(this.#createTableP(obj.x + 20, obj.y + 20, key));
+                this.erdCanvas.appendChild(this.#createTableP(obj.x - 20, obj.y - 20, value));
+            }
+        }
+
+    }
+
+    #renderSvgTable() {
+        for (const [key, value] of Object.entries(tables)) {
+            this.#createTableSvg(value);
+        }
     }
 
     createBtnWrapper() {
@@ -484,17 +529,15 @@ class CRUD {
                     }
                 } else if (e.target === this.infoBtn || e.target.closest(this.selectors.infoBtn)) {
                     if (!this.infoBlock.classList.contains('disactivated')) {
-                        this.#hideAllItems(this.erdBlock, 500)
-                            .then(() => {
-                                this.erdBlock.classList.add('disactivated');
-                                this.infoBlock.classList.add('disactivated');
-                            })
+                        this.erdBlock.classList.add('disactivated');
+                        this.infoBlock.classList.add('disactivated');
                     } else {
                         this.#renderTableShemeEls();
                         this.#fadeIn(this.infoBlock)
                             .then(() => {
-                                this.erdBlock.classList.remove('disactivated')
-                                this.#showAllItems(this.erdBlock, 500)
+                                this.erdBlock.classList.remove('disactivated');
+                                this.infoBlock.classList.remove('disactivated');
+                                this.#renderSvgTable();
                             })
 
                     }
