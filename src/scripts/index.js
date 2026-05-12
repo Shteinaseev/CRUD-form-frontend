@@ -347,7 +347,7 @@ class CRUD {
     #renderTableShemeEls() {
         for (const [key, value] of Object.entries(tables)) {
             const tableShemeEl = this.#createTableShemeEl(value);
-            tableShemeEl.classList.add('disactivated');
+            // tableShemeEl.classList.add('disactivated');
             // this.erdBlock.append(tableShemeEl);
         }
 
