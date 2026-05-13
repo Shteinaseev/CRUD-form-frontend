@@ -67,6 +67,8 @@ canvas {
 .er-diagram-block {
     width: 100vw;
     height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
     transform: translateX(0);
     position: absolute;
     z-index: 36;
@@ -76,25 +78,33 @@ canvas {
     }
 
     svg {
+        .header {
+            aspect-ratio: 1 / 1.6;
+            width: 100vw;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
         .table {
             backdrop-filter: blur(15px);
-            fill: var(--bg-color);
+            fill: #e0e8ef40;
             transition-duration: .6s;
             stroke: var(--highlight);
-            box-shadow: -4px -2px 16px 0px #ffffff, 4px 2px 16px 0px rgb(95 157 231 / 48%);
             rx: 0.8rem;
-            width: 280px;
-            height: 350px;
+            width: 260px;
             filter: url(#multiShadow);
 
             &:hover {
                 fill: #E5EDF588;
-                box-shadow: -2px -1px 8px 0px #ffffff, 2px 1px 8px 0px rgb(95 157 231 / 48%);
             }
         }
 
         text {
-            font-size: 1.05rem;
+            fill: var(--color-primary);
+            font-size: 0.9rem;
+            font-weight: 300;
+
         }
     }
 

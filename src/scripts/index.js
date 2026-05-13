@@ -16,8 +16,9 @@ import {
 } from "../config/data-grid-config";
 
 class CRUD {
+    tableSvgWidth = 260;
     isDragging = false;
-    index = 7;
+    index = 9;
     startX = 0;
     firstCardWidth = 350;
     isShowingAll = false;
@@ -194,45 +195,61 @@ class CRUD {
         return btn;
     }
 
-    #createTablePlane(x, y) {
+    #createTablePlane(x, y, quantity, index) {
         const rect = document.createElementNS(this.svgNs, "rect");
         rect.setAttribute('x', x);
         rect.setAttribute('y', y);
+        rect.setAttribute('height', quantity * 30);
+        rect.setAttribute('data-js-table', index);
         rect.classList.add('table');
         return rect;
     }
 
-    #createTableHeader(x, y, title) {
+    #createTableHeader(x0, y, title) {
         const header = document.createElementNS(this.svgNs, "text");
-        header.setAttribute('x', x);
+        const x1 = x0 + this.tableSvgWidth;
+        const rectCenterX = x0 + this.tableSvgWidth / 2;
+        header.setAttribute('x', rectCenterX);
         header.setAttribute('y', y);
+        header.setAttribute('text-anchor', 'middle');
+        header.classList.add('header');
         header.textContent = title;
         return header;
     }
 
-    #createTableP(x, y, title) {
+    #createTableP(x, y, title, padding = 20, textAnchor = "start") {
         const p = document.createElementNS(this.svgNs, "text");
-        p.setAttribute('x', x);
+        p.setAttribute('text-anchor', textAnchor);
+        if (textAnchor === "start") {
+            p.setAttribute('x', x + padding);
+        } else if (textAnchor === "end") {
+            p.setAttribute('x', x + this.tableSvgWidth - padding);
+        }
         p.setAttribute('y', y);
         p.textContent = title;
         return p;
     }
 
-    #createTableSvg(obj, i, j) {
-        this.erdCanvas.appendChild(this.#createTablePlane(obj.x, obj.y));
-        this.erdCanvas.appendChild(this.#createTableHeader(obj.x, obj.y, obj.title));
+    #createTableSvg(obj, index) {
+        const quantity = Object.keys(obj).length;
+        this.erdCanvas.appendChild(this.#createTablePlane(obj.x, obj.y, quantity, index));
+        this.erdCanvas.appendChild(this.#createTableHeader(obj.x, obj.y + 30, ));
+        let i = 70;
         for (const [key, value] of Object.entries(obj)) {
             if (!['title', 'x', 'y'].includes(key)) {
-                this.erdCanvas.appendChild(this.#createTableP(obj.x + 20, obj.y + 20, key));
-                this.erdCanvas.appendChild(this.#createTableP(obj.x - 20, obj.y - 20, value));
+                this.erdCanvas.appendChild(this.#createTableP(obj.x, obj.y + i, key, 20));
+                this.erdCanvas.appendChild(this.#createTableP(obj.x, obj.y + i, value, 20, "end"));
+                i += 30;
             }
         }
 
     }
 
     #renderSvgTable() {
+        let index = 0;
         for (const [key, value] of Object.entries(tables)) {
-            this.#createTableSvg(value);
+            this.#createTableSvg(value, index);
+            index++;
         }
     }
 
@@ -497,6 +514,8 @@ class CRUD {
                         this.renderFormGroups();
                     });
             }
+
+             gnv 
 
             if (e.target.matches(this.selectors.suggestion)) {
                 console.log(e)
