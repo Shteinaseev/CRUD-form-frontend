@@ -54,7 +54,8 @@ class CRUD {
         suggestion: '[data-js-suggestion]',
         infoBlock: '[data-js-info-block]',
         erDiagramBlock: '[data-js-er-diagram-block]',
-        erDiagramCanvas: '[data-js-er-diagram-canvas]'
+        erDiagramCanvas: '[data-js-er-diagram-canvas]',
+        erDiagramTable: '[data-js-table]'
     }
 
     constructor() {
@@ -76,6 +77,7 @@ class CRUD {
         this.postForm = this.root.querySelector(this.selectors.postForm);
         this.postFormContainer = this.postForm.querySelector(this.selectors.postFormContainer);
         this.searchList = this.root.querySelector(this.selectors.searchList);
+        this.#renderSvgTable();
         this.renderFormGroups();
         this.#fetchData();
         this.bindEvents();
@@ -197,11 +199,13 @@ class CRUD {
 
     #createTablePlane(x, y, quantity, index) {
         const rect = document.createElementNS(this.svgNs, "rect");
+
         rect.setAttribute('x', x);
         rect.setAttribute('y', y);
         rect.setAttribute('height', quantity * 30);
         rect.setAttribute('data-js-table', index);
         rect.classList.add('table');
+        rect.classList.add('animation');
         return rect;
     }
 
@@ -213,6 +217,7 @@ class CRUD {
         header.setAttribute('y', y);
         header.setAttribute('text-anchor', 'middle');
         header.classList.add('header');
+
         header.textContent = title;
         return header;
     }
@@ -230,13 +235,13 @@ class CRUD {
         return p;
     }
 
-    #createTableSvg(obj, index) {
+    #createTableSvg(obj) {
         const quantity = Object.keys(obj).length;
-        this.erdCanvas.appendChild(this.#createTablePlane(obj.x, obj.y, quantity, index));
-        this.erdCanvas.appendChild(this.#createTableHeader(obj.x, obj.y + 30, ));
+        this.erdCanvas.appendChild(this.#createTablePlane(obj.x, obj.y, quantity, obj.index));
+        this.erdCanvas.appendChild(this.#createTableHeader(obj.x, obj.y + 30, obj.title));
         let i = 70;
         for (const [key, value] of Object.entries(obj)) {
-            if (!['title', 'x', 'y'].includes(key)) {
+            if (!['title', 'x', 'y', 'index'].includes(key)) {
                 this.erdCanvas.appendChild(this.#createTableP(obj.x, obj.y + i, key, 20));
                 this.erdCanvas.appendChild(this.#createTableP(obj.x, obj.y + i, value, 20, "end"));
                 i += 30;
@@ -246,10 +251,8 @@ class CRUD {
     }
 
     #renderSvgTable() {
-        let index = 0;
         for (const [key, value] of Object.entries(tables)) {
-            this.#createTableSvg(value, index);
-            index++;
+            this.#createTableSvg(value);
         }
     }
 
@@ -399,10 +402,10 @@ class CRUD {
         });
     }
 
-    #showAllItems(container, timeout = 1000, filter = true) {
-        const elements = this.#conditionalfilterItems([...container.children], filter, ['div']);
-
-        const promises = Promise.all(elements.map(el => this.#fadeIn(el, timeout)));
+    #showAllItems(container, filter = true, isHtmlCollection = true) {
+        const elements = this.#conditionalfilterItems([...container.children], filter, ['div', 'defs']);
+        console.log(elements)
+        const promises = Promise.all(elements.map(el => this.#fadeIn(el)));
         return promises;
     }
 
@@ -410,11 +413,14 @@ class CRUD {
         return condition ? array.filter(el => !els.includes(el.tagName.toLowerCase())) : array;
     }
 
-    #hideAllItems(container, filter = true) {
-        const elements = this.#conditionalfilterItems([...container.children], filter, ['div']);
+    #hideAllItems(container, filter = true, isHtmlCollection = true) {
+        const elements = this.#conditionalfilterItems([...container.children], filter, ['div', 'defs']);
+        console.log(elements)
+
         const promises = Promise.all(elements.map(el => this.#fadeOut(el)))
             .then((list) => {
                 list.forEach((el) => {
+                    console.log(el)
                     el.remove();
                 })
 
@@ -515,7 +521,23 @@ class CRUD {
                     });
             }
 
-             gnv 
+            if (e.target.matches(this.selectors.erDiagramTable)) {
+                const tableIndex = parseInt(e.target.getAttribute('data-js-table'));
+                this.index = tableIndex;
+                this.#fadeOut(this.erdBlock)
+                    .then(() => {
+                        this.#fadeOut(this.infoBlock)
+
+                        this.#hideAllItems(this.section)
+                            .then(() => {
+                                this.#fetchData();
+                            })
+                        this.#hideAllItems(this.postFormContainer, false)
+                            .then(() => {
+                                this.renderFormGroups();
+                            });
+                    })
+            }
 
             if (e.target.matches(this.selectors.suggestion)) {
                 console.log(e)
@@ -547,16 +569,16 @@ class CRUD {
                         this.#hideDataGrid();
                     }
                 } else if (e.target === this.infoBtn || e.target.closest(this.selectors.infoBtn)) {
+                    const tableRects = this.erdBlock.querySelectorAll(this.selectors.erDiagramTable);
                     if (!this.infoBlock.classList.contains('disactivated')) {
-                        this.erdBlock.classList.add('disactivated');
-                        this.infoBlock.classList.add('disactivated');
+                        this.#fadeOut(this.erdBlock)
+                            .then(() => {
+                                this.#fadeOut(this.infoBlock)
+                            })
                     } else {
-                        this.#renderTableShemeEls();
                         this.#fadeIn(this.infoBlock)
                             .then(() => {
-                                this.erdBlock.classList.remove('disactivated');
-                                this.infoBlock.classList.remove('disactivated');
-                                this.#renderSvgTable();
+                                this.#fadeIn(this.erdBlock)
                             })
 
                     }

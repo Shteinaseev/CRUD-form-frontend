@@ -72,8 +72,10 @@ canvas {
     transform: translateX(0);
     position: absolute;
     z-index: 36;
+    filter: blur(0);
 
     &.disactivated {
+        filter: blur(10px);
         transform: translateX(-100%);
     }
 
@@ -93,10 +95,20 @@ canvas {
             stroke: var(--highlight);
             rx: 0.8rem;
             width: 260px;
-            filter: url(#multiShadow);
+            filter: url(#multiShadow) blur(0);
+            ;
+            transform: translateY(0);
+            opacity: 1;
+            transition: transform .8s;
 
             &:hover {
                 fill: #E5EDF588;
+            }
+
+            &.disactivated {
+                transform: translateY(100%);
+                opacity: .3;
+                filter: url(#multiShadow) blur(10px);
             }
         }
 
@@ -104,19 +116,11 @@ canvas {
             fill: var(--color-primary);
             font-size: 0.9rem;
             font-weight: 300;
+            opacity: 1;
 
-        }
-    }
-
-    table-sheme {
-        transform: translateY(0);
-        opacity: 1;
-        filter: blur(0);
-
-        &.disactivated {
-            transform: translateY(100%);
-            opacity: .3;
-            filter: blur(10px);
+            &.disactivated {
+                opacity: 0;
+            }
         }
     }
 }
