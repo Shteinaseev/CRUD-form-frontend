@@ -210,6 +210,8 @@ class CRUD {
     #createTableRelationLine(x0, y0, x1, y1) {
         const line = document.createElementNS(this.svgNs, "path");
         const midpointX = x0 + ((x1 - x0) / 2);
+        const midpointY = y0 + ((y1 - y0) / 2);
+
         line.setAttribute('d', `
                 M ${x0},${y0} L ${midpointX},${y0} L ${midpointX},${y1} ${x1},${y1}
             `);
@@ -249,11 +251,18 @@ class CRUD {
         this.erdCanvas.appendChild(this.#createTableHeader(obj.x, obj.y + 30, obj.title));
 
         let i = 70;
+        let x0 = 0;
         for (const [key, value] of Object.entries(obj)) {
             if (!['title', 'x', 'y', 'index'].includes(key)) {
-                if (value?.foreignKey) {
+                if (value?.foreignKey && value.references.index == 2) {
                     const ref = Object.values(tables).filter(o => value.references.index === o.index);
-                    this.erdCanvas.appendChild(this.#createTableRelationLine(obj.x + this.tableSvgWidth, obj.y + i - 5, ref[0].x, ref[0].y + 65));
+                    if (obj.x > ref[0].x) {
+                        x0 = obj.x + this.tableSvgWidth
+                    } else {
+                        x0 = obj.x + 20;
+                    }
+                    console.log(x0, obj.x + this.tableSvgWidth, obj.x, obj.title)
+                    this.erdCanvas.appendChild(this.#createTableRelationLine(ref[0].x, ref[0].y + 65, x0, obj.y + i - 5));
                 }
                 this.erdCanvas.appendChild(this.#createTableP(obj.x, obj.y + i, key, 20));
                 this.erdCanvas.appendChild(this.#createTableP(obj.x, obj.y + i, value.type, 20, "end"));

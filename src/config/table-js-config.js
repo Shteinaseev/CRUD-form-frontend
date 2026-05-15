@@ -13,17 +13,17 @@ export const ucenik = {
     mesto_idmesto: {
         type: "INT",
         foreignKey: true,
-        references: { table: "mesto", column: "idmesto" , index: 3}
+        references: { table: "mesto", column: "idmesto", index: 3 }
     },
     opstina_idopstina: {
         type: "INT",
         foreignKey: true,
-        references: { table: "opstina", column: "idopstina", index: 5}
+        references: { table: "opstina", column: "idopstina", index: 5 }
     },
     ulica_idulica: {
         type: "INT",
         foreignKey: true,
-        references: { table: "ulica", column: "idulica", index: 9}
+        references: { table: "ulica", column: "idulica", index: 9 }
     },
     broj_ulice: { type: "INT" },
     telefon: { type: "VARCHAR(20)" },
