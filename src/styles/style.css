@@ -69,29 +69,39 @@ canvas {
     height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
-    transform: translateX(0);
+    transform: translateY(0);
     position: absolute;
     z-index: 36;
     filter: blur(0);
 
     &.disactivated {
         filter: blur(10px);
-        transform: translateX(-100%);
+        transform: translateY(-100%);
     }
 
     svg {
+        aspect-ratio: 1 / 1.2;
+        width: 100vw;
+
         .header {
-            aspect-ratio: 1 / 1.6;
-            width: 100vw;
             font-weight: 600;
             text-transform: uppercase;
             font-size: 0.9rem;
         }
 
+        .relation {
+            fill: transparent;
+            stroke-linecap: round;
+            stroke-width: 4;
+            stroke: #dde1e7a8;
+            filter: url(#multiShadow);
+            marker-end: url(#arrow);
+            transition: .6s;
+        }
+
         .table {
             backdrop-filter: blur(15px);
             fill: #e0e8ef40;
-            transition-duration: .6s;
             stroke: var(--highlight);
             rx: 0.8rem;
             width: 260px;
@@ -99,10 +109,11 @@ canvas {
             ;
             transform: translateY(0);
             opacity: 1;
-            transition: transform .8s;
+            transition: .45s;
 
             &:hover {
                 fill: #E5EDF588;
+                /* & ~ .relation {stroke: #ffffff;} */
             }
 
             &.disactivated {
@@ -137,12 +148,10 @@ canvas {
     z-index: 35;
 
     &.disactivated {
-        clip-path: circle(0% at 0% 0%);
+        clip-path: circle(0% at 50% 0%);
     }
 
 }
-
-
 
 .gradient {
     background-image: url("https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png");

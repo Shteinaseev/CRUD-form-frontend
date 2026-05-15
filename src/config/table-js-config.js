@@ -1,142 +1,206 @@
 export const ucenik = {
-  title: 'ucenik',
-  iducenik: "INT",
-  ime: "VARCHAR(45)",
-  prezime: "VARCHAR(45)",
-  datum_rodjenja: "DATE",
-  datum_prvog_upisa: "DATE",
-  osnovna_skola: "INT",
-  mesto_idmesto: "INT",
-  opstina_idopstina: "INT",
-  ulica_idulica: "INT",
-  broj_ulice: "INT",
-  telefon: "VARCHAR(20)",
-  e_mail: "VARCHAR(100)",
-  username: "VARCHAR(45)",
-  x: 360,
-  y: 10,
-  index: 1
+    title: 'ucenik',
+    iducenik: { type: "INT", primaryKey: true },
+    ime: { type: "VARCHAR(45)" },
+    prezime: { type: "VARCHAR(45)" },
+    datum_rodjenja: { type: "DATE" },
+    datum_prvog_upisa: { type: "DATE" },
+    osnovna_skola: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "osnovna_skola", column: "idosnovna_skola", index: 4 }
+    },
+    mesto_idmesto: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "mesto", column: "idmesto" , index: 3}
+    },
+    opstina_idopstina: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "opstina", column: "idopstina", index: 5}
+    },
+    ulica_idulica: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "ulica", column: "idulica", index: 9}
+    },
+    broj_ulice: { type: "INT" },
+    telefon: { type: "VARCHAR(20)" },
+    e_mail: { type: "VARCHAR(100)" },
+    username: { type: "VARCHAR(45)" },
+    x: 360,
+    y: 10,
+    index: 2
 };
 
 export const ucenik_has_staratelj = {
-  title: 'ucenik_has_staratelj',
-  iducenik_has_staratelj: "INT",
-  ucenik_iducenik: "INT",
-  staratelj_idstaratelj: "INT",
-  srodstvo: "VARCHAR(45)",
-  svedocanstvo: "TINYINT",
-  x: 20,
-  y: 50,
-  index: 2
-
+    title: 'ucenik_has_staratelj',
+    iducenik_has_staratelj: { type: "INT", primaryKey: true },
+    ucenik_iducenik: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "ucenik", column: "iducenik", index: 2 }
+    },
+    staratelj_idstaratelj: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "staratelj", column: "idstaratelj", index: 8 }
+    },
+    srodstvo: { type: "VARCHAR(45)" },
+    svedocanstvo: { type: "TINYINT" },
+    x: 20,
+    y: 50,
+    index: 1
 };
 
 export const mesto = {
-  title: "mesto",
-  idmesto: "INT",
-  naziv: "VARCHAR(45)",
-  ptt: "VARCHAR(10)",
-  x: 690,
-  y: 20,
-  index: 3
+    title: "mesto",
+    idmesto: { type: "INT", primaryKey: true },
+    naziv: { type: "VARCHAR(45)" },
+    ptt: { type: "VARCHAR(10)" },
+    x: 835,
+    y: 0,
+    index: 3
 
 };
 
 export const osnovna_skola = {
-  title: "osnovna_skola",
-  idosnovna_skola: "INT",
-  naziv: "VARCHAR(45)",
-  ulica_idulica: "INT",
-  opstina_idopstina: "INT",
-  mesto_idmesto: "INT",
-  x: 1050,
-  y: 50,
-  index: 4
+    title: "osnovna_skola",
+    idosnovna_skola: { type: "INT", primaryKey: true },
+    naziv: { type: "VARCHAR(45)" },
+    ulica_idulica: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "ulica", column: "idulica", index: 9 }
+    },
+    opstina_idopstina: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "opstina", column: "idopstina", index: 5 }
+    },
+    mesto_idmesto: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "mesto", column: "idmesto", index: 3 }
+    },
+    x: 1310,
+    y: 60,
+    index: 4
 };
 
 export const opstina = {
-  title: "opstina",
-  idopstina: "INT",
-  naziv: "VARCHAR(45)",
-  ptt: "VARCHAR(10)",
-  x: 650,
-  y: 280,
-  index: 5
-};
-
-export const odeljenje_has_ucenik = {
-  title: 'odeljenje_has_ucenik',
-  idodeljenje_has_ucenik: "INT",
-  ucenik_iducenik: "INT",
-  odeljenje_idodeljenje: "INT",
-  datu_upisa: "DATE",
-  datum_ispisa: "DATE",
-  x: 300,
-  y: 580,
-  index: 6
-};
-
-export const odeljenje = {
-  title: 'odeljenje',
-  idodeljenje: "INT",
-  oznka_odeljenja: "VARCHAR(10)",
-  razred: "TINYINT",
-  skolska_godina_idskolska_godina: "INT",
-  smer_idsmer: "INT",
-  x: 650,
-  y: 540,
-  index: 7
-};
-
-export const staratelj = {
-  title: 'staratelj',
-  idstaratelj: "INT",
-  ime: "VARCHAR(45)",
-  prezime: "VARCHAR(45)",
-  jmbg: "VARCHAR(45)",
-  broj_stana: "VARCHAR(45)",
-  ulica_idulica: "INT",
-  mesto_idmesto: "INT",
-  opstina_idopstina: "INT",
-  e_mail: "VARCHAR(45)",
-  username: "VARCHAR(45)",
-  password: "VARCHAR(100)",
-  telefon_posao: "VARCHAR(45)",
-  telefon_f: "VARCHAR(45)",
-  telefon_m: "VARCHAR(45)",
-  pol: "VARCHAR(1)",
-  tip: "VARCHAR(45)",
-  x: 40,
-  y: 900,
-  index: 8
+    title: "opstina",
+    idopstina: { type: "INT", primaryKey: true },
+    naziv: { type: "VARCHAR(45)" },
+    ptt: { type: "VARCHAR(10)" },
+    x: 920,
+    y: 300,
+    index: 5
 };
 
 export const ulica = {
-  title: "ulica",
-  idulica: "INT",
-  naziv: "VARCHAR(45)",
-  x: 970,
-  y: 360,
-  index: 9
+    title: "ulica",
+    idulica: { type: "INT", primaryKey: true },
+    naziv: { type: "VARCHAR(45)" },
+    x: 1310,
+    y: 530,
+    index: 9
 
 };
 
+export const odeljenje_has_ucenik = {
+    title: 'odeljenje_has_ucenik',
+    idodeljenje_has_ucenik: { type: "INT", primaryKey: true },
+    ucenik_iducenik: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "ucenik", column: "iducenik", index: 2 }
+    },
+    odeljenje_idodeljenje: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "odeljenje", column: "idodeljenje", index: 7 }
+    },
+    datu_upisa: { type: "DATE" },
+    datum_ispisa: { type: "DATE" },
+    x: 340,
+    y: 580,
+    index: 6
+};
+
+export const odeljenje = {
+    title: 'odeljenje',
+    idodeljenje: { type: "INT", primaryKey: true },
+    oznka_odeljenja: { type: "VARCHAR(10)" },
+    razred: { type: "TINYINT" },
+    skolska_godina_idskolska_godina: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "skolska_godina", column: "idskolska_godina", index: 11 }
+    },
+    smer_idsmer: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "smer", column: "idsmer", index: 10 }
+    },
+    x: 820,
+    y: 740,
+    index: 7
+};
+
+export const staratelj = {
+    title: 'staratelj',
+    idstaratelj: { type: "INT", primaryKey: true },
+    ime: { type: "VARCHAR(45)" },
+    prezime: { type: "VARCHAR(45)" },
+    jmbg: { type: "VARCHAR(45)" },
+    broj_stana: { type: "VARCHAR(45)" },
+    ulica_idulica: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "ulica", column: "idulica", index: 9 }
+    },
+    mesto_idmesto: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "mesto", column: "idmesto", index: 3 }
+    },
+    opstina_idopstina: {
+        type: "INT",
+        foreignKey: true,
+        references: { table: "opstina", column: "idopstina", index: 5 }
+    },
+    e_mail: { type: "VARCHAR(45)" },
+    username: { type: "VARCHAR(45)" },
+    password: { type: "VARCHAR(100)" },
+    telefon_posao: { type: "VARCHAR(45)" },
+    telefon_f: { type: "VARCHAR(45)" },
+    telefon_m: { type: "VARCHAR(45)" },
+    pol: { type: "VARCHAR(1)" },
+    tip: { type: "VARCHAR(45)" },
+    x: 40,
+    y: 950,
+    index: 8
+};
+
+
 export const smer = {
-  title: 'smer',
-  idsmer: "INT",
-  naziv_smera: "VARCHAR(45)",
-  x: 660,
-  y: 880,
-  index: 10
+    title: 'smer',
+    idsmer: { type: "INT", primaryKey: true },
+    naziv_smera: { type: "VARCHAR(45)" },
+    x: 820,
+    y: 1090,
+    index: 10
 };
 
 export const skolska_godina = {
-  title: 'skolska_godina',
-  idskolska_godina: "INT",
-  skolska_godina: "VARCHAR(45)",
-  x: 950,
-  y: 760,
-  index: 11
+    title: 'skolska_godina',
+    idskolska_godina: { type: "INT", primaryKey: true },
+    skolska_godina: { type: "VARCHAR(45)" },
+    x: 1300,
+    y: 1080,
+    index: 11
 
 };
 

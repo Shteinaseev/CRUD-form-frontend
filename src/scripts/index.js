@@ -18,7 +18,7 @@ import {
 class CRUD {
     tableSvgWidth = 260;
     isDragging = false;
-    index = 9;
+    index = 1;
     startX = 0;
     firstCardWidth = 350;
     isShowingAll = false;
@@ -172,7 +172,6 @@ class CRUD {
         const btnSubmit = this.createBtnEl('submit', 'activated', 'Pošalji', false, 'data-js-submit-btn', this.postFormContainer.children.length + 2);
         this.postFormContainer.appendChild(btnSubmit);
         this.postFormContainer.appendChild(wrapper);
-
     }
 
     createBtnEl(type = 'submit', className = '', text = 'Pošalji', isTransparent = false, selector = 'data-js', i = 1) {
@@ -199,7 +198,6 @@ class CRUD {
 
     #createTablePlane(x, y, quantity, index) {
         const rect = document.createElementNS(this.svgNs, "rect");
-
         rect.setAttribute('x', x);
         rect.setAttribute('y', y);
         rect.setAttribute('height', quantity * 30);
@@ -207,6 +205,16 @@ class CRUD {
         rect.classList.add('table');
         rect.classList.add('animation');
         return rect;
+    }
+
+    #createTableRelationLine(x0, y0, x1, y1) {
+        const line = document.createElementNS(this.svgNs, "path");
+        const midpointX = x0 + ((x1 - x0) / 2);
+        line.setAttribute('d', `
+                M ${x0},${y0} L ${midpointX},${y0} L ${midpointX},${y1} ${x1},${y1}
+            `);
+        line.classList.add('relation');
+        return line;
     }
 
     #createTableHeader(x0, y, title) {
@@ -239,11 +247,16 @@ class CRUD {
         const quantity = Object.keys(obj).length;
         this.erdCanvas.appendChild(this.#createTablePlane(obj.x, obj.y, quantity, obj.index));
         this.erdCanvas.appendChild(this.#createTableHeader(obj.x, obj.y + 30, obj.title));
+
         let i = 70;
         for (const [key, value] of Object.entries(obj)) {
             if (!['title', 'x', 'y', 'index'].includes(key)) {
+                if (value?.foreignKey) {
+                    const ref = Object.values(tables).filter(o => value.references.index === o.index);
+                    this.erdCanvas.appendChild(this.#createTableRelationLine(obj.x + this.tableSvgWidth, obj.y + i - 5, ref[0].x, ref[0].y + 65));
+                }
                 this.erdCanvas.appendChild(this.#createTableP(obj.x, obj.y + i, key, 20));
-                this.erdCanvas.appendChild(this.#createTableP(obj.x, obj.y + i, value, 20, "end"));
+                this.erdCanvas.appendChild(this.#createTableP(obj.x, obj.y + i, value.type, 20, "end"));
                 i += 30;
             }
         }
@@ -253,6 +266,7 @@ class CRUD {
     #renderSvgTable() {
         for (const [key, value] of Object.entries(tables)) {
             this.#createTableSvg(value);
+
         }
     }
 
@@ -367,8 +381,8 @@ class CRUD {
     #renderTableShemeEls() {
         for (const [key, value] of Object.entries(tables)) {
             const tableShemeEl = this.#createTableShemeEl(value);
-            // tableShemeEl.classList.add('disactivated');
-            // this.erdBlock.append(tableShemeEl);
+            tableShemeEl.classList.add('disactivated');
+            this.erdBlock.append(tableShemeEl);
         }
 
     }
