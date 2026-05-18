@@ -9,6 +9,17 @@ export const columnsWidth = new Proxy([], {
     }
 });
 
+export const svgTablesWidth = new Proxy([], {
+    get(target, prop) {
+        return target[prop] || 0; // default width of 100px if not set
+    },
+    set(target, prop, value) {
+        target[prop] = value;
+        return true;
+    }
+});
+
+
 export const ucenikFormFields = [
     { label: "Ime", name: "first_name", type: "text", icon: "User" },
     { label: "Prezime", name: "last_name", type: "text", icon: "User" },

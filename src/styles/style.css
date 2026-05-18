@@ -94,37 +94,36 @@ canvas {
             stroke-linecap: round;
             stroke-width: 4;
             stroke: #dde1e7a8;
-            filter: url(#multiShadow);
+            /* filter: url(#multiShadow); */
             marker-end: url(#arrow);
             transition: .6s;
         }
 
         .table {
-            backdrop-filter: blur(15px);
-            fill: #e0e8ef40;
+            fill: #e0e8ef;
             stroke: var(--highlight);
+            stroke-width: 2px;
             rx: 0.8rem;
-            width: 260px;
-            filter: url(#multiShadow) blur(0);
-            ;
+            /* filter: url(#multiShadow); */
             transform: translateY(0);
             opacity: 1;
             transition: .45s;
 
             &:hover {
-                fill: #E5EDF588;
+                fill: #E5EDF5D5;
+                stroke: var(--color-primary);
+
                 /* & ~ .relation {stroke: #ffffff;} */
             }
 
             &.disactivated {
                 transform: translateY(100%);
                 opacity: .3;
-                filter: url(#multiShadow) blur(10px);
             }
         }
 
         text {
-            fill: var(--color-primary);
+            fill: #1a2b4c;
             font-size: 0.9rem;
             font-weight: 300;
             opacity: 1;

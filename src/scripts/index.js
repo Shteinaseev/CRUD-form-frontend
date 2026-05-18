@@ -23,6 +23,7 @@ class CRUD {
     firstCardWidth = 350;
     isShowingAll = false;
     svgNs = "http://www.w3.org/2000/svg";
+    svgTablesWidth = [];
     endpoints = [
         'http://localhost:3000/ucenik_has_staratelj',
         'http://localhost:3000/ucenik',
@@ -196,20 +197,32 @@ class CRUD {
         return btn;
     }
 
-    #createTablePlane(x, y, quantity, index) {
+    #createTablePlane(x, y, quantity, width, index) {
         const rect = document.createElementNS(this.svgNs, "rect");
         rect.setAttribute('x', x);
         rect.setAttribute('y', y);
         rect.setAttribute('height', quantity * 30);
+        rect.setAttribute('width', width);
         rect.setAttribute('data-js-table', index);
         rect.classList.add('table');
         rect.classList.add('animation');
         return rect;
     }
 
-    #createTableRelationLine(x0, y0, x1, y1) {
+    #createTableRelationLine(x0, y0, x1, y1, quantity, title) {
         const line = document.createElementNS(this.svgNs, "path");
-        const midpointX = x0 + ((x1 - x0) / 2);
+        let midpointX;
+        if (y0 + quantity * 30 < y1) {
+            x0 += this.tableSvgWidth
+            x1 += this.tableSvgWidth - 20
+            midpointX = x0 + 20;
+        } else if (x0 > x1) {
+            x1 += this.tableSvgWidth - 20;
+            midpointX = x0 + ((x1 - x0) / 2)
+        }
+        else {
+            midpointX = x0 + ((x1 - x0) / 2)
+        }
         const midpointY = y0 + ((y1 - y0) / 2);
 
         line.setAttribute('d', `
@@ -245,38 +258,51 @@ class CRUD {
         return p;
     }
 
-    #createTableSvg(obj) {
-        const quantity = Object.keys(obj).length;
-        this.erdCanvas.appendChild(this.#createTablePlane(obj.x, obj.y, quantity, obj.index));
-        this.erdCanvas.appendChild(this.#createTableHeader(obj.x, obj.y + 30, obj.title));
+    calcTextWidth(value, fs, gap) {
+        return value.toString().length * fs + gap
+    }
 
+    #createTableSvg(obj, index) {
+        const quantity = Object.keys(obj).length;
         let i = 70;
+        let x1 = 0;
         let x0 = 0;
+        this.ErDiagramOther.push(this.#createTableHeader(obj.x, obj.y + 30, obj.title));
+
         for (const [key, value] of Object.entries(obj)) {
             if (!['title', 'x', 'y', 'index'].includes(key)) {
-                if (value?.foreignKey && value.references.index == 2) {
+                if (value?.foreignKey) {
                     const ref = Object.values(tables).filter(o => value.references.index === o.index);
-                    if (obj.x > ref[0].x) {
-                        x0 = obj.x + this.tableSvgWidth
-                    } else {
-                        x0 = obj.x + 20;
-                    }
-                    console.log(x0, obj.x + this.tableSvgWidth, obj.x, obj.title)
-                    this.erdCanvas.appendChild(this.#createTableRelationLine(ref[0].x, ref[0].y + 65, x0, obj.y + i - 5));
+                    x1 = obj.x + 20;
+                    x0 = ref[0].x;
+                    this.ErDiagramRelationsLines.push(this.#createTableRelationLine(x0, ref[0].y + 65, x1, obj.y + i - 5, quantity, obj.title));
                 }
-                this.erdCanvas.appendChild(this.#createTableP(obj.x, obj.y + i, key, 20));
-                this.erdCanvas.appendChild(this.#createTableP(obj.x, obj.y + i, value.type, 20, "end"));
+                const width = this.calcTextWidth(value, 16, 16) + this.calcTextWidth(key, 16, 16);
+                if (!this.svgTablesWidth[index]) {
+                    this.svgTablesWidth[index] = width;
+                }
+                else if (this.svgTablesWidth[index] < width) {
+                    this.svgTablesWidth[index] = width;
+                }
+                this.ErDiagramOther.push(this.#createTableP(obj.x, obj.y + i, key, 20));
+                this.ErDiagramOther.push(this.#createTableP(obj.x, obj.y + i, value.type, 20, "end"));
                 i += 30;
             }
         }
+        this.ErDiagramOther.unshift(this.#createTablePlane(obj.x, obj.y, quantity, this.svgTablesWidth[index], obj.index));
 
     }
 
     #renderSvgTable() {
+        this.ErDiagramRelationsLines = [];
+        this.ErDiagramOther = [];
+        let index = 0;
         for (const [key, value] of Object.entries(tables)) {
-            this.#createTableSvg(value);
-
+            this.#createTableSvg(value, index++);
         }
+        console.log(this.svgTablesWidth)
+        this.ErDiagramRelationsLines.forEach(el => this.erdCanvas.appendChild(el));
+        this.ErDiagramOther.forEach(el => this.erdCanvas.appendChild(el));
     }
 
     createBtnWrapper() {
@@ -427,7 +453,6 @@ class CRUD {
 
     #showAllItems(container, filter = true, isHtmlCollection = true) {
         const elements = this.#conditionalfilterItems([...container.children], filter, ['div', 'defs']);
-        console.log(elements)
         const promises = Promise.all(elements.map(el => this.#fadeIn(el)));
         return promises;
     }
@@ -438,12 +463,10 @@ class CRUD {
 
     #hideAllItems(container, filter = true, isHtmlCollection = true) {
         const elements = this.#conditionalfilterItems([...container.children], filter, ['div', 'defs']);
-        console.log(elements)
 
         const promises = Promise.all(elements.map(el => this.#fadeOut(el)))
             .then((list) => {
                 list.forEach((el) => {
-                    console.log(el)
                     el.remove();
                 })
 
