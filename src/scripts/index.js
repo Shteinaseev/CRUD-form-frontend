@@ -31,7 +31,7 @@ class CRUD {
         'http://localhost:3000/osnovna_skola',
         'http://localhost:3000/opstina',
         'http://localhost:3000/odeljenje_has_ucenik',
-        'https://timofej.asejev.ucim.in.rs/crud-form/proba.php',
+        'https://dario.ginder.ucim.in.rs/odeljenje/api/proba.php',
         'http://localhost:3000/ulica',
         'http://localhost:3000/staratelj',
         'http://localhost:3000/smer',
