@@ -25,8 +25,8 @@ export class entityCard extends HTMLElement {
                ${this.liElementsList.join("")}
             </ul>
             <div class="btn-wrapper">
-                <button class="btn submit">Promeniti</button>
-                <button class="btn danger">Obrisati</button>
+                <button data-js-btn-edit class="btn submit">Promeniti</button>
+                <button data-js-btn-delete class="btn danger">Obrisati</button>
             </div>
         `
     }
@@ -59,6 +59,14 @@ export class entityCard extends HTMLElement {
 
         observer.observe(parent, { attributes: true });
 
+
+        // this.shadowRoot.querySelector("#btn1").addEventListener("click", () => {
+        //   this.dispatchEvent(new CustomEvent("action", {
+        //     detail: { type: "btn1" },
+        //     bubbles: true,
+        //     composed: true
+        //   }));
+        // });
     }
 }
 

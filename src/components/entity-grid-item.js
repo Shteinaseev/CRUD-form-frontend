@@ -43,8 +43,8 @@ export class EntityGridItem extends HTMLElement {
             }
             i++;
         }
-        this.liElementsList.push(`<li><button class="btn submit">promeniti</button></li>`);
-        this.liElementsList.push(`<li><button class="btn danger">obrisati</button></li>`);
+        this.liElementsList.push(`<li><button data-js-btn-edit class="btn submit">promeniti</button></li>`);
+        this.liElementsList.push(`<li><button data-js-btn-delete class="btn danger">obrisati</button></li>`);
     }
 
     connectedCallback() {

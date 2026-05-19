@@ -104,6 +104,7 @@ canvas {
             stroke: var(--highlight);
             stroke-width: 2px;
             rx: 0.8rem;
+            width: 260px;
             /* filter: url(#multiShadow); */
             transform: translateY(0);
             opacity: 1;

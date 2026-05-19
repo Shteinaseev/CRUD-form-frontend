@@ -56,7 +56,9 @@ class CRUD {
         infoBlock: '[data-js-info-block]',
         erDiagramBlock: '[data-js-er-diagram-block]',
         erDiagramCanvas: '[data-js-er-diagram-canvas]',
-        erDiagramTable: '[data-js-table]'
+        erDiagramTable: '[data-js-table]',
+        btnEdit: '[data-js-btn-edit]',
+        btnDelete: '[data-js-btn-delete]'
     }
 
     constructor() {
@@ -544,6 +546,7 @@ class CRUD {
         }, { capture: true })
 
         window.addEventListener('click', (e) => {
+            console.log(e)
             const isClickInsideNavbar = this.navbar.contains(e.target);
             const isNumberBtn = e.target.matches(this.selectors.numberBtn);
             if (!isClickInsideNavbar && !this.navbar.classList.contains('scrolled')) {
@@ -565,6 +568,10 @@ class CRUD {
                     .then(() => {
                         this.renderFormGroups();
                     });
+            }
+
+            if(e.target.matches(this.selectors.btnEdit)) {
+                console.log("sfdf")
             }
 
             if (e.target.matches(this.selectors.erDiagramTable)) {
