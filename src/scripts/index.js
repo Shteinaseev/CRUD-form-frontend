@@ -31,7 +31,7 @@ class CRUD {
         'http://localhost:3000/osnovna_skola',
         'http://localhost:3000/opstina',
         'http://localhost:3000/odeljenje_has_ucenik',
-        'https://dario.ginder.ucim.in.rs/odeljenje/api/proba.php',
+        'https://timofej.asejev.ucim.in.rs/crud-form/proba.php',
         'http://localhost:3000/ulica',
         'http://localhost:3000/staratelj',
         'http://localhost:3000/smer',
@@ -570,7 +570,7 @@ class CRUD {
                     });
             }
 
-            if(e.target.matches(this.selectors.btnEdit)) {
+            if (e.target.matches(this.selectors.btnEdit)) {
                 console.log("sfdf")
             }
 
