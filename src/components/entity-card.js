@@ -60,13 +60,13 @@ export class entityCard extends HTMLElement {
         observer.observe(parent, { attributes: true });
 
 
-        // this.shadowRoot.querySelector("#btn1").addEventListener("click", () => {
-        //   this.dispatchEvent(new CustomEvent("action", {
-        //     detail: { type: "btn1" },
-        //     bubbles: true,
-        //     composed: true
-        //   }));
-        // });
+        this.shadowRoot.querySelector("[data-js-btn-edit]").addEventListener("click", () => {
+            this.dispatchEvent(new editEvent("action", {
+                detail: { type: "btnEdit" },
+                bubbles: true,
+                composed: true
+            }));
+        });
     }
 }
 
