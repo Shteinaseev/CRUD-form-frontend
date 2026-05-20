@@ -2,6 +2,7 @@ import styles from './form-group.css?inline';
 import * as icons from '@boxicons/js';
 export class FormGroup extends HTMLElement {
 
+    static formAssociated = true;
     static get observedAttributes() {
         return ['label', 'name', 'type', 'icon',
             'inputmode', 'min-length', 'max-length', 'value', 'required', 'options', 'lookup', 'displayfields', 'searchfields'];
@@ -26,7 +27,16 @@ export class FormGroup extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
-        this.#internals = this.attachInternals?.();
+        this.#internals = this.attachInternals();
+    }
+
+    set value(val) {
+        this.#value = val;
+        this.#internals.setFormValue(val);
+    }
+
+    get value() {
+        return this.#value;
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -67,6 +77,7 @@ export class FormGroup extends HTMLElement {
 
             case 'value':
                 this.#value = newValue || '';
+                this.#internals.setFormValue(this.#value);
                 break;
 
             case 'required':
@@ -108,17 +119,24 @@ export class FormGroup extends HTMLElement {
         }
         let url;
         if (this.#lookup === 'odeljenje') {
-            url = `http://localhost:5173/api/odeljenje/api/proba.php
-`
+            console.log("fsd")
+            url = `https://dario.ginder.ucim.in.rs/${this.#lookup}/api/odeljenje_find.php?${this.#searchFields.join('')}&keyword=${value}`
         } else {
             url = `http://localhost:3000/${this.#lookup}?q=${value}`
         }
+
         fetch(url)
             .then(res => res.json())
             .then(data => {
                 const newData = [];
-                console.log(data)
-                data.forEach(el => {
+                let arr;
+                if (this.#lookup === 'odeljenje') {
+                    arr = data.data
+                } else {
+                    arr = data
+                }
+                console.log(data, arr)
+                arr.forEach(el => {
                     let i = 0;
                     const obj = {};
                     console.log(el)
@@ -142,22 +160,48 @@ export class FormGroup extends HTMLElement {
     }
 
     onInput(event) {
-        const value = event.target.#value.trim();
+        const value = event.target.value.trim();
+        this.value = value;
         this.#fetchSuggestions(value);
     }
 
     #bindInputEvents() {
-        const input = this.shadowRoot.querySelector('input, textarea');
-        if (!input) return;
+        const inputs = this.shadowRoot.querySelectorAll('input, textarea');
+        if (!inputs.length) return;
+
+        const syncValue = (input) => {
+            if (this.#type === 'checkbox') {
+                this.value = input.checked ? input.value || '1' : '';
+                return;
+            }
+
+            if (this.#type === 'radio') {
+                const checkedInput = this.shadowRoot.querySelector('input:checked');
+                this.value = checkedInput ? checkedInput.value : '';
+                return;
+            }
+
+            this.value = input.value;
+        };
+
+        inputs.forEach((input) => {
+            input.addEventListener('input', () => syncValue(input));
+            input.addEventListener('change', () => syncValue(input));
+        });
+
+        const input = inputs[0];
+
         if (this.#type === 'number' || this.#inputMode === 'numeric') {
             input.addEventListener('input', () => {
-                this.#value = input.value;
                 input.value = input.value.replace(/\D/g, '');
+                this.value = input.value;
             });
         }
         else if (this.#type === 'checkbox') {
             input.nextElementSibling.addEventListener('click', () => {
+                input.checked = !input.checked;
                 input.nextElementSibling.classList.toggle('check');
+                this.value = input.checked ? input.value || '1' : '';
             });
         }
         else if (this.#type === 'search') {
@@ -166,16 +210,14 @@ export class FormGroup extends HTMLElement {
                 if (e.key === 'Enter') {
                     this.#fetchSuggestions(input.value.trim());
                 }
-                document.addEventListener('suggestion-selected', (e) => {
-                    if (e.detail['data-js-table'].value === this.#lookup) {
-                        input.value = e.detail['data-js-suggestion'].value
-                    }
-                });
-
+            });
+            document.addEventListener('suggestion-selected', (e) => {
+                if (e.detail['data-js-table'].value === this.#lookup) {
+                    input.value = e.detail['data-js-suggestion'].value;
+                    this.value = input.value;
+                }
             });
         }
-
-
 
     }
 

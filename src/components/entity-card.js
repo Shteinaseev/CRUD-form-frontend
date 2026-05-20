@@ -61,7 +61,7 @@ export class entityCard extends HTMLElement {
 
 
         this.shadowRoot.querySelector("[data-js-btn-edit]").addEventListener("click", () => {
-            this.dispatchEvent(new editEvent("action", {
+            this.dispatchEvent(new CustomEvent("editEvent", {
                 detail: { type: "btnEdit" },
                 bubbles: true,
                 composed: true

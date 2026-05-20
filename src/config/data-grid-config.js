@@ -99,20 +99,20 @@ export const opstinaFormFields = [
 
 export const odeljenjeHasUcenikFormFields = [
     {
-        label: "Učenik", name: "ucenik_iducenik", type: "search", icon: "User",
+        label: "Učenik", name: "UCENIK", type: "search", icon: "User",
         lookup: "ucenik", displayFields: ["iducenik", "ime", "prezime"],
         searchFields: ["iducenik", "ime", "prezime"]
     }, // поиск по ученику
 
     {
-        label: "Odeljenje", name: "odeljenje_idodeljenje", type: "search", icon: "Layers",
+        label: "Odeljenje", name: "ODELJENJE", type: "search", icon: "Layers",
         lookup: "odeljenje", displayFields: ["idodeljenje", "oznaka_odeljenja", "razred"],
-        searchFields: ["idodeljenje", "oznaka_odeljenja", "razred"]
+        searchFields: ["idskolska_godina=1"]
     }, // поиск по отделению
 
-    { label: "Datum upisa", name: "datu_upisa", type: "date", icon: "Calendar" },
+    { label: "Datum upisa", name: "UPISA", type: "date", icon: "Calendar" },
 
-    { label: "Datum ispisa", name: "datum_ispisa", type: "date", icon: "Calendar" }
+    { label: "Datum ispisa", name: "ISPISA", type: "date", icon: "Calendar" }
 ];
 
 export const odeljenjeFormFields = [

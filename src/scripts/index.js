@@ -18,7 +18,7 @@ import {
 class CRUD {
     tableSvgWidth = 260;
     isDragging = false;
-    index = 1;
+    index = 6;
     startX = 0;
     firstCardWidth = 350;
     isShowingAll = false;
@@ -85,16 +85,10 @@ class CRUD {
         this.#fetchData();
         this.bindEvents();
 
-        fetch('https://dario.ginder.ucim.in.rs/odeljenje/api/odeljenje_find.php?idodeljenje=1')
-            .then(response => {
-                response => response.json()
-            })
-            .then(data => {
-                console.log(data)
-            })
-
         document.querySelectorAll('entity-card').forEach((el) => {
-            el.addEventListener("editEvent", console.log(e))
+            el.addEventListener("editEvent", (e) => {
+                console.log(e)
+            })
         })
     }
 
@@ -552,12 +546,28 @@ class CRUD {
             }).join('');
         })
 
+        document.addEventListener('submit', (e) => {
+            e.preventDefault()
+            if (this.index === 6) {
+                console.log(this.postFormContainer)
+                const formData = new FormData(e.target)
+                console.log(formData)
+                fetch('https://aleksandr.leontev.ucim.in.rs/odeljenje_has_ucenik/api/od_has_uc_create.php', {
+                    method: 'POST',
+                    body: formData,
+                })
+                    .then(res => res.json())
+                    .then(data => console.log(data))
+
+                console.log("fdsfd")
+            }
+        })
+
         window.addEventListener('blur', (e) => {
             this.searchList.parentElement.classList.add('disactivated')
         }, { capture: true })
 
         window.addEventListener('click', (e) => {
-            console.log(e)
             const isClickInsideNavbar = this.navbar.contains(e.target);
             const isNumberBtn = e.target.matches(this.selectors.numberBtn);
             if (!isClickInsideNavbar && !this.navbar.classList.contains('scrolled')) {
