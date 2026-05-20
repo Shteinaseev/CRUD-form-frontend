@@ -85,6 +85,13 @@ class CRUD {
         this.#fetchData();
         this.bindEvents();
 
+        fetch('https://dario.ginder.ucim.in.rs/odeljenje/odeljenje_find.php?idodeljenja=1')
+            .then(response => {
+                response => response.json()
+            })
+            .then(data => {
+                console.log(data)
+            })
     }
 
     #fetchData() {
