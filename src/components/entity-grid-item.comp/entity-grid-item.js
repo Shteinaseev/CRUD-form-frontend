@@ -1,5 +1,5 @@
 import styles from './entity-grid-item.css?inline';
-import { columnsWidth } from "../config/data-grid-config";
+import { columnsWidth } from "../../config/data-grid-config";
 
 export class EntityGridItem extends HTMLElement {
     liElementsList = [];

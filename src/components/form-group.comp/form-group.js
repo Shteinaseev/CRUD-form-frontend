@@ -5,7 +5,7 @@ export class FormGroup extends HTMLElement {
     static formAssociated = true;
     static get observedAttributes() {
         return ['label', 'name', 'type', 'icon',
-            'inputmode', 'min-length', 'max-length', 'value', 'required', 'options', 'lookup', 'displayfields', 'searchfields'];
+            'inputmode', 'min-length', 'max-length', 'value', 'required', 'options', 'lookup', 'displayfields', 'searchfields', 'valueFrom'];
     }
 
     #label = '';
@@ -23,6 +23,25 @@ export class FormGroup extends HTMLElement {
     #searchFields = [];
     #id = '';
     #internals = null;
+    #valueFrom = '';
+
+    on = {
+        dataSend: (callback) => {
+            this.addEventListener("data-send", (e) => {
+                callback(e.detail);
+            });
+        }
+    };
+
+    off = {
+        dataSend: (callback) => {
+            this.removeEventListener("data-send", (e) => {
+                callback(e.detail);
+            })
+        }
+    };
+
+
 
     constructor() {
         super();
@@ -31,8 +50,21 @@ export class FormGroup extends HTMLElement {
     }
 
     set value(val) {
-        this.#value = val;
-        this.#internals.setFormValue(val);
+        this.#value = val ?? '';
+        this.#internals.setFormValue(this.#value);
+
+        const input = this.shadowRoot?.querySelector('input, textarea');
+
+        if (!input) return;
+
+        if (input.type === 'checkbox') {
+            input.checked = Boolean(this.#value);
+        } else if (input.type === 'radio') {
+            const radio = this.shadowRoot.querySelector(`input[value="${this.#value}"]`);
+            if (radio) radio.checked = true;
+        } else {
+            input.value = this.#value;
+        }
     }
 
     get value() {
@@ -95,6 +127,10 @@ export class FormGroup extends HTMLElement {
 
             case 'searchfields':
                 this.#searchFields = this.#parseOptions(newValue);
+                break;
+
+            case 'valueFrom':
+                this.#valueFrom = newValue || '';
                 break;
         }
 

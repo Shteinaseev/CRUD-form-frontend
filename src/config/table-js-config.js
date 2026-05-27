@@ -105,7 +105,7 @@ export const ulica = {
     naziv: { type: "VARCHAR(45)" },
     x: 1310,
     y: 530,
-    index: 9
+    index: 8
 
 };
 
@@ -181,7 +181,7 @@ export const staratelj = {
     tip: { type: "VARCHAR(45)" },
     x: 40,
     y: 950,
-    index: 8
+    index: 9
 };
 
 

@@ -1,8 +1,7 @@
-import { FormGroup } from "../components/form-group";
-import { dotsGenerator } from "./dots";
-import { entityCard } from "../components/entity-card";
-import { EntityGridItem } from "../components/entity-grid-item";
-import { TableSheme } from "../components/table-sheme";
+import { FormGroup } from "../components/form-group.comp/form-group";
+import { entityCard } from "../components/entity-card.comp/entity-card";
+import { EntityGridItem } from "../components/entity-grid-item.comp/entity-grid-item";
+import { TableSheme } from "../components/table-sheme.comp/table-sheme";
 import { ReflectGradient } from "./reflect-gradient";
 import { getIcons, Home, ChevronLeft, ChevronRight, Menu, Plus, InfoCircle, HelpCircle } from '@boxicons/js';
 import * as tables from '../config/table-js-config';
@@ -84,12 +83,6 @@ class CRUD {
         this.renderFormGroups();
         this.#fetchData();
         this.bindEvents();
-
-        document.querySelectorAll('entity-card').forEach((el) => {
-            el.addEventListener("editEvent", (e) => {
-                console.log(e)
-            })
-        })
     }
 
     #fetchData() {
@@ -105,8 +98,8 @@ class CRUD {
                         this.section.appendChild(this.createBtnEl('button', 'disactivated', 'Prikaži sve', true, 'data-js-show-all'));
                     })
             })
-
     }
+
 
     createFormGroup(i) {
         const formGroup = document.createElement('form-group');
@@ -121,7 +114,8 @@ class CRUD {
 
     updateAttrs(el, obj) {
         for (const [key, value] of Object.entries(obj)) {
-            el.setAttribute(key, value);
+            const attrName = key.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
+            el.setAttribute(attrName, value);
         }
     }
 
@@ -307,7 +301,6 @@ class CRUD {
         for (const [key, value] of Object.entries(tables)) {
             this.#createTableSvg(value, index++);
         }
-        console.log(this.svgTablesWidth)
         this.ErDiagramRelationsLines.forEach(el => this.erdCanvas.appendChild(el));
         this.ErDiagramOther.forEach(el => this.erdCanvas.appendChild(el));
     }
@@ -338,6 +331,7 @@ class CRUD {
         let data = this.data.slice(0, 2);
         data.forEach((data, i) => {
             const card = this.createEntityCardEl(data, i);
+            card.edit();
             card.classList.add('animation');
             card.classList.add('disactivated');
             setTimeout(() => {
@@ -528,6 +522,19 @@ class CRUD {
             })
     }
 
+    fillForm(data) {
+        const fields = this.postFormContainer.querySelectorAll('form-group');
+        console.log(data)
+        fields.forEach((field) => {
+            const name = field.getAttribute('value-from');
+
+            if (name in data) {
+                console.log(field, name, data[name])
+                field.value = data[name];
+            }
+        });
+    }
+
     bindEvents() {
 
         window.addEventListener('data-send', (e) => {
@@ -551,7 +558,7 @@ class CRUD {
             if (this.index === 6) {
                 console.log(this.postFormContainer)
                 const formData = new FormData(e.target)
-                console.log(formData)
+                console.log([...formData.entries()], formData)
                 fetch('https://aleksandr.leontev.ucim.in.rs/odeljenje_has_ucenik/api/od_has_uc_create.php', {
                     method: 'POST',
                     body: formData,
@@ -562,6 +569,10 @@ class CRUD {
                 console.log("fdsfd")
             }
         })
+
+        this.container.addEventListener('editEvent', (e) => {
+            this.fillForm(e.detail.data);
+        });
 
         window.addEventListener('blur', (e) => {
             this.searchList.parentElement.classList.add('disactivated')

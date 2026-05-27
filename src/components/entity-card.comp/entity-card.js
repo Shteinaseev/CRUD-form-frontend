@@ -7,6 +7,10 @@ export class entityCard extends HTMLElement {
         this.attachShadow({ mode: 'open' });
     }
 
+    edit() {
+
+    }
+
     set data(value) {
         this._data = value;
         this.render();
@@ -43,26 +47,9 @@ export class entityCard extends HTMLElement {
         const parent = this.parentElement;
         if (!parent) return;
 
-        const observer = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                if (mutation.attributeName === 'class') {
-                    if (parent.classList.contains('dragging')) {
-                        this.style.cursor = 'grab';
-                        this.style.userSelect = 'none';
-                    } else {
-                        this.style.cursor = 'auto';
-                        this.style.userSelect = 'all';
-                    }
-                }
-            });
-        });
-
-        observer.observe(parent, { attributes: true });
-
-
         this.shadowRoot.querySelector("[data-js-btn-edit]").addEventListener("click", () => {
             this.dispatchEvent(new CustomEvent("editEvent", {
-                detail: { type: "btnEdit" },
+                detail: { type: "btnEdit", data: this._data },
                 bubbles: true,
                 composed: true
             }));

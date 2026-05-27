@@ -264,29 +264,36 @@
             "idodeljenje_has_ucenik": 1,
             "ucenik_iducenik": 101,
             "odeljenje_idodeljenje": 1,
-            "datu_upisa": "2025-09-01",
-            "datum_ispisa": null
+            "datum_upisa": "2025-09-01",
+            "datum_ispisa": "2027-09-01"
         },
         {
             "idodeljenje_has_ucenik": 2,
             "ucenik_iducenik": 102,
             "odeljenje_idodeljenje": 1,
-            "datu_upisa": "2025-09-01",
-            "datum_ispisa": null
+            "datum_upisa": "2025-09-01",
+            "datum_ispisa": "2027-09-01"
+        },
+        {
+            "idodeljenje_has_ucenik": 2,
+            "ucenik_iducenik": 102,
+            "odeljenje_idodeljenje": 1,
+            "datum_upisa": "2025-09-01",
+            "datum_ispisa": "2027-09-01"
         },
         {
             "idodeljenje_has_ucenik": 3,
             "ucenik_iducenik": 103,
             "odeljenje_idodeljenje": 2,
-            "datu_upisa": "2025-09-01",
+            "datum_upisa": "2025-09-01",
             "datum_ispisa": "2026-01-15"
         },
         {
             "idodeljenje_has_ucenik": 4,
             "ucenik_iducenik": 104,
             "odeljenje_idodeljenje": 3,
-            "datu_upisa": "2025-09-01",
-            "datum_ispisa": null
+            "datum_upisa": "2025-09-01",
+            "datum_ispisa": "2028-09-01"
         }
     ],
     "ulica": [
