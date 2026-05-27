@@ -18,11 +18,22 @@ class CRUD {
     tableSvgWidth = 260;
     isDragging = false;
     index = 6;
-    startX = 0;
-    firstCardWidth = 350;
-    isShowingAll = false;
     svgNs = "http://www.w3.org/2000/svg";
     svgTablesWidth = [];
+    #recordId = null;
+    #tableNames = [
+        "ucenik_has_staratelj",
+        "ucenik",
+        "mesto",
+        "osnovna_skola",
+        "opstina",
+        "odeljenje_has_ucenik",
+        "odeljenje",
+        "ulica",
+        "staratelj",
+        "smer",
+        "skolska_godina"
+    ]
     endpoints = [
         'http://localhost:3000/ucenik_has_staratelj',
         'http://localhost:3000/ucenik',
@@ -57,7 +68,8 @@ class CRUD {
         erDiagramCanvas: '[data-js-er-diagram-canvas]',
         erDiagramTable: '[data-js-table]',
         btnEdit: '[data-js-btn-edit]',
-        btnDelete: '[data-js-btn-delete]'
+        btnDelete: '[data-js-btn-delete]',
+        btnCancel: '[data-js-btn-cancel]'
     }
 
     constructor() {
@@ -158,6 +170,7 @@ class CRUD {
         }
     }
 
+
     renderFormItems(array) {
         let i = 0;
         array.forEach(obj => {
@@ -174,6 +187,10 @@ class CRUD {
         const btnSubmit = this.createBtnEl('submit', 'activated', 'Pošalji', false, 'data-js-submit-btn', this.postFormContainer.children.length + 2);
         this.postFormContainer.appendChild(btnSubmit);
         this.postFormContainer.appendChild(wrapper);
+    }
+
+    renderBtnCancel() { 
+        const btnCancel = this.createBtnEl('button', 'activated', 'Otkaži', false, 'data-js-btn-cancel', this.postFormContainer.children.length + 2);
     }
 
     createBtnEl(type = 'submit', className = '', text = 'Pošalji', isTransparent = false, selector = 'data-js', i = 1) {
@@ -523,14 +540,16 @@ class CRUD {
     }
 
     fillForm(data) {
+        const pk = 'id' + this.#tableNames[this.index - 1];
+        this.#recordId = data[pk];
         const fields = this.postFormContainer.querySelectorAll('form-group');
-        console.log(data)
         fields.forEach((field) => {
             const name = field.getAttribute('value-from');
-
             if (name in data) {
-                console.log(field, name, data[name])
                 field.value = data[name];
+            } else if (name.startsWith('id')) {
+                this.#recordId = data[name];
+                console.log("fdfd", this.#recordId)
             }
         });
     }
@@ -556,22 +575,26 @@ class CRUD {
         document.addEventListener('submit', (e) => {
             e.preventDefault()
             if (this.index === 6) {
+                let method = 'POST';
                 console.log(this.postFormContainer)
                 const formData = new FormData(e.target)
-                console.log([...formData.entries()], formData)
+                if (this.#recordId) {
+                    formData.append('idodeljenje_has_ucenik', this.#recordId);
+                    method = 'PUT';
+                }
+                console.log(method, [...formData])
                 fetch('https://aleksandr.leontev.ucim.in.rs/odeljenje_has_ucenik/api/od_has_uc_create.php', {
-                    method: 'POST',
+                    method: method,
                     body: formData,
                 })
                     .then(res => res.json())
                     .then(data => console.log(data))
-
-                console.log("fdsfd")
             }
         })
 
-        this.container.addEventListener('editEvent', (e) => {
+        this.section.addEventListener('editEvent', (e) => {
             this.fillForm(e.detail.data);
+            this.postFormContainer.querySelector('[data-js-submit-btn]').textContent = 'Sačuvaj promene';
         });
 
         window.addEventListener('blur', (e) => {
@@ -600,10 +623,6 @@ class CRUD {
                     .then(() => {
                         this.renderFormGroups();
                     });
-            }
-
-            if (e.target.matches(this.selectors.btnEdit)) {
-                console.log("sfdf")
             }
 
             if (e.target.matches(this.selectors.erDiagramTable)) {

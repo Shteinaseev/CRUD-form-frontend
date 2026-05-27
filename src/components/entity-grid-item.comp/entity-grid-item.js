@@ -30,7 +30,6 @@ export class EntityGridItem extends HTMLElement {
     }
 
     renderLiEls() {
-        // let i = 0; style="max-width: ${this.colWidths[i] || 100}px">
         let i = 0;
         for (const value of Object.values(this._data)) {
             this.liElementsList.push(`<li>${value}</li>`);
@@ -50,6 +49,14 @@ export class EntityGridItem extends HTMLElement {
     connectedCallback() {
         this.renderLiEls();
         this.render();
+
+        this.shadowRoot.querySelector("[data-js-btn-edit]").addEventListener("click", () => {
+            this.dispatchEvent(new CustomEvent("editEvent", {
+                detail: { type: "btnEdit", data: this._data },
+                bubbles: true,
+                composed: true
+            }));
+        });
     }
 }
 

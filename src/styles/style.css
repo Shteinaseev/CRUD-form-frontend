@@ -387,6 +387,28 @@ canvas {
         z-index: 13;
     }
 
+    button.cancel-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background-color: transparent;
+        color: var(--color-danger);
+        border: 2px solid var(--color-danger);
+        border-radius: 50px;
+        padding: 0.5rem 0.5rem;
+        z-index: 15;
+        transition: .3s;
+        box-shadow: inset 2px 2px 5px #bcbcbc, inset -2px -2px 5px #ffffff, 2px 2px 5px #bcbcbc, -2px -2px 5px #ffffff;
+
+        &:hover {
+            background-color: var(--color-primary);
+        }
+
+        &.disactivated {
+            transform: translateY(-20vw);
+        }
+    }
+
     form {
         display: flex;
         flex-direction: column;
@@ -406,6 +428,8 @@ canvas {
             flex-direction: column;
             transition: all 0.4s var(--transition-timing-function);
         }
+
+
 
         &::-webkit-scrollbar {
             width: 10px;
