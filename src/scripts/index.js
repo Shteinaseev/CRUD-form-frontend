@@ -91,6 +91,7 @@ class CRUD {
         this.postForm = this.root.querySelector(this.selectors.postForm);
         this.postFormContainer = this.postForm.querySelector(this.selectors.postFormContainer);
         this.searchList = this.root.querySelector(this.selectors.searchList);
+        this.btnCancel = this.root.querySelector(this.selectors.btnCancel);
         this.#renderSvgTable();
         this.renderFormGroups();
         this.#fetchData();
@@ -189,7 +190,7 @@ class CRUD {
         this.postFormContainer.appendChild(wrapper);
     }
 
-    renderBtnCancel() { 
+    renderBtnCancel() {
         const btnCancel = this.createBtnEl('button', 'activated', 'Otkaži', false, 'data-js-btn-cancel', this.postFormContainer.children.length + 2);
     }
 
@@ -554,7 +555,21 @@ class CRUD {
         });
     }
 
+    clearForm() {
+        const fields = this.postFormContainer.querySelectorAll('form-group');
+        fields.forEach((field) => {
+            field.value = '';
+        });
+        this.#recordId = null;
+        this.btnCancel.classList.add('disactivated');
+    }
+
     bindEvents() {
+
+        this.btnCancel.addEventListener('click', () => {
+            this.clearForm();
+            this.postFormContainer.querySelector('[data-js-submit-btn]').textContent = 'Pošalji';
+        });
 
         window.addEventListener('data-send', (e) => {
             console.log(e.detail)
@@ -590,10 +605,13 @@ class CRUD {
                     .then(res => res.json())
                     .then(data => console.log(data))
             }
+            this.clearForm();
+
         })
 
         this.section.addEventListener('editEvent', (e) => {
             this.fillForm(e.detail.data);
+            this.btnCancel.classList.remove('disactivated');
             this.postFormContainer.querySelector('[data-js-submit-btn]').textContent = 'Sačuvaj promene';
         });
 
@@ -611,6 +629,9 @@ class CRUD {
             if (isNumberBtn) {
                 const btnIndex = parseInt(e.target.getAttribute('data-js-btn-index'));
                 this.index = btnIndex;
+                if(this.#recordId){
+                    this.clearForm();
+                }
                 const btnWrapper = this.postForm.querySelector(this.selectors.btnWrapper);
                 [...btnWrapper.children].forEach(btn => {
                     btn.disabled = true;
