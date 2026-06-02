@@ -44,7 +44,7 @@ class CRUD {
         'https://dario.ginder.ucim.in.rs/odeljenje/api/proba.php',
         'http://localhost:3000/ulica',
         'http://localhost:3000/staratelj',
-        'http://darko.lovrekovic.ucim.in.rs/smer/api/smer_listall.php',
+        'https://darko.lovrekovic.ucim.in.rs/smer/api/smer_listall.php',
         'http://localhost:3000/skolska_godina'
     ]
     selectors = {
