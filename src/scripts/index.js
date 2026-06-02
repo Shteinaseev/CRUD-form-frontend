@@ -44,7 +44,7 @@ class CRUD {
         'https://dario.ginder.ucim.in.rs/odeljenje/api/proba.php',
         'http://localhost:3000/ulica',
         'http://localhost:3000/staratelj',
-        'http://localhost:3000/smer',
+        'http://darko.lovrekovic.ucim.in.rs/smer/api/smer_listall.php',
         'http://localhost:3000/skolska_godina'
     ]
     selectors = {
@@ -631,7 +631,7 @@ class CRUD {
             if (isNumberBtn) {
                 const btnIndex = parseInt(e.target.getAttribute('data-js-btn-index'));
                 this.index = btnIndex;
-                if(this.#recordId){
+                if (this.#recordId) {
                     this.clearForm();
                 }
                 const btnWrapper = this.postForm.querySelector(this.selectors.btnWrapper);
