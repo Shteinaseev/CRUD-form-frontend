@@ -10,53 +10,42 @@ export class ReflectGradient {
     `;
 
     fragmentShader = `
-        precision mediump float;
+    uniform float iTime;
+    uniform vec2 iResolution;
 
-        uniform vec2 iResolution;
-        uniform float iTime;
-        uniform vec2 iMouse;
-
-        varying vec2 vUv;
-
-        #define TAU 6.28318530718
-        #define MAX_ITER 5
-
-        void mainImage(out vec4 fragColor, in vec2 fragCoord) {
-            float time = iTime * 0.5 + 23.0;
-            vec2 uv = fragCoord.xy / iResolution.xy;
-            
-            // Mouse interaction - create distortion around cursor
-            vec2 mouse = iMouse / iResolution;
-            float dist = distance(uv, mouse);
-            float distortion = smoothstep(0.3, 0.0, dist) * 0.15;
-            
-            vec2 p = mod((uv + distortion) * TAU, TAU) - 250.0;
-            vec2 i = vec2(p);
-            float c = 1.0;
-            float inten = 0.005;
-
-            for (int n = 0; n < MAX_ITER; n++) {
-                float t = time * (1.0 - (3.5 / float(n + 1)));
-                i = p + vec2(
-                    cos(t - i.x) + sin(t + i.y),
-                    sin(t - i.y) + cos(t + i.x)
-                );
-                c += 1.0 / length(vec2(
-                    p.x / (sin(i.x + t) / inten),
-                    p.y / (cos(i.y + t) / inten)
-                ));
-            }
-
-            c /= float(MAX_ITER);
-            c = 1.17 - pow(c, 1.4);
-            vec3 colour = vec3(pow(abs(c), 8.0));
-            colour = clamp(colour + vec3(0.0, 0.35, 0.5), 0.0, 1.0);
-            fragColor = vec4(colour, 1.0);
+    void mainImage(out vec4 fragColor, vec2 fragCoord) {
+        float mr = min(iResolution.x, iResolution.y);
+        vec2 uv = (fragCoord * 2.0 - iResolution.xy) / mr;
+        float d = -iTime * 0.5;
+        float a = 0.0;
+        for (float i = 0.0; i < 8.0; ++i) {
+            a += cos(i - d - a * uv.x);
+            d += sin(uv.y * i + a);
         }
+        d += iTime * 0.5;
 
-        void main() {
-            mainImage(gl_FragColor, gl_FragCoord.xy);
-        }
+        vec3 col = vec3(cos(uv * vec2(d, a)) * 0.6 + 0.4, cos(a + d) * 0.5 + 0.5);
+        col = cos(col * cos(vec3(d, a, 2.5)) * 0.5 + 0.5);
+
+        // Тёмно-синяя палитра
+        float t = dot(col, vec3(0.299, 0.587, 0.114)); // яркость как параметр mix
+        t = clamp(t, 0.0, 1.0);
+
+        vec3 black  = vec3(0.0);
+        vec3 blue   = vec3(0.169, 0.369, 0.576);  // #2b5e93
+        vec3 violet = vec3(0.702, 0.447, 0.902);  // #b372e6
+        float threshold = 0.9;
+
+        vec3 finalCol = t < threshold
+            ? mix(black, blue, t / threshold)
+            : mix(blue, violet, (t - threshold) / (1.0 - threshold));
+            
+        fragColor = vec4(finalCol, 1.0);
+    }
+
+      void main() {
+        mainImage(gl_FragColor, gl_FragCoord.xy);
+      }
     `
 
     constructor() {
@@ -65,6 +54,10 @@ export class ReflectGradient {
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+        this.mouse = new THREE.Vector2(0, 0);
+        this.mousePrev = new THREE.Vector2(0, 0);
+        this.velocity = new THREE.Vector2(0, 0);
 
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
@@ -77,7 +70,8 @@ export class ReflectGradient {
         this.uniforms = {
             iTime: { value: 0 },
             iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-            iMouse: { value: new THREE.Vector2(0, 0) }
+            iMouse: { value: new THREE.Vector2(0, 0) },
+            iMouseVelocity: { value: new THREE.Vector2(0, 0) }
         };
 
         const material = new THREE.ShaderMaterial({
@@ -86,26 +80,30 @@ export class ReflectGradient {
             fragmentShader: this.fragmentShader
         });
 
-        const geometry = new THREE.PlaneBufferGeometry(2, 2);
+        const geometry = new THREE.PlaneGeometry(2, 2);
         const mesh = new THREE.Mesh(geometry, material);
         this.scene.add(mesh);
 
-        this.startTime = Date.now();
+        this.clock = new THREE.Clock();
         window.addEventListener('resize', this.resize.bind(this));
         document.addEventListener('mousemove', this.onMouseMove.bind(this));
         this.animate();
     }
 
     onMouseMove(e) {
-        this.uniforms.iMouse.value.x = e.clientX;
-        this.uniforms.iMouse.value.y = window.innerHeight - e.clientY;
+        this.mouse.set(e.clientX, window.innerHeight - e.clientY);
+        this.uniforms.iMouse.value.copy(this.mouse);
     }
 
     animate() {
         requestAnimationFrame(this.animate.bind(this));
-        const elapsed = (Date.now() - this.startTime) / 1000;
-        this.uniforms.iTime.value = elapsed;
 
+        // Считаем скорость здесь — плавное затухание
+        this.velocity.subVectors(this.mouse, this.mousePrev);
+        this.mousePrev.copy(this.mouse);
+        this.uniforms.iMouseVelocity.value.lerp(this.velocity, 0.15);
+        const elapsed = this.clock.getElapsedTime();
+        this.uniforms.iTime.value = elapsed;
         this.renderer.render(this.scene, this.camera);
     }
 

@@ -393,7 +393,7 @@ class CRUD {
         const actionCellWidth = 108;
         let i = 0;
         for (const key of Object.keys(this.data[0])) {
-            const width = key.length * 16 + 32;
+            const width = key.length * 14;
             if (!columnsWidth[i]) {
                 columnsWidth[i] = width;
             }
@@ -402,7 +402,9 @@ class CRUD {
             }
 
             this.gridWidth += width;
-            header.innerHTML += `<p>${key}</p>`;
+            header.innerHTML += `
+            <p>${key}</p>
+            `;
             i++;
         }
         header.innerHTML += `<p>promeniti</p>`;

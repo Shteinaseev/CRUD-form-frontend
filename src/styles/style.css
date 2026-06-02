@@ -64,6 +64,11 @@ canvas {
     z-index: -1;
 }
 
+[data-js-blur-overlay] {
+    filter: blur(0px);
+    transition: filter 0.1s ease-out;
+}
+
 .er-diagram-block {
     width: 100vw;
     height: 100vh;
@@ -105,7 +110,7 @@ canvas {
             stroke-width: 2px;
             rx: 0.8rem;
             width: 260px;
-            /* filter: url(#multiShadow); */
+            filter: url(#multiShadow);
             transform: translateY(0);
             opacity: 1;
             transition: .45s;
