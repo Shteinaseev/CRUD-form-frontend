@@ -119,7 +119,7 @@ export const odeljenjeFormFields = [
     {
         label: "Smer", name: "smer_idsmer", valueFrom: "smer_idsmer", type: "search", icon: "BookOpen",
         lookup: "smer", displayFields: ["idsmer", "naziv"],
-        searchFields: ["idsmer", "naziv"]
+        searchFields: ["naziv"]
     } // поиск по направлению
 ];
 

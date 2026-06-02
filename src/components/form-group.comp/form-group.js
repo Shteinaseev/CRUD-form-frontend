@@ -157,7 +157,10 @@ export class FormGroup extends HTMLElement {
         if (this.#lookup === 'odeljenje') {
             console.log("fsd")
             url = `https://dario.ginder.ucim.in.rs/${this.#lookup}/api/odeljenje_find.php?${this.#searchFields.join('')}&keyword=${value}`
-        } else {
+        } else if (this.#lookup === 'smer') {
+            url = `https://darko.lovrekovic.ucim.in.rs/${this.#lookup}/api/smer_search_naziv.php?naziv=${value}`
+        }
+        else {
             url = `http://localhost:3000/${this.#lookup}?q=${value}`
         }
 
@@ -166,7 +169,7 @@ export class FormGroup extends HTMLElement {
             .then(data => {
                 const newData = [];
                 let arr;
-                if (this.#lookup === 'odeljenje') {
+                if (this.#lookup === 'odeljenje' || this.#lookup === 'smer') {
                     arr = data.data
                 } else {
                     arr = data

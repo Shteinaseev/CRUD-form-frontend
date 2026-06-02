@@ -17,7 +17,7 @@ import {
 class CRUD {
     tableSvgWidth = 260;
     isDragging = false;
-    index = 6;
+    index = 7;
     svgNs = "http://www.w3.org/2000/svg";
     svgTablesWidth = [];
     #recordId = null;
@@ -96,13 +96,20 @@ class CRUD {
         this.renderFormGroups();
         this.#fetchData();
         this.bindEvents();
+
     }
 
     #fetchData() {
         fetch(`${this.endpoints[this.index - 1]}`)
             .then(response => response.json())
             .then(data => {
-                this.data = data;
+                if (this.index === 10) {
+                    this.data = data.data;
+                    console.log(data.data)
+                } else {
+                    this.data = data;
+                }
+                console.log(this.data, this.index)
                 this.#fadeContainer(this.container, 500)
                 this.#hideAllItems(this.container, 1000)
                     .then(() => {
