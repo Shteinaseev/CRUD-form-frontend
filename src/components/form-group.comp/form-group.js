@@ -5,7 +5,7 @@ export class FormGroup extends HTMLElement {
     static formAssociated = true;
     static get observedAttributes() {
         return ['label', 'name', 'type', 'icon',
-            'inputmode', 'min-length', 'max-length', 'value', 'required', 'options', 'lookup', 'displayfields', 'searchfields', 'valueFrom'];
+            'inputmode', 'min-length', 'max-length', 'value', 'required', 'options', 'lookup', 'display-fields', 'search-fields', 'valueFrom'];
     }
 
     #label = '';
@@ -120,12 +120,11 @@ export class FormGroup extends HTMLElement {
                 this.#lookup = newValue || '';
                 break;
 
-            case 'displayfields':
+            case 'display-fields':
                 this.#displayFields = this.#parseOptions(newValue);
-
                 break;
 
-            case 'searchfields':
+            case 'search-fields':
                 this.#searchFields = this.#parseOptions(newValue);
                 break;
 
@@ -135,7 +134,7 @@ export class FormGroup extends HTMLElement {
         }
 
         this.#id = this.#name.toLowerCase().replace(/\s/g, '-') + '-' + Math.floor(Math.random() * 1000);
-
+        console.log(this.#displayFields, this.#searchFields)
         this.render();
         this.#bindInputEvents();
 
@@ -178,8 +177,8 @@ export class FormGroup extends HTMLElement {
                 arr.forEach(el => {
                     let i = 0;
                     const obj = {};
-                    console.log(el)
                     for (const [key, value] of Object.entries(el)) {
+                        console.log(this.#displayFields, key)
                         if (this.#displayFields[i++] === key) {
                             obj[key] = value
                         }
@@ -187,6 +186,7 @@ export class FormGroup extends HTMLElement {
                     newData.push(obj)
 
                 });
+                console.log(newData)
                 this.dispatchEvent(new CustomEvent("data-send", {
                     detail: { data: newData, title: this.#lookup },
                     bubbles: true,
@@ -252,7 +252,7 @@ export class FormGroup extends HTMLElement {
             });
             document.addEventListener('suggestion-selected', (e) => {
                 if (e.detail['data-js-table'].value === this.#lookup) {
-                    input.value = e.detail['data-js-suggestion'].value;
+                    input.value = e.detail['data-js-textcontent'].value;
                     this.value = input.value;
                 }
             });
@@ -264,7 +264,10 @@ export class FormGroup extends HTMLElement {
         if (!value) return [];
 
         try {
-            return JSON.parse(value);
+            const parsed = JSON.parse(value);
+            if (Array.isArray(parsed)) {
+                return parsed;
+            }
         } catch {
             return value.split(',').map(v => v.trim());
         }

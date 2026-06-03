@@ -8,12 +8,12 @@
 }
 
 :root {
-    --bg-color: #ffffff22;
+    --bg-color: #ffffff33;
     --table-color: #e0e8ef33;
     --highlight: #ffffffa9;
     --color-primary: #ffffff;
     --color-secondary: #000000;
-    --color-accent: #010c5b;
+    --color-accent: #2b5e93;
     --color-aqua: #02abcc;
     --color-dark-purple: #29208b;
     --color-accent-muted: #0f5ec5;
@@ -284,7 +284,7 @@ canvas {
 
 .glass-filter {
     z-index: 2;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(10px);
     filter: url(#glass-distortion) saturate(120%) brightness(1.15);
 }
 

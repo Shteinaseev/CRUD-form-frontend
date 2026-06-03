@@ -586,13 +586,20 @@ class CRUD {
             this.searchList.innerHTML = e.detail.data.map((item) => {
                 let textContent = ''
                 let id = '';
+                let text = '';
                 for (const [key, value] of Object.entries(item)) {
                     textContent += `${key} : ${value}, `
-                    if (key === 'id' + e.detail.title) {
+                    console.log(key, value)
+                    if (key === 'ID' + e.detail.title || key === 'ID') {
                         id = value;
                     }
+                    if (key === 'NAZIV' || key === 'naziv') {
+                        text = value;
+                    }
+
                 }
-                return `<li data-js-suggestion="${id}" data-js-table="${e.detail.title}" class="disactivated">${textContent}</li>`;
+                console.log(id)
+                return `<li data-js-suggestion="${id}" data-js-table="${e.detail.title}" data-js-textcontent="${text}" class="disactivated">${textContent}</li>`;
             }).join('');
         })
 
